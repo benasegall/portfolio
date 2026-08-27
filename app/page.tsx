@@ -25,7 +25,7 @@ export default function Home() {
               Selected Work
             </h2>
             <p className="mt-1 text-base leading-snug text-muted-foreground">
-              A few recent projects — tap any to read more.
+              Selected work across enterprise software, fintech and B2B SaaS.
             </p>
           </div>
         </div>
@@ -42,7 +42,7 @@ export default function Home() {
             <p className="text-base leading-snug text-muted-foreground text-pretty">
               {philosophy.quote}
             </p>
-            <p className="mt-16 text-base leading-snug text-muted-foreground">{footer.copyright}</p>
+            <p className="mt-16 text-detail leading-snug text-muted-foreground">{footer.copyright}</p>
           </div>
         </footer>
       </main>

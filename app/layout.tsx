@@ -1,14 +1,11 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist } from 'next/font/google'
 import './globals.css'
-
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
+import { siteMeta } from '@/lib/portfolio-data'
 
 export const metadata: Metadata = {
-  title: 'Benjamin Segall — Experience Designer',
-  description:
-    'Portfolio of Benjamin Segall, an experience designer based in London, currently interning at IBM.',
+  title: siteMeta.title,
+  description: siteMeta.description,
   icons: {
     icon: [
       {
@@ -33,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`bg-background ${geist.variable}`}>
-      <body className="antialiased">
+    <html lang="en" className="bg-background">
+      <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
