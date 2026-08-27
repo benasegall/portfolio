@@ -8,6 +8,8 @@
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --text-base: 1.125rem;
   --text-base--line-height: 1.4;
+  --text-detail: 1rem;
+  --text-detail--line-height: 1.4;
   --text-lg: 1.5rem;
   --text-lg--line-height: 1.3;
   --color-sidebar-ring: var(--sidebar-ring);

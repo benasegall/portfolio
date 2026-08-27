@@ -15,7 +15,7 @@ export function ItemList({ heading, items, className }: ItemListProps) {
   return (
     <section className={className}>
       {heading ? (
-        <h2 className="mb-3 text-base font-semibold leading-snug tracking-tight text-foreground">
+        <h2 className="mb-3 text-detail font-semibold leading-snug tracking-tight text-foreground">
           {heading}
         </h2>
       ) : null}
@@ -26,7 +26,7 @@ export function ItemList({ heading, items, className }: ItemListProps) {
               <p className="text-base font-semibold leading-snug tracking-tight text-foreground">
                 {item.title}
               </p>
-              <p className="mt-0.5 text-base leading-snug text-muted-foreground text-pretty">
+              <p className="mt-0.5 text-detail leading-snug text-muted-foreground text-pretty">
                 {item.description}
               </p>
             </div>
