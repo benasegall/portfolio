@@ -3,6 +3,11 @@ export type ListItem = {
   description: string
 }
 
+export type ProjectSection = {
+  title: string
+  paragraphs: string[]
+}
+
 export type Project = {
   slug: string
   title: string
@@ -10,6 +15,8 @@ export type Project = {
   cover: string
   date: string
   body: string[]
+  sectionTitles: string[]
+  sectionLengths: number[]
   items?: ListItem[]
 }
 
@@ -49,6 +56,8 @@ export const projects: Project[] = [
       "I also scoped out a proactive support feature that would spot a stuck user through hovering or inactivity. The core onboarding needed to work on its own before anything sat on top of it, so it stayed out of this build.",
       "The tour and tutorials reduce confusion and improve early usability, but the deeper problem is the structure of the interface. The onboarding problems I solved are symptoms. The interface is the cause, and that's where I'd start next time.",
     ],
+    sectionTitles: ["Context", "Research", "Approach", "Decisions", "Reflection"],
+    sectionLengths: [3, 1, 2, 2, 1],
     items: [
       { title: "Context", description: "A root cause analysis tool for managers and project leads chasing recurring problems." },
       { title: "Research", description: "Five out of five new users failed to complete the primary task without help." },
@@ -75,6 +84,8 @@ export const projects: Project[] = [
       "Liability. The hardest problem wasn't the interface. It was using AI to interpret binding documents. A legal reviewer flagged that my summary UI was too definitive, which could create liability of its own. So key areas became cited and highlightable, letting a user check the source text rather than trust the summary.",
       "The interface was the easy part. Trust wasn't. Clarity on screen only gets you so far. The rest came from putting disclaimers inside the reading flow rather than hiding them in small print, and being honest about what an AI summary can't guarantee.",
     ],
+    sectionTitles: ["Context", "Research", "Approach", "Decisions", "Reflection"],
+    sectionLengths: [4, 1, 2, 4, 1],
     items: [
       { title: "Context", description: "Built in 54 hours at Sync the City with a team of six." },
       { title: "Research", description: "83% accept terms without reading them; 97% would rather see a plain summary first." },
@@ -99,6 +110,8 @@ export const projects: Project[] = [
       "Success here is trips set up per card, and how many of those accounts are still open at 18.",
       "Travel Ready works inside Wise's existing system rather than proposing something new, which is what the brief asked for. I didn't speak to parents or teenagers, so the read behind it comes from Wise's research and the gap in the market rather than from testing. That's the first thing I'd fix. The second is that I never explored extending it beyond travel into everyday spending. That's what would make a full account at 18 the obvious next step rather than a decision.",
     ],
+    sectionTitles: ["Context", "Competitor landscape", "Approach", "Decisions", "Reflection"],
+    sectionLengths: [1, 1, 4, 3, 1],
     items: [
       { title: "Context", description: "A live Wise brief to get more parents setting up Young Explorer for 15 to 17 year olds." },
       { title: "Insight", description: "The first trip abroad is where parental reassurance and teenage independence meet." },

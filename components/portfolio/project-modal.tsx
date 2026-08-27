@@ -61,15 +61,34 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
           <hr className="my-6 border-border" />
 
-          <div className="flex flex-col gap-5">
-            {project.body.map((paragraph) => (
-              <p
-                key={paragraph}
-                className="text-base leading-snug text-muted-foreground text-pretty"
-              >
-                {paragraph}
-              </p>
-            ))}
+          <div className="flex flex-col gap-8">
+            {project.sectionTitles.map((title, sectionIndex) => {
+              const start = project.sectionLengths
+                .slice(0, sectionIndex)
+                .reduce((total, length) => total + length, 0)
+              const paragraphs = project.body.slice(
+                start,
+                start + project.sectionLengths[sectionIndex],
+              )
+
+              return (
+                <section key={title} className="flex flex-col gap-3">
+                  <h3 className="text-base font-semibold leading-snug tracking-tight text-foreground">
+                    {title}
+                  </h3>
+                  <div className="flex flex-col gap-5">
+                    {paragraphs.map((paragraph) => (
+                      <p
+                        key={paragraph}
+                        className="text-base leading-snug text-muted-foreground text-pretty"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </section>
+              )
+            })}
           </div>
 
           {project.items ? (
