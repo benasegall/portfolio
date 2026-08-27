@@ -9,24 +9,34 @@ export function Projects() {
   const [active, setActive] = useState<Project | null>(null)
 
   return (
-    <div className="project-scroller" aria-label="Selected projects">
-      <div className="project-track">
-        {projects.map((project, index) => (
-          <button key={project.slug} type="button" onClick={() => setActive(project)} className="project-card group">
-            <div className="overflow-hidden border border-border bg-muted">
-              <img src={project.cover || "/placeholder.svg"} alt={project.title} className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
-            </div>
-            <div className="flex items-baseline justify-between gap-4 border-b border-border py-4 text-left">
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight text-foreground">{project.title}</h3>
-                <p className="mt-1 text-base text-muted-foreground">{project.category}</p>
+    <section className="mx-auto w-full max-w-6xl px-6 pb-32">
+      <div className="overflow-x-auto">
+        <div className="flex gap-x-8" style={{ minWidth: "min-content" }}>
+          {projects.map((project) => (
+            <button
+              key={project.slug}
+              type="button"
+              onClick={() => setActive(project)}
+              className="group flex flex-col text-left flex-shrink-0"
+              style={{ width: "min(100vw - 48px, 600px)" }}
+            >
+              <div className="overflow-hidden rounded-2xl bg-muted">
+                <img
+                  src={project.cover || "/placeholder.svg"}
+                  alt={project.title}
+                  className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                />
               </div>
-              <span className="font-mono text-xs text-muted-foreground">0{index + 1}</span>
-            </div>
-          </button>
-        ))}
+              <h3 className="mt-4 text-lg font-semibold tracking-tight text-foreground">
+                {project.title}
+              </h3>
+              <p className="text-lg text-muted-foreground">{project.category}</p>
+            </button>
+          ))}
+        </div>
       </div>
+
       <ProjectModal project={active} onClose={() => setActive(null)} />
-    </div>
+    </section>
   )
 }
