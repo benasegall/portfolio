@@ -15,7 +15,7 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-2 lg:grid-cols-[1fr_minmax(0,32rem)_1fr]">
           <div className="hidden lg:block" aria-hidden="true" />
           <div>
-            <h2 className="text-base font-semibold leading-snug tracking-tight text-foreground">
+            <h2 className="text-base font-medium leading-snug tracking-tight text-foreground">
               Selected Work
             </h2>
             <p className="mt-1 text-base leading-snug text-muted-foreground">
@@ -30,7 +30,7 @@ export default function Home() {
 
         <footer className="mx-auto max-w-6xl px-6 pb-32 pt-16">
           <div className="max-w-md">
-            <h2 className="mb-3 text-base font-semibold leading-snug tracking-tight text-foreground">
+            <h2 className="mb-3 text-base font-medium leading-snug tracking-tight text-foreground">
               {philosophy.heading}
             </h2>
             <p className="text-base leading-snug text-muted-foreground text-pretty">

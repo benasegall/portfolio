@@ -52,7 +52,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             />
 
             <div className="px-3 pb-4 pt-6 sm:px-5 sm:pt-8">
-              <h2 className="text-2xl font-semibold leading-snug tracking-tight text-foreground">
+              <h2 className="text-2xl font-medium leading-snug tracking-tight text-foreground">
                 {project.title}
               </h2>
               <p className="mt-1 text-base leading-snug text-muted-foreground">{project.date}</p>
@@ -75,7 +75,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
                   return (
                     <section key={title} className="flex flex-col gap-3">
-                      <h3 className="text-base font-semibold leading-snug tracking-tight text-foreground">
+                      <h3 className="text-base font-medium leading-snug tracking-tight text-foreground">
                         {title}
                       </h3>
                       <div className="flex flex-col gap-5">
