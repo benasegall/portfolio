@@ -34,12 +34,12 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-foreground/20 backdrop-blur-sm sm:items-center sm:p-8"
       onClick={onClose}
     >
-      <div className="relative flex w-full justify-center sm:max-w-5xl">
-        <div
-          className="relative max-h-[92vh] w-full overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:max-h-[90vh] sm:rounded-3xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="max-h-[92vh] overflow-y-auto overscroll-contain p-4 pb-8 sm:max-h-[90vh] sm:p-6">
+      <div
+        className="flex w-full justify-center sm:max-w-6xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="relative max-h-[92vh] w-full overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:max-h-[90vh] sm:rounded-[2rem]">
+          <div className="sheet-scroll max-h-[92vh] overflow-y-auto overscroll-contain p-4 pb-8 sm:max-h-[90vh] sm:p-7">
             <div
               aria-hidden="true"
               className="mx-auto mb-5 h-1.5 w-24 rounded-full bg-muted-foreground/50 sm:hidden"
@@ -95,15 +95,15 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close project"
-          className="absolute right-0 top-4 hidden size-10 translate-x-full items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted sm:flex sm:right-[-0.75rem] sm:translate-x-full lg:right-[-1rem]"
-        >
-          <X className="size-5" />
-        </button>
       </div>
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close project"
+        className="fixed right-4 top-1/2 hidden size-10 -translate-y-1/2 items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted sm:flex"
+      >
+        <X className="size-5" />
+      </button>
     </div>
   )
 }
