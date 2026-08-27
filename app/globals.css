@@ -52,7 +52,7 @@
 
 :root {
   color-scheme: light;
-  /* 4-color system: white, black, medium grey (#555), light grey (#888) */
+  /* 4-color system: white, black, medium grey (#555), light grey (#f5f5f5) */
   --background: #ffffff;
   --foreground: #000000;
   --card: #ffffff;
@@ -61,29 +61,29 @@
   --popover-foreground: #000000;
   --primary: #000000;
   --primary-foreground: #ffffff;
-  --secondary: #888888;
+  --secondary: #f5f5f5;
   --secondary-foreground: #000000;
-  --muted: #888888;
+  --muted: #f5f5f5;
   --muted-foreground: #555555;
-  --accent: #888888;
+  --accent: #f5f5f5;
   --accent-foreground: #000000;
   --destructive: #555555;
-  --border: #888888;
-  --input: #888888;
+  --border: #f5f5f5;
+  --input: #f5f5f5;
   --ring: #555555;
   --chart-1: #000000;
   --chart-2: #555555;
   --chart-3: #555555;
-  --chart-4: #888888;
-  --chart-5: #888888;
+  --chart-4: #f5f5f5;
+  --chart-5: #f5f5f5;
   --radius: 0.625rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #000000;
   --sidebar-primary: #000000;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #888888;
+  --sidebar-accent: #f5f5f5;
   --sidebar-accent-foreground: #000000;
-  --sidebar-border: #888888;
+  --sidebar-border: #f5f5f5;
   --sidebar-ring: #555555;
 }
 

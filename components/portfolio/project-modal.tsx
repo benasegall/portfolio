@@ -54,7 +54,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         />
 
         <div className="px-3 pb-4 pt-6 sm:px-5 sm:pt-8">
-          <h2 className="text-lg font-semibold leading-snug tracking-tight text-foreground">
+          <h2 className="text-2xl font-semibold leading-snug tracking-tight text-foreground">
             {project.title}
           </h2>
           <p className="mt-1 text-base leading-snug text-muted-foreground">{project.date}</p>
