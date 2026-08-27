@@ -7,10 +7,10 @@ export function Intro() {
       <div className="hidden lg:block" aria-hidden="true" />
 
       <div className="mx-auto w-full max-w-lg text-balance lg:mx-0">
-        <h1 className="text-base font-semibold leading-snug tracking-tight text-foreground">
+        <h1 className="text-lg font-semibold leading-snug tracking-tight text-foreground">
           {profile.name}
         </h1>
-        <p className="text-base leading-snug tracking-tight text-muted-foreground">
+        <p className="text-sm leading-snug tracking-tight text-muted-foreground">
           {profile.role}
         </p>
 
@@ -36,7 +36,7 @@ export function Intro() {
         aria-label="Connect"
         className="lg:justify-self-end lg:text-right"
       >
-        <h2 className="text-base font-semibold leading-snug tracking-tight text-foreground">
+        <h2 className="text-lg font-semibold leading-snug tracking-tight text-foreground">
           Connect
         </h2>
         <ul className="mt-2 flex flex-col">
