@@ -35,7 +35,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       onClick={onClose}
     >
       <div
-        className="flex w-full items-start justify-center gap-5 sm:max-w-6xl"
+        className="flex w-full items-start justify-center gap-4 sm:max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative w-full max-w-[640px] overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:rounded-[2rem]">
@@ -100,7 +100,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         type="button"
         onClick={onClose}
         aria-label="Close project"
-        className="sticky top-8 hidden size-10 shrink-0 items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted sm:flex"
+        className="sticky top-0 hidden size-18 shrink-0 items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted sm:flex"
       >
         <X className="size-5" />
       </button>
