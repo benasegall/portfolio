@@ -5,7 +5,7 @@ import type { Project } from "@/lib/portfolio-data"
 import { projects } from "@/lib/portfolio-data"
 import { ProjectModal } from "./project-modal"
 
-const CARD_WIDTH = "min(640px, 60vw)"
+const CARD_WIDTH = "min(768px, 72vw)"
 
 export function Projects() {
   const [active, setActive] = useState<Project | null>(null)
