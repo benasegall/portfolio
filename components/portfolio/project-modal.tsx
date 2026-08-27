@@ -31,18 +31,23 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label={project.title}
-      className="fixed inset-0 z-50 flex justify-center overflow-y-auto bg-foreground/20 p-4 backdrop-blur-sm sm:p-8"
+      className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-foreground/20 backdrop-blur-sm sm:items-center sm:p-8"
       onClick={onClose}
     >
       <div
-        className="relative my-auto w-full max-w-2xl rounded-3xl bg-card p-3 shadow-2xl sm:p-4"
+        className="relative max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] bg-card p-4 pb-8 shadow-2xl sm:my-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-3xl sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
+        <div
+          aria-hidden="true"
+          className="mx-auto mb-5 h-1.5 w-24 rounded-full bg-muted-foreground/50 sm:hidden"
+        />
+
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute -top-2 -right-2 z-10 flex size-10 items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted sm:-top-3 sm:-right-3"
+          className="absolute -right-14 top-4 z-10 hidden size-10 items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted sm:flex"
         >
           <X className="size-5" />
         </button>
@@ -50,7 +55,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         <img
           src={project.cover || "/placeholder.svg"}
           alt={project.title}
-          className="aspect-[16/10] w-full rounded-2xl object-cover"
+          className="aspect-[4/3] w-full rounded-2xl object-cover sm:aspect-[16/9]"
         />
 
         <div className="px-3 pb-4 pt-6 sm:px-5 sm:pt-8">
