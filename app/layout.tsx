@@ -2,13 +2,13 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
+import { siteMeta } from '@/lib/portfolio-data'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 
 export const metadata: Metadata = {
-  title: 'Benjamin Segall — Experience Designer',
-  description:
-    'Portfolio of Benjamin Segall, an experience designer based in London, currently interning at IBM.',
+  title: siteMeta.title,
+  description: siteMeta.description,
   icons: {
     icon: [
       {
