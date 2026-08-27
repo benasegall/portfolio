@@ -5,12 +5,6 @@ import { philosophy, footer } from "@/lib/portfolio-data"
 export default function Home() {
   return (
     <div className="relative min-h-screen font-sans">
-      {/* light grey edge accent */}
-      <div
-        aria-hidden="true"
-        className="fixed inset-y-0 left-0 z-10 w-1.5 bg-border"
-      />
-
       <main>
         <Intro />
 
