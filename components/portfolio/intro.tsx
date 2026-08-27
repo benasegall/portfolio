@@ -10,7 +10,7 @@ export function Intro() {
         <h1 className="text-lg font-semibold leading-snug tracking-tight text-foreground">
           {profile.name}
         </h1>
-        <p className="text-sm leading-snug tracking-tight text-muted-foreground">
+        <p className="text-base leading-snug tracking-tight text-muted-foreground">
           {profile.role}
         </p>
 

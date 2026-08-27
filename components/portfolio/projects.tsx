@@ -37,7 +37,7 @@ export function Projects() {
             <h3 className="mt-4 text-lg font-semibold leading-snug tracking-tight text-foreground">
               {project.title}
             </h3>
-            <p className="text-sm leading-snug text-muted-foreground">{project.category}</p>
+            <p className="text-base leading-snug text-muted-foreground">{project.category}</p>
           </button>
         ))}
       </div>
