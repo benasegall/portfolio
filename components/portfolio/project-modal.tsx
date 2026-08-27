@@ -59,6 +59,14 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           </h2>
           <p className="mt-1 text-base leading-snug text-muted-foreground">{project.date}</p>
 
+          {project.items ? (
+            <ItemList
+              heading="Highlights"
+              items={project.items}
+              className="mt-6"
+            />
+          ) : null}
+
           <hr className="my-6 border-border" />
 
           <div className="flex flex-col gap-8">
@@ -90,14 +98,6 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               )
             })}
           </div>
-
-          {project.items ? (
-            <ItemList
-              heading="Highlights"
-              items={project.items}
-              className="mt-8"
-            />
-          ) : null}
         </div>
       </div>
     </div>
