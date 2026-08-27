@@ -31,15 +31,15 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label={project.title}
-      className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-foreground/20 backdrop-blur-sm sm:items-center sm:p-8"
+      className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-foreground/20 backdrop-blur-sm sm:items-start sm:p-8"
       onClick={onClose}
     >
       <div
         className="flex w-full justify-center sm:max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative max-h-[92vh] w-full overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:max-h-[90vh] sm:rounded-[2rem]">
-          <div className="sheet-scroll max-h-[92vh] overflow-y-auto overscroll-contain p-4 pb-8 sm:max-h-[90vh] sm:p-7">
+        <div className="relative w-full overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:rounded-[2rem]">
+          <div className="p-4 pb-8 sm:p-7">
             <div
               aria-hidden="true"
               className="mx-auto mb-5 h-1.5 w-24 rounded-full bg-muted-foreground/50 sm:hidden"
