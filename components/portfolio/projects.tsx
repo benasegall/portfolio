@@ -34,10 +34,10 @@ export function Projects() {
                 className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               />
             </div>
-            <h3 className="mt-4 text-lg font-semibold tracking-tight text-foreground">
+            <h3 className="mt-4 text-base font-semibold leading-snug tracking-tight text-foreground">
               {project.title}
             </h3>
-            <p className="text-lg text-muted-foreground">{project.category}</p>
+            <p className="text-sm leading-snug text-muted-foreground">{project.category}</p>
           </button>
         ))}
       </div>

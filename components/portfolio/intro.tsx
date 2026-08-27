@@ -7,23 +7,23 @@ export function Intro() {
       <div className="hidden lg:block" aria-hidden="true" />
 
       <div className="mx-auto w-full max-w-lg text-balance lg:mx-0">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+        <h1 className="text-base font-semibold leading-snug tracking-tight text-foreground">
           {profile.name}
         </h1>
-        <p className="text-xl tracking-tight text-muted-foreground">
+        <p className="text-base leading-snug tracking-tight text-muted-foreground">
           {profile.role}
         </p>
 
-        <div className="mt-10 flex flex-col gap-6">
+        <div className="mt-8 flex flex-col gap-4">
           {profile.bio.map((paragraph) => (
             <p
               key={paragraph}
-              className="text-xl leading-relaxed text-muted-foreground text-pretty"
+              className="text-base leading-snug text-muted-foreground text-pretty"
             >
               {paragraph}
             </p>
           ))}
-          <p className="text-xl leading-relaxed text-muted-foreground">
+          <p className="text-base leading-snug text-muted-foreground">
             {profile.current.prefix}{" "}
             <span className="font-semibold text-foreground">
               {profile.current.company}
@@ -36,7 +36,7 @@ export function Intro() {
         aria-label="Connect"
         className="lg:justify-self-end lg:text-right"
       >
-        <h2 className="text-xl font-semibold tracking-tight text-foreground">
+        <h2 className="text-base font-semibold leading-snug tracking-tight text-foreground">
           Connect
         </h2>
         <ul className="mt-2 flex flex-col">
@@ -46,7 +46,7 @@ export function Intro() {
                 href={link.href}
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                className="text-xl text-muted-foreground transition-colors hover:text-foreground"
+                className="text-base leading-snug text-muted-foreground transition-colors hover:text-foreground"
               >
                 {link.label}
               </a>
