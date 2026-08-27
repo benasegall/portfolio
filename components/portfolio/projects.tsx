@@ -13,7 +13,7 @@ export function Projects() {
   return (
     <section className="w-full pb-32">
       <div
-        className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         style={{
           paddingLeft: `calc((100vw - ${CARD_WIDTH}) / 2 - 2rem)`,
           paddingRight: `calc((100vw - ${CARD_WIDTH}) / 2 + 2rem)`,
