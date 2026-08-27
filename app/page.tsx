@@ -28,7 +28,7 @@ export default function Home() {
           <Projects />
         </div>
 
-        <footer className="mx-auto max-w-6xl px-6 pb-32 pt-16">
+        <footer className="mx-auto max-w-6xl px-6 pb-20 pt-12">
           <div className="max-w-md">
             <h2 className="mb-3 text-base font-medium leading-snug tracking-tight text-foreground">
               {philosophy.heading}

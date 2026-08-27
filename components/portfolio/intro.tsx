@@ -2,7 +2,7 @@ import { profile, connectLinks } from "@/lib/portfolio-data"
 
 export function Intro() {
   return (
-    <section className="mx-auto grid w-full max-w-6xl gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1fr_minmax(0,32rem)_1fr] lg:gap-8">
+    <section className="mx-auto grid w-full max-w-6xl gap-12 px-6 py-16 md:py-24 lg:grid-cols-[1fr_minmax(0,32rem)_1fr] lg:gap-8">
       {/* spacer keeps the bio optically centered on large screens */}
       <div className="hidden lg:block" aria-hidden="true" />
 

@@ -33,9 +33,9 @@ export const profile = {
 }
 
 export const connectLinks: { label: string; href: string }[] = [
-  { label: "Email", href: "mailto:hello@benjaminsegall.com" },
-  { label: "CV", href: "#" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
+  { label: "Email", href: "mailto:benasegall@gmail.com" },
+  { label: "CV", href: "https://drive.google.com/file/d/1OyowLEmJPKoriapbSCXiseFirdBLi3_l/view?usp=sharing" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/benasegall" },
 ]
 
 export const projects: Project[] = [
