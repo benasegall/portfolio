@@ -23,7 +23,7 @@ export function ItemList({ heading, items, className }: ItemListProps) {
         {items.map((item) => (
           <li key={item.title}>
             <div className="-mx-4 rounded-2xl px-4 py-3 transition-colors hover:bg-muted">
-              <p className="text-base font-medium leading-snug tracking-tight text-foreground">
+              <p className="text-detail font-medium leading-snug tracking-tight text-foreground">
                 {item.title}
               </p>
               <p className="mt-0.5 text-detail leading-snug text-muted-foreground text-pretty">
