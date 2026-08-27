@@ -38,7 +38,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         className="flex w-full items-start justify-center gap-5 sm:max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative w-full max-w-5xl overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:rounded-[2rem]">
+        <div className="relative w-full max-w-[640px] overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:rounded-[2rem]">
           <div className="p-4 pb-8 sm:p-7">
             <div
               aria-hidden="true"
