@@ -15,8 +15,8 @@ export function Projects() {
       <div
         className="flex snap-x snap-mandatory gap-8 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         style={{
-          paddingLeft: `calc((100vw - ${CARD_WIDTH}) / 2)`,
-          paddingRight: `calc((100vw - ${CARD_WIDTH}) / 2)`,
+          paddingLeft: `calc((100vw - ${CARD_WIDTH}) / 2 - 2rem)`,
+          paddingRight: `calc((100vw - ${CARD_WIDTH}) / 2 + 2rem)`,
         }}
       >
         {projects.map((project) => (
@@ -31,7 +31,7 @@ export function Projects() {
               <img
                 src={project.cover || "/placeholder.svg"}
                 alt={project.title}
-                className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                className="aspect-[16/9] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               />
             </div>
             <div className="mx-auto w-full max-w-[32rem]">
