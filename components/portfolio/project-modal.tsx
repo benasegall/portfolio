@@ -61,7 +61,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 <ItemList heading="Highlights" items={project.items} className="mt-6" />
               ) : null}
 
-              <hr className="my-6 border-border" />
+              <hr className="my-6 border-project-divider" />
 
               <div className="flex flex-col gap-8">
                 {project.sectionTitles.map((title, sectionIndex) => {
