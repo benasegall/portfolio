@@ -54,7 +54,7 @@
 
 :root {
   color-scheme: light;
-  /* 4-color system: white, black, medium grey (#555), light grey (#f5f5f5) */
+  /* 4-color system: white, black, medium grey (#555), light grey (#DCDCDC) */
   --background: #ffffff;
   --foreground: #000000;
   --card: #ffffff;
@@ -63,29 +63,29 @@
   --popover-foreground: #000000;
   --primary: #000000;
   --primary-foreground: #ffffff;
-  --secondary: #f5f5f5;
+  --secondary: #DCDCDC;
   --secondary-foreground: #000000;
-  --muted: #f5f5f5;
+  --muted: #DCDCDC;
   --muted-foreground: #555555;
-  --accent: #f5f5f5;
+  --accent: #DCDCDC;
   --accent-foreground: #000000;
   --destructive: #555555;
-  --border: #f5f5f5;
-  --input: #f5f5f5;
+  --border: #DCDCDC;
+  --input: #DCDCDC;
   --ring: #555555;
   --chart-1: #000000;
   --chart-2: #555555;
   --chart-3: #555555;
-  --chart-4: #f5f5f5;
-  --chart-5: #f5f5f5;
+  --chart-4: #DCDCDC;
+  --chart-5: #DCDCDC;
   --radius: 0.625rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #000000;
   --sidebar-primary: #000000;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f5f5f5;
+  --sidebar-accent: #DCDCDC;
   --sidebar-accent-foreground: #000000;
-  --sidebar-border: #f5f5f5;
+  --sidebar-border: #DCDCDC;
   --sidebar-ring: #555555;
 }
 
