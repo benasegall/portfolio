@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { X } from "lucide-react"
 import type { Project } from "@/lib/portfolio-data"
 import { ItemList } from "./item-list"
 
@@ -38,6 +39,15 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative w-full max-w-[768px] overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:rounded-[2rem]">
+          <button
+            type="button"
+            aria-label="Close project"
+            onClick={onClose}
+            className="absolute right-5 top-5 z-10 flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <X aria-hidden="true" />
+          </button>
+
           <div className="p-4 pb-8 pt-0 sm:p-7 sm:pt-0">
             <div
               aria-hidden="true"
