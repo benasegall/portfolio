@@ -27,7 +27,7 @@ export function Projects() {
                 className="aspect-[3/2] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               />
             </div>
-            <div className="mx-auto w-full max-w-[32rem]">
+            <div className="mx-auto w-full max-w-[32rem] px-2">
               <h3 className="mt-4 text-base font-medium leading-snug tracking-tight text-foreground">
                 {project.title}
               </h3>
