@@ -28,8 +28,9 @@ export default function Home() {
           <Projects />
         </div>
 
-        <footer className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-          <div className="max-w-md">
+        <footer className="mx-auto grid max-w-6xl gap-8 px-6 pb-20 pt-12 lg:grid-cols-[1fr_minmax(0,32rem)_1fr]">
+          <div className="hidden lg:block" aria-hidden="true" />
+          <div>
             <h2 className="mb-3 text-base font-medium leading-snug tracking-tight text-foreground">
               {philosophy.heading}
             </h2>
