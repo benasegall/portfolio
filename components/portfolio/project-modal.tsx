@@ -39,7 +39,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full max-w-[768px] overflow-hidden rounded-t-[2rem] bg-card shadow-2xl sm:rounded-[2rem]">
-          <div className="p-4 sm:p-7">
+          <div className="p-3 sm:p-4">
             <div
               aria-hidden="true"
               className="mx-auto mb-5 h-1.5 w-24 rounded-full bg-muted-foreground/50 sm:hidden"
@@ -101,7 +101,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             type="button"
             aria-label="Close project"
             onClick={onClose}
-            className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <X aria-hidden="true" />
           </button>
