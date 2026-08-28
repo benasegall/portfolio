@@ -32,20 +32,24 @@ export function Projects() {
   }, [])
 
   const centeredProject = projects.find((project) => project.slug === centeredSlug) ?? projects[0]
+  const [visibleProject, setVisibleProject] = useState(centeredProject)
+  const [isChanging, setIsChanging] = useState(false)
+
+  useEffect(() => {
+    if (centeredProject.slug === visibleProject.slug) return
+
+    setIsChanging(true)
+    const timeout = window.setTimeout(() => {
+      setVisibleProject(centeredProject)
+      setIsChanging(false)
+    }, 140)
+
+    return () => window.clearTimeout(timeout)
+  }, [centeredProject, visibleProject.slug])
 
   return (
     <section className="w-full pb-32">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 lg:grid-cols-[1fr_minmax(0,32rem)_1fr]">
-        <div className="hidden lg:block" aria-hidden="true" />
-        <div>
-          <h3 className="text-base font-medium leading-snug tracking-tight text-foreground">
-            {centeredProject.title}
-          </h3>
-          <p className="text-base leading-snug text-muted-foreground">{centeredProject.category}</p>
-        </div>
-      </div>
-
-      <div ref={carouselRef} className="mt-8 flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-0 md:pl-[calc((100vw-min(768px,72vw))/2-2rem)] md:pr-[calc((100vw-min(768px,72vw))/2+2rem)]">
+      <div ref={carouselRef} className="flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-0 md:pl-[calc((100vw-min(768px,72vw))/2-2rem)] md:pr-[calc((100vw-min(768px,72vw))/2+2rem)]">
         {projects.map((project) => (
           <button
             key={project.slug}
@@ -63,6 +67,16 @@ export function Projects() {
             </div>
           </button>
         ))}
+      </div>
+
+      <div className="mx-auto mt-6 grid min-h-14 w-full max-w-6xl gap-8 px-6 lg:grid-cols-[1fr_minmax(0,32rem)_1fr]">
+        <div className="hidden lg:block" aria-hidden="true" />
+        <div className={`transition-opacity duration-150 ${isChanging ? "opacity-0" : "opacity-100"}`}>
+          <h3 className="text-base font-medium leading-snug tracking-tight text-foreground">
+            {visibleProject.title}
+          </h3>
+          <p className="text-base leading-snug text-muted-foreground">{visibleProject.category}</p>
+        </div>
       </div>
 
       <ProjectModal project={active} onClose={() => setActive(null)} />
