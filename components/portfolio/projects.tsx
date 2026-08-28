@@ -12,20 +12,13 @@ export function Projects() {
 
   return (
     <section className="w-full pb-32">
-      <div
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        style={{
-          paddingLeft: `calc((100vw - ${CARD_WIDTH}) / 2 - 2rem)`,
-          paddingRight: `calc((100vw - ${CARD_WIDTH}) / 2 + 2rem)`,
-        }}
-      >
+      <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-0 md:pl-[calc((100vw-min(768px,72vw))/2-2rem)] md:pr-[calc((100vw-min(768px,72vw))/2+2rem)]">
         {projects.map((project) => (
           <button
             key={project.slug}
             type="button"
             onClick={() => setActive(project)}
-            className="group flex flex-shrink-0 snap-center flex-col text-left"
-            style={{ width: CARD_WIDTH }}
+            className="group flex w-[calc(100vw-2rem)] flex-shrink-0 snap-center flex-col text-left md:w-[min(768px,72vw)]"
           >
             <div className="overflow-hidden rounded-2xl bg-muted">
               <img
