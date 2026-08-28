@@ -1,0 +1,15 @@
+Nimbus Sans
+Copyright (c) URW++ Design & Development
+
+Source: https://github.com/ArtifexSoftware/urw-base35-fonts
+Licensed under the GNU Affero General Public License v3 (AGPL-3.0),
+with the following exemption:
+
+  As a special exception, permission is granted to include these font
+  programs in a Postscript or PDF file that consists of a document that
+  contains text to be displayed or printed using this font, regardless
+  of the conditions or license applying to the document itself.
+
+Note: the .woff2 files here are format conversions of the upstream .otf
+files, subset to Latin-1 + punctuation. The unmodified upstream .otf
+originals are retained alongside them as corresponding source.

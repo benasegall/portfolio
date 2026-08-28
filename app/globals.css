@@ -1,0 +1,304 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Nimbus Sans (URW) — AGPL-3.0, see public/fonts/LICENSE.txt
+ * Only 400 and 700 exist; there is no medium weight, which is why
+ * headings use font-bold rather than font-medium.
+ */
+@font-face {
+  font-family: 'Nimbus Sans';
+  src: url('/fonts/NimbusSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nimbus Sans';
+  src: url('/fonts/NimbusSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-sans: 'Nimbus Sans', Arial, sans-serif;
+  /* Two breakpoints: md = tablet, lg = desktop. Vitrine switches its own
+     slider layout at 700px internally — that is inside the library and can't
+     be moved, so it sits below `md` deliberately. */
+  --breakpoint-md: 50.625rem; /* 810 — tablet  */
+  --breakpoint-lg: 75rem;     /* 1200 — desktop */
+
+  /* one line-height (1.375) across every size, so `leading-snug` is never needed */
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.375;
+  --text-detail: 0.9375rem;
+  --text-detail--line-height: 1.375;
+  --text-lg: 1.5rem;
+  --text-lg--line-height: 1.375;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-project-divider: var(--project-divider);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  /* 4-color system: white, black, medium grey (#555), light grey (#D9D9D9) */
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #D9D9D9;
+  --secondary-foreground: #000000;
+  --muted: #f5f5f7;
+  --muted-foreground: #555555;
+  --accent: #D9D9D9;
+  --accent-foreground: #000000;
+  --destructive: #555555;
+  --border: #D9D9D9;
+  --project-divider: #D9D9D9;
+  --input: #D9D9D9;
+  --ring: #555555;
+  --chart-1: #000000;
+  --chart-2: #555555;
+  --chart-3: #555555;
+  --chart-4: #D9D9D9;
+  --chart-5: #D9D9D9;
+  --radius: 0.625rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #D9D9D9;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #D9D9D9;
+  --sidebar-ring: #555555;
+
+  /* tokens read by @ocarignan/vitrine's stylesheet */
+  --gap: 1rem; /* space between project panels; matches the mobile gap */
+
+  /* How far the portrait may hang out to the left of the grid, at >=1200 only.
+     0rem  = flush with the grid column
+     5rem  = the original "playful" bleed
+     7rem  = current — one grid gap (2rem) further left again
+     Anything between works; it is capped by the room actually available, so it
+     can never push the card off-screen. This is the only value to change. */
+  --portrait-bleed: 7rem;
+  --accent-color: var(--foreground);
+  --text-color: var(--muted-foreground);
+  --color-text: var(--foreground);
+}
+
+.dark {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: light;
+  }
+}
+
+.sheet-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sheet-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * THE page grid — the single definition every section aligns to.
+ * Intro, Selected Work and the footer all use it; nothing else defines a grid.
+ *
+ * Stacked, every child is the same 32rem block centred in the container.
+ * In three columns, the middle track is that same 32rem, centred by equal 1fr
+ * sides. So the text column is a screen-centred 32rem in EVERY tier — which is
+ * what lets a single rule align the slider caption at every width.
+ */
+.page-grid {
+  display: grid;
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  gap: 3rem;
+}
+
+.page-grid > * {
+  width: 100%;
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 810px) {
+  .page-grid {
+    grid-template-columns: 1fr minmax(0, 32rem) 1fr;
+    gap: 2rem;
+  }
+
+  .page-grid > * {
+    max-width: none;
+    margin-inline: 0;
+  }
+}
+
+/*
+ * The slider caption can't live inside .page-grid (Vitrine owns that markup),
+ * so it mirrors the grid's text column instead. Because that column is a
+ * screen-centred 32rem in every tier, one expression covers all of them and no
+ * breakpoint is needed. The 1.5rem floor takes over once the viewport is too
+ * narrow to hold 32rem, matching the container's own padding.
+ * `!important` because Vitrine sets these as inline styles.
+ */
+.slider__meta {
+  padding-left: max(1.5rem, calc(50% - 16rem)) !important;
+  padding-right: max(1.5rem, calc(50% - 16rem)) !important;
+}
+
+/*
+ * Below the tablet breakpoint the projects sit tighter together, which buys
+ * width for the panels themselves. Scoped to the whole mobile tier, not
+ * Vitrine's internal 700px, so the gap doesn't change mid-tier. Specificity
+ * has to beat Vitrine's nested `.slider .slider__track`, hence !important.
+ */
+@media (max-width: 809px) {
+  .slider__track {
+    gap: 0.5rem !important;
+  }
+}
+
+/*
+ * Vitrine centres the track by insetting it `(100vw - contentWidth)/2 - 12`,
+ * where the -12 offsets the 24px it normally adds to the item width. With
+ * `aspectRatio` set it does NOT add that 24, so the panel lands 12px left of
+ * centre and the right-hand peek is always 24px larger than the left.
+ * This computes the true inset instead, making both peeks equal.
+ *
+ * The two constants mirror the <Slider> props: 800 = contentWidth,
+ * 28 = sideMargin (which governs once the viewport is too narrow for 800).
+ * Change either prop and these must change with it.
+ */
+@media (min-width: 700px) {
+  .slider__track {
+    padding-left: max(28px, calc((100vw - 800px) / 2)) !important;
+    padding-right: max(28px, calc((100vw - 800px) / 2)) !important;
+    scroll-padding-left: max(28px, calc((100vw - 800px) / 2)) !important;
+  }
+}
+
+/*
+ * Vitrine spaces the slider with `lh` margins of its own (3-4lh top,
+ * 4.75-6.75lh bottom) — 99px and 167px here. Stacked on top of our own section
+ * padding that left the "Selected Work" heading 123px from the work it labels
+ * while sitting only 40px below the rule above it, and pushed the caption 343px
+ * from the footer. Zeroed so page.tsx owns the vertical rhythm in one place.
+ */
+.slider {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/*
+ * Vitrine renders the caption as h3 + <br> + p with no gap, so the title and
+ * its line sit flush. Everywhere else on the site a title/subtitle pair is 4px
+ * apart (see the sheet's title and dek).
+ */
+.slider__meta-inner {
+  gap: 0.25rem;
+}
+
+/*
+ * Vitrine paints a custom `+` zoom cursor (a data-URI SVG) on the panel image.
+ * That cursor advertises its lightbox, which we disable in favour of our own
+ * project modal, so it promises the wrong interaction. The panel itself is
+ * already `pointer`; this just stops the image overriding it.
+ * `!important` beats Vitrine's nested `.slider .slider__item img`.
+ */
+.slider__item img,
+.slider__item video {
+  cursor: pointer !important;
+}
+
+/*
+ * Vitrine sets only colour and margin on the caption, so it inherits body
+ * type while every other block carries explicit classes. Match the project
+ * title to the page's headings (font-medium + tracking-tight); the subtitle
+ * already matches body copy.
+ */
+.slider__meta h3 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/*
+ * Optional pull that lets the portrait hang out of the grid on the left.
+ * Driven entirely by --portrait-bleed (see :root) — currently 0rem, so the
+ * card sits flush with the grid column. The pull is capped by the room
+ * between the viewport edge and the container, keeping a 1rem gutter, so it
+ * can never overflow the viewport and cause horizontal scroll.
+ */
+@media (min-width: 1200px) {
+  .portrait-bleed {
+    margin-left: calc(
+      -1 * min(
+        var(--portrait-bleed),
+        max(0rem, (100vw - min(100vw, 72rem)) / 2 + 0.5rem)
+      )
+    );
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground text-base;
+  }
+}
