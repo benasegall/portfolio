@@ -8,12 +8,12 @@ export default function Home() {
       <main>
         <Intro />
 
-        <div className="mx-auto mb-24 max-w-6xl px-6">
+        <div className="mx-auto mb-10 max-w-6xl px-6">
           <hr className="border-border" />
         </div>
 
-        <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-2 lg:grid-cols-[1fr_minmax(0,32rem)_1fr]">
-          <div className="hidden lg:block" aria-hidden="true" />
+        <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-2 md:grid-cols-[1fr_minmax(0,32rem)_1fr]">
+          <div className="hidden md:block" aria-hidden="true" />
           <div>
             <h2 className="text-base font-medium leading-snug tracking-tight text-foreground">
               Selected Work
@@ -24,12 +24,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="pt-10">
+        <div className="pt-4">
           <Projects />
         </div>
 
-        <footer className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-20 pt-12 lg:grid-cols-[1fr_minmax(0,32rem)_1fr]">
-          <div className="hidden lg:block" aria-hidden="true" />
+        <footer className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-20 pt-12 md:grid-cols-[1fr_minmax(0,32rem)_1fr]">
+          <div className="hidden md:block" aria-hidden="true" />
           <div>
             <h2 className="text-base font-medium leading-snug tracking-tight text-foreground">
               {philosophy.heading}
