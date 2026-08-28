@@ -31,7 +31,7 @@ export default function Home() {
         <footer className="mx-auto grid max-w-6xl gap-8 px-6 pb-20 pt-12 lg:grid-cols-[1fr_minmax(0,32rem)_1fr]">
           <div className="hidden lg:block" aria-hidden="true" />
           <div className="lg:col-start-2 lg:col-end-3">
-            <h2 className="mb-3 text-base font-medium leading-snug tracking-tight text-foreground">
+            <h2 className="text-base font-medium leading-snug tracking-tight text-foreground">
               {philosophy.heading}
             </h2>
             <p className="text-base leading-snug text-muted-foreground text-pretty">
