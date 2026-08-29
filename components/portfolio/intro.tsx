@@ -1,4 +1,5 @@
 import { profile, connectLinks } from "@/lib/portfolio-data"
+import { Bio } from "./bio"
 import { Portrait } from "./portrait"
 
 export function Intro() {
@@ -10,22 +11,7 @@ export function Intro() {
         <h1 className="text-base font-bold tracking-tight text-foreground">
           {profile.name}
         </h1>
-        <div className="mt-8 flex flex-col gap-4">
-          {profile.bio.map((paragraph) => (
-            <p
-              key={paragraph}
-              className="text-base text-muted-foreground text-pretty"
-            >
-              {paragraph}
-            </p>
-          ))}
-          <p className="text-base text-muted-foreground">
-            {profile.current.employer}{" "}
-            <span className="text-foreground">
-              {profile.current.availability}
-            </span>
-          </p>
-        </div>
+        <Bio />
       </div>
 
       <nav

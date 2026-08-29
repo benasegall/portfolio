@@ -32,6 +32,12 @@ export const profile = {
   bio: [
     "I'm a product designer in London, with roots in the USA. I studied UX at Norwich University of the Arts and have worked across agency and consultancy teams, where I learned to hold both user needs and business goals in the same hand.",
   ],
+  // Revealed when the bio block is expanded, inserted between `bio` and
+  // `current` — the "Currently at IBM" line stays pinned last in both states.
+  more: [
+    "Design taught me how to understand a problem, work through the unclear part of it and land on something practical. I'm interested in applying that across different areas, and keen to take on a wider range of challenges.",
+    "If my background and approach to problems could be a good fit, I'd love to hear more.",
+  ],
   // Two sentences, so the availability — the actionable half — can be
   // emphasised on its own. Combined they read exactly as the content spec:
   // "Currently at IBM. Available from 21 September."
