@@ -132,7 +132,10 @@ export const projects: Project[] = [
     sectionLengths: [4, 1, 2, 2, 1, 1],
     media: [
       // The self-serve trial that replaced emailing the team for access.
-      { id: "getting-in", title: "Getting in", afterParagraph: 1, items: [
+      // Anchored to the end of Context rather than inside it: a gallery placed
+      // mid-section splits the prose in two, and the section closes on trial-
+      // to-paying conversion, which is exactly what these screens show.
+      { id: "getting-in", title: "Getting in", afterParagraph: 3, items: [
         img("what-caused-this", "getting-in-01", "Email verifying the account and starting the 14-day free trial"),
         img("what-caused-this", "getting-in-02", "Upgrade plan with order summary and payment details"),
         img("what-caused-this", "getting-in-03", "Purchase confirmed, returning to the dashboard"),
@@ -155,73 +158,6 @@ export const projects: Project[] = [
       { title: "Context", description: "A root cause analysis tool for managers and project leads chasing recurring problems." },
       { title: "Research", description: "Five out of five new users failed to complete the primary task without help." },
       { title: "Approach", description: "Guidance at the point of action, focused on creating a first analysis report." },
-    ],
-  },
-  {
-    slug: "clearterms",
-    title: "ClearTerms",
-    category: "Turning terms and conditions into summaries people actually read.",
-    cover: "/images/projects/clearterms/cover.webp",
-    date: "The biggest lie on the internet is \"I have read and agree to the terms and conditions.\" ClearTerms uses AI-driven summaries to make that statement true.",
-    body: [
-      "A man lost his right to sue over food poisoning because of a clause buried in the signup for a free service. He had agreed to it. Almost nobody reads these documents, and the people who write them know it.",
-      "Our survey found 83% of people accept terms without reading them, and 97% would rather see a plain summary first. ClearTerms was built for both sides of that gap, consumers who need clarity and businesses that want to reduce legal risk.",
-      "Our proof of concept flagged a clause granting TikTok rights to a user's image and voice. Not something anyone catches reading on their own.",
-      "I was one of two designers on a team of six at Sync the City, a 54 hour build event. We worked the design together from research through to final screens, alongside development and business strategy. Decisions on revenue model, disclaimers and product format fed straight into design choices, so the design moved with the business case rather than after it. Legal input came from external mentor review through the Akcela incubator.",
-      "Surveys and interviews showed people weren't ignoring terms out of laziness. They were beaten by the structure and the language. That moved the problem from reducing content to ranking it, so someone could spot a risky clause without reading the whole document.",
-      "The challenge was hierarchy. Legal documents are dense and flat, so the interface had to separate the clauses that matter from the routine ones at a glance.",
-      "Three patterns came out of that.",
-      "Plain language summaries, replacing dense legal text with scannable insights. Clause highlighting, flagging terms that are risky or unclear. Categorisation, grouping clauses by theme such as data use, liability and intellectual property, so someone can navigate without reading everything.",
-      "Scope. Competitor tools mostly cover narrow areas like cookie policies. We chose to cover the whole document, which gave ClearTerms a clearer position and made the design problem harder.",
-      "Format. A website would have been easier to build and test, but people meet terms in context, at the moment they sign up. ToS;DR, the closest competitor, pulls users out to its own site and breaks that moment. A Chrome extension puts the tool where the decision happens, and leaves room to grow into a platform later.",
-      "Model. Freemium. The consumer tool stays free to build trust and drive organic growth, with revenue on the business side, which the extension format suits.",
-      "Liability. The hardest problem wasn't the interface. It was using AI to interpret binding documents. A legal reviewer flagged that my summary UI was too definitive, which could create liability of its own. So key areas became cited and highlightable, letting a user check the source text rather than trust the summary.",
-      "The interface was the easy part. Trust wasn't. Clarity on screen only gets you so far. The rest came from putting disclaimers inside the reading flow rather than hiding them in small print, and being honest about what an AI summary can't guarantee.",
-    ],
-    sectionTitles: ["Context", "Research", "Approach", "Decisions", "Reflection"],
-    sectionLengths: [4, 1, 3, 4, 1],
-    leadIns: ["Scope.", "Format.", "Model.", "Liability."],
-    media: [
-      // Interview reel plus the survey charts behind the 83% / 97% figures.
-      // videoControls is what surfaces the lightbox mute button; the panel
-      // itself stays muted whatever we pass.
-      // The interviews play in Vimeo's own player. The reel is 31 seconds at a
-      // ~28 Mbps bitrate, far too heavy to self-host, and its audio carries the
-      // findings — so a player the viewer starts beats a muted ambient loop.
-      { id: "interviews", title: "User interviews", afterParagraph: 4, items: [],
-        embed: {
-          src: "https://player.vimeo.com/video/1044294752?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479",
-          title: "ClearTerms User Interviews",
-        } },
-      { id: "research", title: "Survey results", afterParagraph: 4, items: [
-        img("clearterms", "research-01", "Survey results: 97% would prefer a summary of the key points"),
-      ] },
-      // Wireframes running lo-fi modules -> in-context -> branded panel.
-      { id: "hierarchy", title: "Building the hierarchy", afterParagraph: 7, items: [
-        img("clearterms", "hierarchy-01", "Low-fidelity wireframes of the concern, preferences and summary modules"),
-        img("clearterms", "hierarchy-02", "Mid-fidelity extension panel shown beside a live terms page"),
-        img("clearterms", "hierarchy-03", "The panel at full fidelity in ClearTerms branding"),
-      ] },
-      // Sits on "Format." — the flow showing the extension firing in place.
-      // Kept whole: splitting it into stages made each panel taller but the
-      // flow itself harder to follow, and the last stage was no clearer.
-      { id: "where-it-lives", title: "Where the tool lives", afterParagraph: 9, items: [
-        img("clearterms", "where-it-lives-01", "User flow from installing the extension to reading a generated summary"),
-      ] },
-      // Identity work. Anchored to the last paragraph so it closes the case
-      // study rather than interrupting an argument it does not serve.
-      { id: "identity", title: "Identity", afterParagraph: 12, items: [
-        img("clearterms", "identity-01", "Colour palette exploration"),
-        img("clearterms", "identity-02", "Logotype explorations"),
-        img("clearterms", "identity-03", "Logo lockups on light and dark backgrounds"),
-        img("clearterms", "identity-04", "The final ClearTerms logo"),
-        img("clearterms", "identity-05", "Favicon and full logo lockup"),
-      ] },
-    ],
-    items: [
-      { title: "Context", description: "Built in 54 hours at Sync the City with a team of six." },
-      { title: "Research", description: "83% accept terms without reading them; 97% would rather see a plain summary first." },
-      { title: "Safeguard", description: "Cited and highlightable clauses let users check source text themselves." },
     ],
   },
   {
@@ -271,10 +207,14 @@ export const projects: Project[] = [
         img("wise-young-explorer", "before-09", "Editing the suggested budget"),
         img("wise-young-explorer", "before-10", "Ready-to-go checklist before activating Travel Ready"),
       ] },
+      // Opens on the card as it sits during the trip, then the same screen with
+      // the card frozen — the pair reads as the interaction rather than as two
+      // near-identical screens. The first of these was the old cover.
       { id: "during", title: "During — while they are away", afterParagraph: 5, items: [
-        img("wise-young-explorer", "during-01", "Trip status with spend by currency and recent transactions"),
-        img("wise-young-explorer", "during-02", "Travel Ready card view with the card frozen"),
-        img("wise-young-explorer", "during-03", "Safety controls for payments, alerts and ATM withdrawals"),
+        img("wise-young-explorer", "during-01", "The Travel Ready card during the trip"),
+        img("wise-young-explorer", "during-02", "The same card, frozen"),
+        img("wise-young-explorer", "during-03", "Trip status with spend by currency and recent transactions"),
+        img("wise-young-explorer", "during-04", "Safety controls for payments, alerts and ATM withdrawals"),
       ] },
       { id: "after", title: "After — the recap", afterParagraph: 7, items: [
         img("wise-young-explorer", "after-01", "Trip recap with the exchange rate across the trip"),
@@ -290,6 +230,73 @@ export const projects: Project[] = [
       { title: "Context", description: "A live Wise brief to get more parents setting up Young Explorer for 15 to 17 year olds." },
       { title: "Insight", description: "The first trip abroad is where parental reassurance and teenage independence meet." },
       { title: "Solution", description: "Travel Ready: a guided setup built into the Young Explorer card area." },
+    ],
+  },
+  {
+    slug: "clearterms",
+    title: "ClearTerms",
+    category: "Turning terms and conditions into summaries people actually read.",
+    cover: "/images/projects/clearterms/cover.webp",
+    date: "The biggest lie on the internet is \"I have read and agree to the terms and conditions.\" ClearTerms uses AI-driven summaries to make that statement true.",
+    body: [
+      "A man lost his right to sue over food poisoning because of a clause buried in the signup for a free service. He had agreed to it. Almost nobody reads these documents, and the people who write them know it.",
+      "Our survey found 83% of people accept terms without reading them, and 97% would rather see a plain summary first. ClearTerms was built for both sides of that gap, consumers who need clarity and businesses that want to reduce legal risk.",
+      "Our proof of concept flagged a clause granting TikTok rights to a user's image and voice. Not something anyone catches reading on their own.",
+      "I was one of two designers on a team of six at Sync the City, a 54 hour build event. We worked the design together from research through to final screens, alongside development and business strategy. Decisions on revenue model, disclaimers and product format fed straight into design choices, so the design moved with the business case rather than after it. Legal input came from external mentor review through the Akcela incubator.",
+      "Surveys and interviews showed people weren't ignoring terms out of laziness. They were beaten by the structure and the language. That moved the problem from reducing content to ranking it, so someone could spot a risky clause without reading the whole document.",
+      "The challenge was hierarchy. Legal documents are dense and flat, so the interface had to separate the clauses that matter from the routine ones at a glance.",
+      "Three patterns came out of that.",
+      "Plain language summaries, replacing dense legal text with scannable insights. Clause highlighting, flagging terms that are risky or unclear. Categorisation, grouping clauses by theme such as data use, liability and intellectual property, so someone can navigate without reading everything.",
+      "Scope. Competitor tools mostly cover narrow areas like cookie policies. We chose to cover the whole document, which gave ClearTerms a clearer position and made the design problem harder.",
+      "Format. A website would have been easier to build and test, but people meet terms in context, at the moment they sign up. ToS;DR, the closest competitor, pulls users out to its own site and breaks that moment. A Chrome extension puts the tool where the decision happens, and leaves room to grow into a platform later.",
+      "Model. Freemium. The consumer tool stays free to build trust and drive organic growth, with revenue on the business side, which the extension format suits.",
+      "Liability. The hardest problem wasn't the interface. It was using AI to interpret binding documents. A legal reviewer flagged that my summary UI was too definitive, which could create liability of its own. So key areas became cited and highlightable, letting a user check the source text rather than trust the summary.",
+      "The interface was the easy part. Trust wasn't. Clarity on screen only gets you so far. The rest came from putting disclaimers inside the reading flow rather than hiding them in small print, and being honest about what an AI summary can't guarantee.",
+    ],
+    sectionTitles: ["Context", "Research", "Approach", "Decisions", "Reflection"],
+    sectionLengths: [4, 1, 3, 4, 1],
+    leadIns: ["Scope.", "Format.", "Model.", "Liability."],
+    media: [
+      // Interview reel plus the survey charts behind the 83% / 97% figures.
+      // videoControls is what surfaces the lightbox mute button; the panel
+      // itself stays muted whatever we pass.
+      // The interviews play in Vimeo's own player. The reel is 31 seconds at a
+      // ~28 Mbps bitrate, far too heavy to self-host, and its audio carries the
+      // findings — so a player the viewer starts beats a muted ambient loop.
+      { id: "interviews", title: "User interviews", afterParagraph: 4, items: [],
+        embed: {
+          src: "https://player.vimeo.com/video/1044294752?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479",
+          title: "ClearTerms User Interviews",
+        } },
+      { id: "research", title: "Survey results", afterParagraph: 4, items: [
+        img("clearterms", "research-01", "Survey results: 97% would prefer a summary of the key points"),
+      ] },
+      // Wireframes running lo-fi modules -> in-context -> branded panel.
+      { id: "hierarchy", title: "Building the hierarchy", afterParagraph: 7, items: [
+        img("clearterms", "hierarchy-03", "The panel at full fidelity in ClearTerms branding"),
+        img("clearterms", "hierarchy-01", "Low-fidelity wireframes of the concern, preferences and summary modules"),
+        img("clearterms", "hierarchy-02", "Mid-fidelity extension panel shown beside a live terms page"),
+      ] },
+      // Sits on "Format." — the flow showing the extension firing in place.
+      // Kept whole: splitting it into stages made each panel taller but the
+      // flow itself harder to follow, and the last stage was no clearer.
+      { id: "where-it-lives", title: "Where the tool lives", afterParagraph: 9, items: [
+        img("clearterms", "where-it-lives-01", "User flow from installing the extension to reading a generated summary"),
+      ] },
+      // Identity work. Anchored to the last paragraph so it closes the case
+      // study rather than interrupting an argument it does not serve.
+      { id: "identity", title: "Identity", afterParagraph: 12, items: [
+        img("clearterms", "identity-01", "Colour palette exploration"),
+        img("clearterms", "identity-02", "Logotype explorations"),
+        img("clearterms", "identity-03", "Logo lockups on light and dark backgrounds"),
+        img("clearterms", "identity-05", "Favicon and full logo lockup"),
+        img("clearterms", "identity-04", "The final ClearTerms logo"),
+      ] },
+    ],
+    items: [
+      { title: "Context", description: "Built in 54 hours at Sync the City with a team of six." },
+      { title: "Research", description: "83% accept terms without reading them; 97% would rather see a plain summary first." },
+      { title: "Safeguard", description: "Cited and highlightable clauses let users check source text themselves." },
     ],
   },
 ]
