@@ -2,7 +2,6 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-@custom-variant dark (&:is(.dark *));
 
 /*
  * Nimbus Sans (URW) — AGPL-3.0, see public/fonts/LICENSE.txt
@@ -82,6 +81,10 @@
 }
 
 :root {
+  /* The site is light-only by design: one palette, no dark tokens, and no
+     `dark:` variants anywhere. Declaring it here stops the browser rendering
+     form controls, scrollbars and the like in a dark scheme it will never
+     match. `viewport.colorScheme` in app/layout.tsx says the same thing. */
   color-scheme: light;
   /* 4-color system: white, black, medium grey (#555), light grey (#D9D9D9) */
   --background: #ffffff;
@@ -131,16 +134,6 @@
   --accent-color: var(--foreground);
   --text-color: var(--muted-foreground);
   --color-text: var(--foreground);
-}
-
-.dark {
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    color-scheme: light;
-  }
 }
 
 .sheet-scroll {
@@ -196,7 +189,15 @@
  * narrow to hold 32rem, matching the container's own padding.
  * `!important` because Vitrine sets these as inline styles.
  */
-.slider__meta {
+/*
+ * Everything below prefixed `.projects-slider` is tuned for the one slider on
+ * the homepage — its 800px contentWidth and its viewport-centred 32rem caption
+ * column are baked into the values. The project sheets now carry sliders of
+ * their own at a different width inside a 45rem column, so these rules have to
+ * stay off them; `100vw` maths in particular would push an in-sheet track
+ * hundreds of pixels sideways.
+ */
+.projects-slider .slider__meta {
   padding-left: max(1.5rem, calc(50% - 16rem)) !important;
   padding-right: max(1.5rem, calc(50% - 16rem)) !important;
 }
@@ -208,7 +209,7 @@
  * has to beat Vitrine's nested `.slider .slider__track`, hence !important.
  */
 @media (max-width: 809px) {
-  .slider__track {
+  .projects-slider .slider__track {
     gap: 0.5rem !important;
   }
 }
@@ -225,7 +226,7 @@
  * Change either prop and these must change with it.
  */
 @media (min-width: 700px) {
-  .slider__track {
+  .projects-slider .slider__track {
     padding-left: max(28px, calc((100vw - 800px) / 2)) !important;
     padding-right: max(28px, calc((100vw - 800px) / 2)) !important;
     scroll-padding-left: max(28px, calc((100vw - 800px) / 2)) !important;
@@ -260,8 +261,8 @@
  * already `pointer`; this just stops the image overriding it.
  * `!important` beats Vitrine's nested `.slider .slider__item img`.
  */
-.slider__item img,
-.slider__item video {
+.projects-slider .slider__item img,
+.projects-slider .slider__item video {
   cursor: pointer !important;
 }
 
@@ -300,5 +301,231 @@
   }
   body {
     @apply bg-background text-foreground text-base;
+  }
+}
+
+/*
+ * Page scroll lock for an open project sheet. It has to be a class with
+ * `!important` rather than an inline style, because Vitrine's lightbox clears
+ * `document.body.style.overflow` when it closes — which would release the page
+ * behind a sheet that is still open. A stylesheet `!important` outranks an
+ * inline write, so the lock survives the lightbox opening and closing over it.
+ */
+body.sheet-open {
+  overflow: hidden !important;
+}
+
+/*
+ * Vitrine's slider is full-bleed by design — `width: 100vw` plus a
+ * `-50vw + 50%` pull, so a page-level slider escapes whatever contains it.
+ * That is right for the homepage and wrong inside a project sheet, where it
+ * sends the track straight through the card's edges. These two rules pin the
+ * in-sheet galleries back into their column.
+ *
+ * The track padding has to be corrected with it: Vitrine centres the active
+ * panel using an inline padding derived from 100vw (428px at a 1440 viewport),
+ * which would shove the panel far outside the sheet. `!important` is what beats
+ * that inline style — the same reason the `.projects-slider` rules above use it.
+ *
+ * 584 = the 560 contentWidth set in project-media.tsx plus the 24px Vitrine
+ * adds to an item when no aspectRatio is given; 24 is that component's
+ * sideMargin, taking over once the column is too narrow to centre. Both mirror
+ * the <Slider> props — move one and you must move the other.
+ */
+.project-media .slider {
+  width: 100%;
+  margin-left: 0;
+}
+
+.project-media .slider__track {
+  padding-left: max(24px, calc((100% - 584px) / 2)) !important;
+  padding-right: max(24px, calc((100% - 584px) / 2)) !important;
+  scroll-padding-left: max(24px, calc((100% - 584px) / 2)) !important;
+}
+
+/*
+ * Cursors inside a project sheet's galleries.
+ *
+ * Vitrine paints two custom SVG cursors through variables: a `+` over a panel
+ * (`--slider-cursor-zoom-in`) and an `×` over the open lightbox
+ * (`--lightbox-cursor-zoom-out`). Overriding the variables rather than the
+ * individual rules catches images, video and every lightbox surface at once.
+ *
+ * The panel takes the ordinary pointer, matching the project panels on the
+ * homepage — one clickable affordance across the site. The zoom takes the
+ * default arrow: its dismiss is the close button in project-media.tsx, styled
+ * to match the sheet's own, so the cursor should not advertise a second one.
+ */
+.project-media {
+  --slider-cursor-zoom-in: pointer;
+  --lightbox-cursor-zoom-out: default;
+}
+
+/*
+ * Gallery panels are framed like the homepage portrait: a white card with a
+ * little padding, a soft resting shadow and the image inset inside it. That
+ * frame is what gives a row of mixed sizes a common edge, so the images
+ * themselves keep their own proportions instead of being padded to match —
+ * the same idea as pictures hung on a wall.
+ *
+ * `.slider__item-inner` rather than `.slider__item`, because Vitrine already
+ * owns the hover on the inner element and its lift is the one the portrait
+ * was matched to (6px rise, scale 1.01, .35s cubic-bezier(.2,0,0,1)) — so the
+ * two behave identically without redefining anything. Radii mirror the
+ * portrait: 1.25rem outer, 0.75rem on the image, 0.5rem of card between.
+ */
+.project-media .slider__item-inner {
+  padding: 0.5rem;
+  /* !important on both radii: Vitrine sets 16px on the inner element and on
+     the image at equal specificity, and its stylesheet loads after this one. */
+  border-radius: 1.25rem !important;
+  background: var(--card);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.03);
+}
+
+.project-media .slider__item-inner img,
+.project-media .slider__item-inner video {
+  border-radius: 0.75rem !important;
+  /*
+   * Vitrine caps the image at the item's full width, which is also the card's
+   * full width — so with the padding added the image overhung the card's right
+   * and bottom edges by exactly the padding, and the frame stopped short of
+   * the picture. Taking the padding off the image's own cap puts the whole
+   * image inside the frame. 1rem = the 0.5rem padding on both sides.
+   */
+  max-width: calc(var(--item-max-w) - 1rem) !important;
+  max-height: calc(var(--item-max-h) - 1rem) !important;
+}
+
+/*
+ * Vitrine holds 8rem at the foot of the lightbox for the caption it normally
+ * draws there. These galleries pass no per-image title or meta, so that space
+ * stayed empty and pushed every zoomed image above the middle of the screen.
+ * Zeroing it centres the image and hands the height back to it.
+ */
+.project-media .lightbox {
+  --lb-caption-space: 0rem;
+  /*
+   * Vitrine sizes a zoomed image to 95vw and nearly the full height, which
+   * pushed it hard against the edges of the screen and left no room to see the
+   * next or previous image. Capping it well inside the viewport keeps the
+   * image clear of the edges, sits it in the middle of the screen, and lets
+   * the neighbours show at either side so the gallery still reads as a set.
+   */
+  --lb-max-width: 74vw;
+  --lb-max-height: 74dvh;
+}
+
+/*
+ * Vitrine's shared-element zoom runs for 600ms. A project sheet opens with no
+ * animation at all, so the zoom read as sluggish beside it — this drops the
+ * transition entirely and the two now behave the same way: the zoom is just
+ * there. Not scoped to `.project-media` because view-transition
+ * pseudo-elements live on the document rather than in the tree; safe because
+ * the homepage slider runs with the lightbox off and never starts one.
+ */
+::view-transition-group(.vitrine-shared),
+::view-transition-old(.vitrine-shared),
+::view-transition-new(.vitrine-shared) {
+  animation-duration: 0s;
+}
+
+/*
+ * The homepage project panels get the same frame as the sheet's cover and the
+ * gallery panels: a white card with a little padding and the image inset
+ * inside it, rather than artwork running to the panel's edge.
+ *
+ * `.slider__item-inner` is the element Vitrine animates, so the existing hover
+ * lift carries over untouched. The image cap subtracts the padding for the
+ * same reason it does in the galleries — Vitrine sizes the image to the item's
+ * full width, which is also the card's, so without this the picture overhangs
+ * the frame by exactly the padding it was given.
+ */
+.projects-slider .slider__item-inner {
+  padding: 0.5rem;
+  border-radius: 1.25rem !important;
+  background: var(--card);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.03);
+}
+
+.projects-slider .slider__item-inner img,
+.projects-slider .slider__item-inner video {
+  border-radius: 0.75rem !important;
+  max-width: calc(var(--item-max-w) - 1rem) !important;
+  max-height: calc(var(--item-max-h) - 1rem) !important;
+  /*
+   * `contain`, not Vitrine's `cover`. Insetting a 3:2 panel by an equal 8px
+   * all round leaves a content box of 784x517 — a ratio of 1.516, not 1.5 —
+   * so cover-cropping trimmed every cover: about 3px off the top and bottom of
+   * the Wise phone, whose device fills the frame and so visibly lost its ends,
+   * and 36px off each side of the two laptops. Fitting instead of filling
+   * crops nothing; the sliver of letterboxing that replaces it is invisible,
+   * because all three covers are on white and so is the card behind them.
+   */
+  object-fit: contain !important;
+}
+
+/*
+ * Respect a reduced-motion preference.
+ *
+ * Neither this site nor Vitrine had any handling, and the slider is the most
+ * motion-heavy thing here: panels lift and scale on hover, the track animates
+ * as it snaps, and the zoom runs a shared-element transition. For someone with
+ * vestibular sensitivity that is exactly the kind of movement to switch off.
+ *
+ * Motion is reduced to near-zero rather than removed outright — keeping a 1ms
+ * duration means transition and animation end events still fire, so anything
+ * waiting on them (Vitrine's reveal sequence) still completes rather than
+ * hanging. Scrolling is left alone: the galleries are scroll containers, and
+ * making that instant would break swiping rather than calm it.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  /* The hover lift and scale on project panels and the portrait. */
+  .slider__item-inner:hover,
+  .portrait-bleed > div:hover {
+    translate: none !important;
+    transform: none !important;
+  }
+}
+
+/*
+ * Panel hover uses a box-shadow, not Vitrine's `filter: drop-shadow()`.
+ *
+ * A `filter` promotes the element to its own rasterisation context, and every
+ * such change forces the sheet's backdrop-filter layer behind it to be redrawn
+ * — the second half of the flicker where the sheet blanked for a frame as the
+ * pointer crossed a panel. `box-shadow` costs the compositor nothing here and
+ * is visually identical, because these panels are plain rounded rectangles:
+ * drop-shadow only earns its cost on irregular or cut-out shapes, which is
+ * what Vitrine assumes but not what a white card is.
+ *
+ * Values are Vitrine's own, so the hover looks exactly as before.
+ */
+.project-media .slider__item-inner,
+.projects-slider .slider__item-inner {
+  /* !important throughout: Vitrine declares these as rules nested inside
+     `.slider__item`, which lands at the same specificity as ours and loads
+     after this stylesheet. */
+  transition:
+    translate 0.35s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 0.35s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+@media (hover: hover) {
+  .project-media .slider__item-inner:hover,
+  .projects-slider .slider__item-inner:hover {
+    filter: none !important;
+    box-shadow:
+      0 4px 10px rgb(0 0 0 / 0.05),
+      0 2px 4px rgb(0 0 0 / 0.02) !important;
   }
 }
