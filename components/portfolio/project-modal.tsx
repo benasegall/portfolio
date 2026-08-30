@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { X } from "lucide-react"
 import type { Project } from "@/lib/portfolio-data"
 import { ItemList } from "./item-list"
+import { ProjectMedia } from "./project-media"
 
 type ProjectModalProps = {
   project: Project | null
@@ -58,13 +59,30 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   useEffect(() => {
     if (!project) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
+      if (e.key !== "Escape") return
+      // Vitrine's lightbox listens for Escape as well. Without this guard a
+      // single press dismisses the zoomed image *and* the sheet behind it.
+      //
+      // Testing for rendered boxes rather than mere presence: a closed
+      // lightbox stays in the DOM as `.lightbox--closing` with `display:
+      // none`, so a presence check would keep matching forever and Escape
+      // would stop closing the sheet after the first zoom. `getClientRects()`
+      // is empty for a `display: none` element, and does not care what
+      // Vitrine names its state classes.
+      const lightbox = document.querySelector(".lightbox")
+      if (lightbox && lightbox.getClientRects().length > 0) return
+      onClose()
     }
     document.addEventListener("keydown", onKey)
-    document.body.style.overflow = "hidden"
+    // A class rather than an inline style: Vitrine's lightbox writes
+    // `document.body.style.overflow = ""` on close, which would release the
+    // page behind a sheet that is still open. An !important rule in the
+    // stylesheet outranks that inline write; a competing inline style would
+    // not.
+    document.body.classList.add("sheet-open")
     return () => {
       document.removeEventListener("keydown", onKey)
-      document.body.style.overflow = ""
+      document.body.classList.remove("sheet-open")
     }
   }, [project, onClose])
 
@@ -79,9 +97,26 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       aria-modal="true"
       aria-label={project.title}
       onClick={onClose}
-      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-foreground/20 backdrop-blur-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
-      <div className="flex min-h-full items-start justify-center px-2 pb-16 pt-2 md:px-8 md:pb-24 md:pt-8">
+      {/*
+        The tint and blur sit on their own layer rather than on the scrolling
+        overlay above. `backdrop-filter` makes an element the containing block
+        for every fixed-position descendant, and Vitrine's lightbox is
+        `position: fixed` rendered in place (it uses no portal) — so with the
+        blur on the overlay, `inset: 0` resolved against the scrolled content
+        instead of the viewport and the lightbox opened far off-screen. As a
+        sibling of the sheet it blurs exactly the same pixels without ever
+        being an ancestor of one. Painted first, and unpositioned in the flow,
+        so the sheet still sits above it; pointer-events-none keeps
+        click-outside-to-close working.
+      */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 bg-foreground/20 backdrop-blur-sm"
+      />
+
+      <div className="relative flex min-h-full items-start justify-center px-2 pb-16 pt-2 md:px-8 md:pb-24 md:pt-8">
         <div
           onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-[960px] rounded-[2rem] bg-card shadow-2xl"
@@ -105,11 +140,23 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           </div>
 
           <div className="p-2">
-            <img
-              src={project.cover || "/placeholder.svg"}
-              alt={project.title}
-              className="aspect-[3/2] w-full rounded-[1.5rem] object-cover"
-            />
+            {/*
+              The cover is inset on three sides rather than run to the sheet's
+              edge. With placeholders it read fine tight to the frame, but real
+              screenshots carry their own detail right to the crop, and pressed
+              against the corner they looked cramped — particularly the desktop
+              shots, which lost their left and right margins entirely. The top
+              inset also answers the sheet's own bottom padding, so the card is
+              framed evenly top and bottom. The image gets smaller; the frame is
+              worth more than the extra pixels.
+            */}
+            <div className="px-4 pt-4 md:px-6 md:pt-6">
+              <img
+                src={project.cover || "/placeholder.svg"}
+                alt={project.title}
+                className="aspect-[3/2] w-full rounded-[1.5rem] object-cover"
+              />
+            </div>
 
             {/*
               Only the text is inset — the cover above stays tight to the sheet.
@@ -145,14 +192,26 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                         {title}
                       </h3>
                       <div className="flex flex-col gap-5">
-                        {paragraphs.map((paragraph) => (
-                          <p
-                            key={paragraph}
-                            className="text-base text-muted-foreground text-pretty"
-                          >
-                            {withLeadIns(paragraph, project.leadIns)}
-                          </p>
-                        ))}
+                        {paragraphs.map((paragraph, paragraphIndex) => {
+                          // `afterParagraph` indexes the whole body, so the
+                          // section's own offset has to be added back on.
+                          const bodyIndex = start + paragraphIndex
+                          const blocks =
+                            project.media?.filter(
+                              (block) => block.afterParagraph === bodyIndex,
+                            ) ?? []
+
+                          return (
+                            <Fragment key={paragraph}>
+                              <p className="text-base text-muted-foreground text-pretty">
+                                {withLeadIns(paragraph, project.leadIns)}
+                              </p>
+                              {blocks.map((block) => (
+                                <ProjectMedia key={block.id} block={block} />
+                              ))}
+                            </Fragment>
+                          )
+                        })}
                       </div>
                     </section>
                   )
