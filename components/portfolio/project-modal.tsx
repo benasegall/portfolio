@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import { X } from "lucide-react"
 import type { Project } from "@/lib/portfolio-data"
 import { ItemList } from "./item-list"
@@ -56,6 +56,65 @@ function withLeadIns(text: string, leadIns?: string[]) {
 }
 
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
+  const sheetRef = useRef<HTMLDivElement>(null)
+
+  /*
+   * Focus management. `aria-modal` tells a screen reader's virtual cursor to
+   * stay inside the dialog, but it does nothing to Tab — without this, opening
+   * a sheet left focus on <body>, Tab wandered into the page behind it, and
+   * closing dropped focus back to the top of the document.
+   *
+   * So: remember what opened the sheet, move focus inside, keep Tab within it,
+   * and hand focus back on close.
+   */
+  useEffect(() => {
+    if (!project) return
+    const opener = document.activeElement as HTMLElement | null
+    const sheet = sheetRef.current
+    if (!sheet) return
+
+    const focusable = () =>
+      Array.from(
+        sheet.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.getClientRects().length > 0)
+
+    // The close button, so the first Tab lands somewhere predictable.
+    focusable()[0]?.focus()
+
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return
+      // While the zoom is open it owns the keyboard; let it through.
+      const lightbox = document.querySelector(".lightbox")
+      if (lightbox && lightbox.getClientRects().length > 0) return
+
+      const items = focusable()
+      if (!items.length) return
+      const first = items[0]
+      const last = items[items.length - 1]
+      const active = document.activeElement as HTMLElement | null
+
+      if (!sheet.contains(active)) {
+        e.preventDefault()
+        first.focus()
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener("keydown", onTab)
+    return () => {
+      document.removeEventListener("keydown", onTab)
+      // Back to the panel that opened it, so the keyboard keeps its place.
+      opener?.focus?.()
+    }
+  }, [project])
+
   useEffect(() => {
     if (!project) return
     const onKey = (e: KeyboardEvent) => {
@@ -89,34 +148,44 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   if (!project) return null
 
   return (
-    // The overlay scrolls, not the card — so the sheet is only as tall as its
-    // content and runs past the fold. Its bottom edge is revealed by scrolling
-    // to the end, rather than being fitted inside the viewport.
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={project.title}
-      onClick={onClose}
-      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-    >
+    <>
       {/*
-        The tint and blur sit on their own layer rather than on the scrolling
-        overlay above. `backdrop-filter` makes an element the containing block
-        for every fixed-position descendant, and Vitrine's lightbox is
-        `position: fixed` rendered in place (it uses no portal) — so with the
-        blur on the overlay, `inset: 0` resolved against the scrolled content
-        instead of the viewport and the lightbox opened far off-screen. As a
-        sibling of the sheet it blurs exactly the same pixels without ever
-        being an ancestor of one. Painted first, and unpositioned in the flow,
-        so the sheet still sits above it; pointer-events-none keeps
-        click-outside-to-close working.
+        The tint and blur are their own layer, a sibling of the scrolling
+        overlay rather than a child of it. Two separate constraints put it
+        here, and both matter:
+
+        It must not be an ANCESTOR of the sheet. `backdrop-filter` makes an
+        element the containing block for every fixed-position descendant, and
+        Vitrine's lightbox is `position: fixed` rendered in place with no
+        portal — with the blur on the overlay, the zoom resolved `inset: 0`
+        against the scrolled content and opened far off-screen.
+
+        It must also not be INSIDE the scroll container. A `backdrop-filter`
+        element within a scroller is re-rasterised as that scroller repaints,
+        and the whole layer can blank for a frame — the flicker where the sheet
+        appeared to vanish and come back while the pointer moved over it.
+
+        Sitting outside both, it blurs exactly the same pixels with neither
+        problem. It is painted first so the sheet stacks above it, and
+        pointer-events-none leaves click-outside-to-close to the overlay.
       */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 bg-foreground/20 backdrop-blur-sm"
+        className="pointer-events-none fixed inset-0 z-50 bg-foreground/20 backdrop-blur-sm"
       />
 
-      <div className="relative flex min-h-full items-start justify-center px-2 pb-16 pt-2 md:px-8 md:pb-24 md:pt-8">
+      {/* The overlay scrolls, not the card — so the sheet is only as tall as
+          its content and runs past the fold. Its bottom edge is revealed by
+          scrolling to the end, rather than being fitted inside the viewport. */}
+      <div
+        ref={sheetRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={project.title}
+        onClick={onClose}
+        className="fixed inset-0 z-50 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <div className="relative flex min-h-full items-start justify-center px-2 pb-16 pt-2 md:px-8 md:pb-24 md:pt-8">
         <div
           onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-[960px] rounded-[2rem] bg-card shadow-2xl"
@@ -216,11 +285,12 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     </section>
                   )
                 })}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

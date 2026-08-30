@@ -2,7 +2,6 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-@custom-variant dark (&:is(.dark *));
 
 /*
  * Nimbus Sans (URW) — AGPL-3.0, see public/fonts/LICENSE.txt
@@ -82,6 +81,10 @@
 }
 
 :root {
+  /* The site is light-only by design: one palette, no dark tokens, and no
+     `dark:` variants anywhere. Declaring it here stops the browser rendering
+     form controls, scrollbars and the like in a dark scheme it will never
+     match. `viewport.colorScheme` in app/layout.tsx says the same thing. */
   color-scheme: light;
   /* 4-color system: white, black, medium grey (#555), light grey (#D9D9D9) */
   --background: #ffffff;
@@ -131,16 +134,6 @@
   --accent-color: var(--foreground);
   --text-color: var(--muted-foreground);
   --color-text: var(--foreground);
-}
-
-.dark {
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    color-scheme: light;
-  }
 }
 
 .sheet-scroll {
@@ -470,4 +463,69 @@ body.sheet-open {
    * because all three covers are on white and so is the card behind them.
    */
   object-fit: contain !important;
+}
+
+/*
+ * Respect a reduced-motion preference.
+ *
+ * Neither this site nor Vitrine had any handling, and the slider is the most
+ * motion-heavy thing here: panels lift and scale on hover, the track animates
+ * as it snaps, and the zoom runs a shared-element transition. For someone with
+ * vestibular sensitivity that is exactly the kind of movement to switch off.
+ *
+ * Motion is reduced to near-zero rather than removed outright — keeping a 1ms
+ * duration means transition and animation end events still fire, so anything
+ * waiting on them (Vitrine's reveal sequence) still completes rather than
+ * hanging. Scrolling is left alone: the galleries are scroll containers, and
+ * making that instant would break swiping rather than calm it.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  /* The hover lift and scale on project panels and the portrait. */
+  .slider__item-inner:hover,
+  .portrait-bleed > div:hover {
+    translate: none !important;
+    transform: none !important;
+  }
+}
+
+/*
+ * Panel hover uses a box-shadow, not Vitrine's `filter: drop-shadow()`.
+ *
+ * A `filter` promotes the element to its own rasterisation context, and every
+ * such change forces the sheet's backdrop-filter layer behind it to be redrawn
+ * — the second half of the flicker where the sheet blanked for a frame as the
+ * pointer crossed a panel. `box-shadow` costs the compositor nothing here and
+ * is visually identical, because these panels are plain rounded rectangles:
+ * drop-shadow only earns its cost on irregular or cut-out shapes, which is
+ * what Vitrine assumes but not what a white card is.
+ *
+ * Values are Vitrine's own, so the hover looks exactly as before.
+ */
+.project-media .slider__item-inner,
+.projects-slider .slider__item-inner {
+  /* !important throughout: Vitrine declares these as rules nested inside
+     `.slider__item`, which lands at the same specificity as ours and loads
+     after this stylesheet. */
+  transition:
+    translate 0.35s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 0.35s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+@media (hover: hover) {
+  .project-media .slider__item-inner:hover,
+  .projects-slider .slider__item-inner:hover {
+    filter: none !important;
+    box-shadow:
+      0 4px 10px rgb(0 0 0 / 0.05),
+      0 2px 4px rgb(0 0 0 / 0.02) !important;
+  }
 }

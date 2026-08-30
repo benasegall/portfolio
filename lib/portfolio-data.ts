@@ -315,4 +315,13 @@ export const footer = {
 export const siteMeta = {
   title: "Benjamin Segall, Product Designer in London",
   description: "Product designer in London. Selected work across enterprise software, fintech and B2B SaaS.",
+  /** Live origin. Open Graph needs absolute URLs, so this resolves the card. */
+  url: "https://www.benjaminsegall.com",
+  /**
+   * The share card, at the 1200x630 every platform expects. Regenerate it if
+   * the availability line changes — it carries that date, same as the page.
+   */
+  ogImage: "/images/site/og.png",
+  ogImageAlt:
+    "Benjamin Segall, product designer in London. Currently at IBM, available from 21 September.",
 }
