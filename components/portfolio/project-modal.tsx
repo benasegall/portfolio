@@ -185,7 +185,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         onClick={onClose}
         className="fixed inset-0 z-50 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <div className="relative flex min-h-full items-start justify-center px-2 pb-16 pt-2 md:px-8 md:pb-24 md:pt-8">
+        <div className="relative flex min-h-full items-start justify-center px-2 pb-16 pt-16 md:px-8 md:pb-24 md:pt-8">
         <div
           onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-[960px] rounded-[2rem] bg-card shadow-2xl"
@@ -193,11 +193,11 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           {/*
             Zero-height so it doesn't displace the cover image, sticky so the
             close stays reachable once the sheet scrolls past the top. The
-            sticky offset matches the sheet's own top frame (pt-2 / md:pt-8),
+            sticky offset matches the sheet's own top frame (pt-16 / md:pt-8),
             so at rest the button sits a consistent 16px inside the corner at
             every breakpoint instead of being nudged by an early stick.
           */}
-          <div className="pointer-events-none sticky top-2 z-20 flex h-0 justify-end md:top-8">
+          <div className="pointer-events-none sticky top-16 z-20 flex h-0 justify-end md:top-8">
             <button
               type="button"
               aria-label="Close project"

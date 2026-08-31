@@ -128,6 +128,14 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
     alt: item.alt,
   }))
 
+  /*
+   * A gallery of one is not a gallery — there is nothing to page to, so arrows
+   * that are permanently disabled and a single dot would advertise a scroll
+   * that isn't there. Several blocks hold exactly one image (`user-flows`,
+   * `tutorials`, `research`, `where-it-lives`), and they keep the bare panel.
+   */
+  const scrollable = items.length > 1
+
   return (
     // Pulls back the text column's own padding so the track runs the full
     // 45rem measure, leaving room for the neighbouring panels to peek.
@@ -151,6 +159,17 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
         // The zoom. Default anyway, but stated because the homepage slider
         // turns it off and the difference between the two matters.
         lightbox
+        /*
+         * The scroll cue. Nothing in a bottom-aligned row of mixed-size panels
+         * says it moves sideways — the peek of the next image reads as a crop
+         * as easily as a hint — so these state it outright. Both render in
+         * `.slider__controls`, a sibling of the track and outside the
+         * lightbox's own markup, so the zoomed view stays chrome-free; its
+         * separate `lightboxControls` prop is left off. Sized down to a single
+         * small row in globals.css — see `.project-media .slider__controls`.
+         */
+        arrows={scrollable}
+        pagination={scrollable}
         // Surfaces the lightbox playback bar, and with it the mute control that
         // is the only route to audio.
         videoControls={block.videoControls}

@@ -398,6 +398,161 @@ body.sheet-open {
 }
 
 /*
+ * Below Vitrine's own 700px breakpoint the caps above have to be paired with
+ * `width: auto`, or they distort the picture.
+ *
+ * Vitrine's mobile model is that every panel is exactly the column's width:
+ * it fixes the item at `--item-max-w` and switches the image to `width: 100%`
+ * with `max-width: none; max-height: none`, so the height simply follows the
+ * ratio however tall that gets. The rule above puts both caps back — it has to,
+ * or the picture overhangs its frame — and that combination is the trap. With
+ * a width specified and only the height auto, a binding `max-height` clamps
+ * the height and leaves the width where it was: CSS recomputes the other axis
+ * only when it is `auto`. The image is squashed rather than scaled.
+ *
+ * It bit exactly the portrait phone screenshots. The Wise galleries are
+ * 833x1600 (0.52); at the 311px content width that is 597px tall against a
+ * 444px cap, so they rendered at 0.70 — a third too wide, visibly squat. The
+ * sketches beside them are 1230x1600 (0.77), only 405px tall at the same
+ * width, so the cap never engaged and they looked right — which is why this
+ * read as a bug in three galleries rather than in the CSS.
+ *
+ * Restoring `width: auto` lets the cap scale both axes together, and the item
+ * hugs the result the way it already does above 700px. Only images the height
+ * cap actually binds change size: the phones settle at 231x444 in a card that
+ * shrinks to match, and everything wider is untouched.
+ */
+@media (max-width: 699px) {
+  /*
+   * Pin the panel width to the layout viewport rather than to whatever
+   * `window.innerWidth` last reported.
+   *
+   * Vitrine sizes a mobile panel in JS — a debounced `resize` handler writes
+   * `--item-max-w: window.innerWidth - 2 * sideMargin` as an inline style on
+   * every item. On iOS that property reports the VISUAL viewport, so pinch-
+   * zooming to 2x has it report about half the width; the handler fires and
+   * rewrites the panels to match. Zooming back out does not reliably fire the
+   * matching resize — the sheet and the lightbox both hold `overflow: hidden`
+   * on <body> while it is open — so the shrunken value survives the zoom being
+   * dismissed, and the gallery stays small inside a full-width sheet. Simulated
+   * at 2x, a panel image fell from 311x149 to 124x59 and stayed there.
+   *
+   * `100vw` is the same number by a route that cannot go stale: CSS viewport
+   * units resolve against the LAYOUT viewport, which pinch-zoom does not move.
+   * 48 = the 24px sideMargin either side, mirroring the <Slider> prop the way
+   * the track padding above already does. At any width this is exactly what
+   * the handler would have written, so nothing moves at normal zoom — it just
+   * stops moving when it shouldn't.
+   *
+   * `!important` is what beats the inline style: an important author rule
+   * outranks a normal inline declaration, custom properties included. Only the
+   * width needs it — `--item-max-h` is the `maxItemHeight` prop, a constant
+   * the resize handler never touches.
+   */
+  .project-media .slider__item {
+    --item-max-w: calc(100vw - 48px) !important;
+    width: fit-content !important;
+    max-width: var(--item-max-w) !important;
+  }
+
+  .project-media .slider__item-inner img,
+  .project-media .slider__item-inner video {
+    width: auto !important;
+    height: auto !important;
+  }
+}
+
+/*
+ * The scroll cue under an in-sheet gallery — prev/next plus one dot per image
+ * (`arrows` / `pagination` in project-media.tsx, on only where there is more
+ * than one image to reach).
+ *
+ * Both controls are dressed as the sheet's close button: a white card, the
+ * same soft shadow, the same muted hover. That button is the only other round
+ * control on a sheet, so the cue reads as part of the same set rather than as
+ * the library's own furniture. Vitrine's default is a translucent wash of the
+ * text colour, which on a white sheet is barely there.
+ *
+ * Sized at 32px against the close button's 40px — a step down, because this is
+ * a hint about the gallery it sits under rather than a control over the sheet.
+ * Vitrine's own 64px is built for a page-width slider and reads as a second
+ * piece of furniture beneath a 560px gallery.
+ *
+ * `!important` throughout for the reason the rules above use it: Vitrine
+ * nests these under `.slider`, matching the specificity of anything scoped by
+ * `.project-media`, and its stylesheet loads after this one.
+ */
+.project-media .slider__controls {
+  /* The same 0.75lh the caption below the track used, so the run of gallery →
+     cue → prose keeps the rhythm it had before the cue existed. */
+  margin-top: 0.75lh !important;
+  gap: 0.5rem !important;
+}
+
+/*
+ * These galleries pass no per-image title or meta, so Vitrine's caption
+ * renders as an empty h3/br/p — 4px of nothing plus its own margin. Harmless
+ * while it was the last thing in the slider; dead space once the cue sits
+ * under it. Dropped only where a cue follows, so the single-image galleries
+ * that show no cue keep the spacing they have today.
+ */
+.project-media .slider__meta:has(+ .slider__controls) {
+  display: none;
+}
+
+/* `--card` / `--muted` / the shadow are the close button's own values, taken
+   from `shadow-md` in project-modal.tsx. */
+.project-media .slider__nav,
+.project-media .slider__dots {
+  background: var(--card) !important;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
+
+.project-media .slider__nav {
+  width: 2rem !important;
+  height: 2rem !important;
+  color: var(--foreground) !important;
+}
+
+/* Vitrine's hover is a wash of the text colour at 15%; this is the close
+   button's `hover:bg-muted` instead. Guarded by `hover: hover` as Vitrine's
+   own is, so a touch device doesn't hold the state after a tap. */
+@media (hover: hover) {
+  .project-media .slider__nav:hover:not(:disabled) {
+    background: var(--muted) !important;
+  }
+}
+
+.project-media .slider__dots {
+  height: 2rem !important;
+  gap: 0.375rem !important;
+  padding-inline: 0.75rem !important;
+}
+
+.project-media .slider__dot {
+  width: 0.375rem !important;
+  height: 0.375rem !important;
+  /* Against the pill's white the wash Vitrine uses is too faint to count the
+     set; this is `--muted-foreground`, the sheet's own secondary text tone. */
+  background: color-mix(in srgb, var(--foreground) 25%, transparent) !important;
+}
+
+@media (hover: hover) {
+  .project-media .slider__dot:hover {
+    background: color-mix(in srgb, var(--foreground) 45%, transparent) !important;
+  }
+}
+
+/* Vitrine widens the active dot into a pill rather than recolouring alone;
+   kept, at the same 2.8:1 ratio to the dot that its own 2rem/0.7rem had. */
+.project-media .slider__dot.slider__dot--active {
+  width: 1.0625rem !important;
+  background: var(--foreground) !important;
+}
+
+/*
  * Vitrine holds 8rem at the foot of the lightbox for the caption it normally
  * draws there. These galleries pass no per-image title or meta, so that space
  * stayed empty and pushed every zoomed image above the middle of the screen.

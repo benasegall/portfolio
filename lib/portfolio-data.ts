@@ -301,8 +301,10 @@ export const projects: Project[] = [
   },
 ]
 
-// One sentence, split across two lines in the footer: the heading carries the
-// clause, the quote continues it. Reads as a single sentence when combined.
+// One sentence in two parts, rendered as a single wrapping paragraph in the
+// footer: `heading` is the opening clause, set in the foreground weight, and
+// `quote` continues it in body copy. Kept split so the emphasis stays data
+// rather than markup; joined with a space at the point of use.
 export const philosophy = {
   heading: "Design starts the moment a decision is made,",
   quote: "whether that's in Figma, a conversation, or with the help of AI.",
