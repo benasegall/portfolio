@@ -398,17 +398,18 @@ body.sheet-open {
 }
 
 /*
- * Below Vitrine's own 700px breakpoint the caps above have to be paired with
- * `width: auto`, or they distort the picture.
+ * Below Vitrine's own 700px breakpoint the height cap above has to come off,
+ * or it distorts the picture.
  *
  * Vitrine's mobile model is that every panel is exactly the column's width:
  * it fixes the item at `--item-max-w` and switches the image to `width: 100%`
  * with `max-width: none; max-height: none`, so the height simply follows the
- * ratio however tall that gets. The rule above puts both caps back — it has to,
- * or the picture overhangs its frame — and that combination is the trap. With
- * a width specified and only the height auto, a binding `max-height` clamps
- * the height and leaves the width where it was: CSS recomputes the other axis
- * only when it is `auto`. The image is squashed rather than scaled.
+ * ratio however tall that gets. The rule above puts both caps back — it has to
+ * for the width, or the picture overhangs its frame — and the height half is
+ * the trap. With a width specified and only the height auto, a binding
+ * `max-height` clamps the height and leaves the width where it was: CSS
+ * recomputes the other axis only when it is `auto`. The image is squashed
+ * rather than scaled.
  *
  * It bit exactly the portrait phone screenshots. The Wise galleries are
  * 833x1600 (0.52); at the 311px content width that is 597px tall against a
@@ -417,10 +418,22 @@ body.sheet-open {
  * width, so the cap never engaged and they looked right — which is why this
  * read as a bug in three galleries rather than in the CSS.
  *
- * Restoring `width: auto` lets the cap scale both axes together, and the item
- * hugs the result the way it already does above 700px. Only images the height
- * cap actually binds change size: the phones settle at 231x444 in a card that
- * shrinks to match, and everything wider is untouched.
+ * Releasing the cap is the whole fix, and it has to stay the whole fix: the
+ * width must keep coming from the panel rather than from the image. Sizing it
+ * from the image instead — `width: auto` here, `fit-content` on the item —
+ * looks equivalent and is not. Vitrine marks everything past the first two
+ * panels `loading="lazy"`, and a lazy image has no intrinsic size until it
+ * arrives, so every unloaded panel collapsed to the 16px of card padding: a
+ * ten-image gallery laid out as two panels and eight slivers. That shortened
+ * the track's scrollWidth, stranded the rest past the end of the scroll, and
+ * left the dots and arrows addressing slides no amount of scrolling reached —
+ * with the active index stuck at 0, which is what disabled the back arrow.
+ * Vitrine's `width: 100%` is load-order-proof, so it is left alone.
+ *
+ * The cost is that a portrait phone screen now takes its true height — 311x597
+ * rather than a squashed 231x444. That is the trade the library already makes
+ * here, and the honest one: `maxItemHeight` cannot be honoured on mobile
+ * without either distorting the image or knowing its ratio before it loads.
  */
 @media (max-width: 699px) {
   /*
@@ -451,14 +464,11 @@ body.sheet-open {
    */
   .project-media .slider__item {
     --item-max-w: calc(100vw - 48px) !important;
-    width: fit-content !important;
-    max-width: var(--item-max-w) !important;
   }
 
   .project-media .slider__item-inner img,
   .project-media .slider__item-inner video {
-    width: auto !important;
-    height: auto !important;
+    max-height: none !important;
   }
 }
 
@@ -486,6 +496,19 @@ body.sheet-open {
   /* The same 0.75lh the caption below the track used, so the run of gallery →
      cue → prose keeps the rhythm it had before the cue existed. */
   margin-top: 0.75lh !important;
+  /*
+   * Lift the cue out of the track's reach. Vitrine gives the track
+   * `padding-block: 48px` with a matching `-48px` margin, so its box hangs
+   * 48px below the images while the layout carries on from where the content
+   * ended — which puts 29 of this row's 32px underneath a horizontal scroll
+   * container. Two static siblings order by DOM position, so the buttons win
+   * today, but only by default: any transform or stacking context the library
+   * puts on the track would silently hand the taps to the scroller instead.
+   * An explicit layer makes that ordering a rule rather than an accident.
+   * Below the lightbox's own z-index of 100, so the zoom still covers the cue.
+   */
+  position: relative;
+  z-index: 1;
   gap: 0.5rem !important;
 }
 
