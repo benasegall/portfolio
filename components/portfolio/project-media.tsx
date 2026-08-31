@@ -21,6 +21,26 @@ import type { MediaBlock } from "@/lib/portfolio-data"
  * globals.css) plus the track's bottom alignment, rather than forcing every
  * image into a single box.
  */
+/*
+ * Where each panel has to sit for the track to call it the current one: the
+ * `scrollLeft` that puts its left edge just inside the track's start padding.
+ * Clamped, because the last panels can never reach the start — the track runs
+ * out of scroll before they get there, and a target the track cannot reach is
+ * exactly what made the controls look broken.
+ */
+function panelStops(track: HTMLElement): number[] {
+  const trackLeft = track.getBoundingClientRect().left
+  const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0
+  const end = Math.max(0, track.scrollWidth - track.clientWidth)
+  return Array.from(
+    track.querySelectorAll<HTMLElement>(".slider__item:not([data-clone])"),
+  ).map((panel) => {
+    const stop =
+      track.scrollLeft + panel.getBoundingClientRect().left - trackLeft - pad
+    return Math.min(end, Math.max(0, Math.round(stop)))
+  })
+}
+
 export function ProjectMedia({ block }: { block: MediaBlock }) {
   const rootRef = useRef<HTMLElement>(null)
   const [zoomOpen, setZoomOpen] = useState(false)
@@ -74,6 +94,215 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
     sizeObserver.observe(root, { childList: true, subtree: true })
     return () => sizeObserver.disconnect()
   }, [block.items])
+
+  /*
+   * Take over the arrows, the dots and the keyboard from Vitrine, and drive the
+   * track from where it actually is.
+   *
+   * Vitrine navigates by index: the arrows step its own `activeIndex`, hand the
+   * matching panel to `scrollIntoView({ behavior: "smooth" })` and grey
+   * themselves out whenever that index is at either end. Both halves are the
+   * bug. The index is written by clicks but only loosely by scrolling, so after
+   * a drag or a trackpad swipe it no longer names the panel on screen — and at
+   * that point the back arrow is either pointing at a slide behind the one you
+   * are looking at or sitting `disabled`, and a disabled button does not emit a
+   * click at all, so nothing we could listen for ever fires. The smooth scroll
+   * is the second half: it is one animation the browser will drop on its own —
+   * reduced-motion settings, an interrupted scroll, an automated browser — and
+   * when it is dropped the call is silently a no-op.
+   *
+   * So the panel stops are measured off the DOM on every click and the track is
+   * moved by hand. "Back" is the last stop left of here, "forward" the first
+   * stop right of here, both read from the live `scrollLeft` rather than from
+   * any remembered index — which also makes a half-scrolled position, where no
+   * index is strictly true, do the obvious thing. Snapping goes off for the
+   * duration, as Vitrine does for its own drag, so the mandatory snap does not
+   * pull each frame onto a panel edge and turn the glide into a series of
+   * jumps.
+   *
+   * Clicks are caught on the way down and stopped, so Vitrine's own handler
+   * never runs and never fights the animation with a scroll of its own. That
+   * leaves the arrows' disabled state and the active dot to us: `sync` writes
+   * both from the same measurements, on every scroll, and again after any
+   * re-render that puts Vitrine's version back.
+   */
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+
+    const trackOf = () => root.querySelector<HTMLElement>(".slider__track")
+
+    // Guards the sync against its own writes: the observer below watches the
+    // very attributes it sets.
+    let writing = false
+    const sync = () => {
+      const track = trackOf()
+      if (!track) return
+      const here = track.scrollLeft
+      const end = Math.max(0, track.scrollWidth - track.clientWidth)
+      const stops = panelStops(track)
+      let active = 0
+      stops.forEach((stop, index) => {
+        // `<=` so a run of panels stacked against the end resolves to the last
+        // of them, which is the one the dots should be pointing at there.
+        if (Math.abs(stop - here) <= Math.abs(stops[active] - here)) active = index
+      })
+
+      writing = true
+      root.querySelectorAll<HTMLButtonElement>(".slider__nav").forEach((nav) => {
+        const spent =
+          nav.getAttribute("aria-label") === "Previous" ? here <= 1 : here >= end - 1
+        if (nav.disabled !== spent) nav.disabled = spent
+      })
+      root.querySelectorAll<HTMLElement>(".slider__dot").forEach((dot, index) => {
+        dot.classList.toggle("slider__dot--active", index === active)
+        const current = index === active ? "true" : null
+        if (dot.getAttribute("aria-current") !== current) {
+          if (current) dot.setAttribute("aria-current", current)
+          else dot.removeAttribute("aria-current")
+        }
+      })
+      writing = false
+    }
+
+    let frame = 0
+    let land = 0
+    let snapping = ""
+    const glide = (track: HTMLElement, to: number) => {
+      const from = track.scrollLeft
+      const distance = to - from
+      if (Math.abs(distance) < 1) return
+      // Restored the moment the glide lands, so a flick or a wheel still snaps.
+      if (!frame) snapping = track.style.scrollSnapType
+      if (frame) cancelAnimationFrame(frame)
+      clearTimeout(land)
+      track.style.scrollSnapType = "none"
+      const started = performance.now()
+      const ms = Math.min(520, 240 + Math.abs(distance) * 0.32)
+      const settle = () => {
+        if (frame) cancelAnimationFrame(frame)
+        frame = 0
+        track.scrollLeft = to
+        track.style.scrollSnapType = snapping
+        // Scroll events are the usual trigger for this, and they are the other
+        // thing a browser stops delivering when it is not painting.
+        sync()
+      }
+      const step = (now: number) => {
+        const t = Math.min(1, (now - started) / ms)
+        track.scrollLeft = from + distance * (1 - Math.pow(1 - t, 3))
+        if (t < 1) {
+          frame = requestAnimationFrame(step)
+          return
+        }
+        clearTimeout(land)
+        settle()
+      }
+      frame = requestAnimationFrame(step)
+      /*
+       * The glide is a nicety; arriving is not. Animation frames stop being
+       * delivered in a backgrounded tab, and some browsers suppress them
+       * outright — which is the same hole Vitrine's smooth `scrollIntoView`
+       * falls into, a control that silently does nothing. This timer is the
+       * floor: however the animation fares, the track is at the panel by the
+       * time it fires.
+       */
+      land = window.setTimeout(settle, ms + 80)
+    }
+
+    // Reports whether there was anywhere to go, so the keyboard can leave the
+    // key alone when there is not.
+    const stepBy = (direction: 1 | -1) => {
+      const track = trackOf()
+      if (!track) return false
+      const stops = panelStops(track)
+      const here = track.scrollLeft
+      const to =
+        direction < 0
+          ? [...stops].reverse().find((stop) => stop < here - 1)
+          : stops.find((stop) => stop > here + 1)
+      if (to === undefined) return false
+      glide(track, to)
+      return true
+    }
+
+    const onClick = (event: MouseEvent) => {
+      const target = event.target
+      if (!(target instanceof Element)) return
+      const control = target.closest(".slider__nav, .slider__dot")
+      if (!control || !root.contains(control)) return
+      event.preventDefault()
+      event.stopPropagation()
+
+      const track = trackOf()
+      if (!track) return
+      if (control.classList.contains("slider__dot")) {
+        const dots = Array.from(root.querySelectorAll(".slider__dot"))
+        const stop = panelStops(track)[dots.indexOf(control)]
+        if (stop !== undefined) glide(track, stop)
+        return
+      }
+      stepBy(control.getAttribute("aria-label") === "Previous" ? -1 : 1)
+    }
+
+    /*
+     * Vitrine takes the arrow keys whenever the pointer is over a slider or the
+     * focus is inside one — an arrow button keeps focus after a click, so that
+     * is most of the time here — and runs them through the same broken index.
+     * Matching its trigger and stopping the event on the way down is what keeps
+     * that path from running at all.
+     */
+    let hovering = false
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
+      const focused = document.activeElement
+      if (!hovering && !(focused && root.contains(focused))) return
+      if (root.querySelector(".lightbox")?.getClientRects().length) return
+      if (!stepBy(event.key === "ArrowLeft" ? -1 : 1)) return
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    const onEnter = () => {
+      hovering = true
+      // Re-reads the controls before the pointer can use them, so a scroll the
+      // listener below happened to miss cannot leave an arrow greyed out.
+      sync()
+    }
+    const onLeave = () => (hovering = false)
+
+    root.addEventListener("click", onClick, true)
+    // Scroll does not bubble, so the capture phase is how one listener covers a
+    // track that mounts after this runs.
+    root.addEventListener("scroll", sync, true)
+    root.addEventListener("pointerenter", onEnter)
+    root.addEventListener("pointerleave", onLeave)
+    window.addEventListener("keydown", onKeyDown, true)
+    window.addEventListener("resize", sync)
+
+    const observer = new MutationObserver(() => {
+      if (!writing) sync()
+    })
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class", "disabled", "aria-current", "style"],
+    })
+    sync()
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame)
+      clearTimeout(land)
+      observer.disconnect()
+      root.removeEventListener("click", onClick, true)
+      root.removeEventListener("scroll", sync, true)
+      root.removeEventListener("pointerenter", onEnter)
+      root.removeEventListener("pointerleave", onLeave)
+      window.removeEventListener("keydown", onKeyDown, true)
+      window.removeEventListener("resize", sync)
+    }
+  }, [])
 
   useEffect(() => {
     const root = rootRef.current
