@@ -25,6 +25,56 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
   const rootRef = useRef<HTMLElement>(null)
   const [zoomOpen, setZoomOpen] = useState(false)
 
+  /*
+   * Stamp each panel image with its own pixel size.
+   *
+   * Vitrine sizes a panel image `width: auto` and caps it with max-width /
+   * max-height, which is correct for a loaded image and 0 for one that has not
+   * arrived — an <img> with no intrinsic size contributes no width. It also
+   * marks everything past the first two panels `loading="lazy"`. The two
+   * together collapsed every unloaded panel to the 16px of card padding: the
+   * Identity gallery laid out as two panels and three 16px slivers 32px apart,
+   * the track's scrollWidth shrank to match, and the panels past the fold
+   * could not be reached at all — which is what left the arrows and dots
+   * addressing slides that were not there, and why the back arrow did nothing.
+   *
+   * `width` and `height` attributes give the browser an intrinsic ratio up
+   * front, so the panel reserves its true size before the file arrives and the
+   * caps resolve against real numbers. It also removes the layout shift as
+   * each image lands. Vitrine's SliderItem has no width/height field, so this
+   * is applied to the DOM it renders; the values come from the data, and are
+   * set only where they are missing so a re-render costs nothing.
+   */
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+
+    const sizeByPanelSrc = new Map(
+      block.items.map((item) => [item.src, item] as const),
+    )
+
+    const stampSizes = () => {
+      root.querySelectorAll<HTMLImageElement>(".slider__item img").forEach((image) => {
+        if (image.getAttribute("width")) return
+        // `src` is absolute once rendered; the data holds a root-relative path.
+        const item = sizeByPanelSrc.get(new URL(image.src).pathname)
+        if (!item) return
+        image.setAttribute("width", String(item.width))
+        image.setAttribute("height", String(item.height))
+        // The attributes alone do not size an image that has not loaded: they
+        // set a default ratio, and a ratio needs a definite axis to resolve
+        // against. Both axes are `auto` here, so the ratio also goes out as a
+        // custom property that the stylesheet can turn into a real width.
+        image.style.setProperty("--panel-ratio", String(item.width / item.height))
+      })
+    }
+
+    stampSizes()
+    const sizeObserver = new MutationObserver(stampSizes)
+    sizeObserver.observe(root, { childList: true, subtree: true })
+    return () => sizeObserver.disconnect()
+  }, [block.items])
+
   useEffect(() => {
     const root = rootRef.current
     if (!root) return

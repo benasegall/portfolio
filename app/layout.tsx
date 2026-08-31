@@ -27,7 +27,10 @@ export const metadata: Metadata = {
     type: 'website',
     url: '/',
     siteName: siteMeta.name,
-    title: siteMeta.title,
+    // The card headline is the name alone. The line under it already opens
+    // with "Product designer in London", so putting the role in both stutters
+    // it back at the reader twice in two lines.
+    title: siteMeta.name,
     description: siteMeta.description,
     locale: 'en_GB',
     images: [
@@ -41,7 +44,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: siteMeta.title,
+    title: siteMeta.name,
     description: siteMeta.description,
     images: [siteMeta.ogImage],
   },
