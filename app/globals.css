@@ -426,6 +426,41 @@ body.sheet-open {
 }
 
 /*
+ * Pin the panel width to the layout viewport rather than to whatever
+ * `window.innerWidth` last reported.
+ *
+ * Vitrine sizes a panel in JS — a debounced `resize` handler writes
+ * `--item-max-w` as an inline style on every item. On iOS that property
+ * reports the VISUAL viewport, so pinch-zooming to 2x has it report about half
+ * the width; the handler fires and rewrites the panels to match. Zooming back
+ * out does not reliably fire the matching resize — the sheet and the lightbox
+ * both hold `overflow: hidden` on <body> while it is open — so the shrunken
+ * value survives the zoom being dismissed, and the gallery stays small inside a
+ * full-width sheet. Simulated at 2x, a panel image fell from 311x149 to 124x59
+ * and stayed there.
+ *
+ * `100vw` is the same number by a route that cannot go stale: CSS viewport
+ * units resolve against the LAYOUT viewport, which pinch-zoom does not move.
+ * `min()` mirrors the handler at every breakpoint rather than only on mobile,
+ * so a pinch-zooming tablet — which sits above the 699px line the mobile
+ * layout rules use — is covered as well. Verified against the inline value it
+ * replaces at 375 (327), 760 (584) and 1400 (584, the capped width).
+ *
+ * The constants mirror the <Slider> props in project-media.tsx, the same
+ * contract the track padding above carries: 584 = the 560 contentWidth plus
+ * the 24px Vitrine adds to an item when no aspectRatio is given, and 48 = the
+ * 24px sideMargin either side.
+ *
+ * `!important` is what beats the inline style: an important author rule
+ * outranks a normal inline declaration, custom properties included. Only the
+ * width needs it — `--item-max-h` is the `maxItemHeight` prop, a constant the
+ * resize handler never touches at any width.
+ */
+.project-media .slider__item {
+  --item-max-w: min(584px, calc(100vw - 48px)) !important;
+}
+
+/*
  * Below Vitrine's own 700px breakpoint the height cap above has to come off,
  * or it distorts the picture.
  *
@@ -464,36 +499,6 @@ body.sheet-open {
  * without either distorting the image or knowing its ratio before it loads.
  */
 @media (max-width: 699px) {
-  /*
-   * Pin the panel width to the layout viewport rather than to whatever
-   * `window.innerWidth` last reported.
-   *
-   * Vitrine sizes a mobile panel in JS — a debounced `resize` handler writes
-   * `--item-max-w: window.innerWidth - 2 * sideMargin` as an inline style on
-   * every item. On iOS that property reports the VISUAL viewport, so pinch-
-   * zooming to 2x has it report about half the width; the handler fires and
-   * rewrites the panels to match. Zooming back out does not reliably fire the
-   * matching resize — the sheet and the lightbox both hold `overflow: hidden`
-   * on <body> while it is open — so the shrunken value survives the zoom being
-   * dismissed, and the gallery stays small inside a full-width sheet. Simulated
-   * at 2x, a panel image fell from 311x149 to 124x59 and stayed there.
-   *
-   * `100vw` is the same number by a route that cannot go stale: CSS viewport
-   * units resolve against the LAYOUT viewport, which pinch-zoom does not move.
-   * 48 = the 24px sideMargin either side, mirroring the <Slider> prop the way
-   * the track padding above already does. At any width this is exactly what
-   * the handler would have written, so nothing moves at normal zoom — it just
-   * stops moving when it shouldn't.
-   *
-   * `!important` is what beats the inline style: an important author rule
-   * outranks a normal inline declaration, custom properties included. Only the
-   * width needs it — `--item-max-h` is the `maxItemHeight` prop, a constant
-   * the resize handler never touches.
-   */
-  .project-media .slider__item {
-    --item-max-w: calc(100vw - 48px) !important;
-  }
-
   .project-media .slider__item-inner img,
   .project-media .slider__item-inner video {
     max-height: none !important;
