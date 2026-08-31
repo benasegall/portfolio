@@ -11,6 +11,15 @@ export type ProjectSection = {
 /** One panel in a project media gallery. Maps 1:1 onto Vitrine's SliderItem. */
 export type MediaItem = {
   src: string
+  /**
+   * The panel image's own pixel size, so a panel can be laid out before the
+   * file arrives. Vitrine sizes its images `width: auto`, which is 0 until an
+   * image has an intrinsic size, and it marks everything past the first two
+   * `loading="lazy"` — so without these a gallery lays out as two panels and a
+   * row of 16px slivers. See the size-stamping effect in project-media.tsx.
+   */
+  width: number
+  height: number
   /** Full-resolution source the lightbox swaps in; falls back to `src`. */
   highResSrc?: string
   /** Direct video file URL (not an embed page). Plays muted and looping. */
@@ -99,11 +108,71 @@ export const connectLinks: { label: string; href: string }[] = [
   { label: "LinkedIn", href: "https://linkedin.com/in/benasegall" },
 ]
 
+/**
+ * Every panel image's pixel size, keyed `slug/name`. Read off the files
+ * themselves — regenerate if an image is replaced at a different size, or the
+ * panel will reserve the wrong space until it loads.
+ */
+const imageSizes: Record<string, [width: number, height: number]> = {
+  "clearterms/hierarchy-01": [1600, 653],
+  "clearterms/hierarchy-02": [1580, 1072],
+  "clearterms/hierarchy-03": [1593, 1072],
+  "clearterms/identity-01": [1600, 1001],
+  "clearterms/identity-02": [1164, 1048],
+  "clearterms/identity-03": [1194, 1050],
+  "clearterms/identity-04": [1590, 293],
+  "clearterms/identity-05": [1569, 965],
+  "clearterms/research-01": [1334, 637],
+  "clearterms/where-it-lives-01": [1600, 377],
+  "what-caused-this/getting-in-01": [1600, 1002],
+  "what-caused-this/getting-in-02": [1600, 1002],
+  "what-caused-this/getting-in-03": [1600, 1002],
+  "what-caused-this/product-tour-01": [1418, 1062],
+  "what-caused-this/product-tour-02": [1600, 1002],
+  "what-caused-this/product-tour-03": [1600, 1002],
+  "what-caused-this/tutorials-01": [1600, 1002],
+  "what-caused-this/user-flows-01": [1551, 855],
+  "wise-young-explorer/after-01": [833, 1600],
+  "wise-young-explorer/after-02": [833, 1600],
+  "wise-young-explorer/after-03": [833, 1600],
+  "wise-young-explorer/after-04": [833, 1600],
+  "wise-young-explorer/after-05": [833, 1600],
+  "wise-young-explorer/after-06": [833, 1600],
+  "wise-young-explorer/after-07": [833, 1600],
+  "wise-young-explorer/before-01": [833, 1600],
+  "wise-young-explorer/before-02": [833, 1600],
+  "wise-young-explorer/before-03": [833, 1600],
+  "wise-young-explorer/before-04": [833, 1600],
+  "wise-young-explorer/before-05": [833, 1600],
+  "wise-young-explorer/before-06": [833, 1600],
+  "wise-young-explorer/before-07": [833, 1600],
+  "wise-young-explorer/before-08": [833, 1600],
+  "wise-young-explorer/before-09": [833, 1600],
+  "wise-young-explorer/before-10": [833, 1600],
+  "wise-young-explorer/dropped-idea-01": [1230, 1600],
+  "wise-young-explorer/dropped-idea-02": [1230, 1600],
+  "wise-young-explorer/dropped-idea-03": [818, 1061],
+  "wise-young-explorer/dropped-idea-04": [818, 1061],
+  "wise-young-explorer/dropped-idea-05": [818, 1061],
+  "wise-young-explorer/dropped-idea-06": [818, 1061],
+  "wise-young-explorer/dropped-idea-07": [818, 1061],
+  "wise-young-explorer/dropped-idea-08": [818, 1061],
+  "wise-young-explorer/during-01": [833, 1600],
+  "wise-young-explorer/during-02": [833, 1600],
+  "wise-young-explorer/during-03": [833, 1600],
+  "wise-young-explorer/during-04": [833, 1600],
+}
+
 /** Builds the panel / lightbox source pair for one processed image. */
 function img(slug: string, name: string, alt: string): MediaItem {
+  const size = imageSizes[`${slug}/${name}`]
+  if (!size) throw new Error(`No recorded size for ${slug}/${name}`)
+  const [width, height] = size
   return {
     src: `/images/projects/${slug}/${name}.webp`,
     highResSrc: `/images/projects/${slug}/${name}-full.webp`,
+    width,
+    height,
     alt,
   }
 }
@@ -316,18 +385,13 @@ export const footer = {
 
 export const siteMeta = {
   /**
-   * The browser's label for the site — the tab, the bookmark, the history
-   * entry. Just the name: those are all places where the descriptive version
-   * is truncated to roughly this anyway, and a tab that reads "Benjamin
-   * Segall" is the one someone finds again in a row of them.
+   * The site's name, everywhere a name is asked for: the <title>, so the tab,
+   * bookmarks and history read as it; and the share card's headline and site
+   * name. Deliberately not "Benjamin Segall, Product Designer in London" — the
+   * role belongs in `description`, which sits directly under the headline on a
+   * card, and saying it in both stutters it back twice in two lines.
    */
   name: "Benjamin Segall",
-  /**
-   * The descriptive form, for the contexts that show a headline rather than a
-   * label: the share card and the search snippet, where the extra words are
-   * doing work rather than competing for room.
-   */
-  title: "Benjamin Segall, Product Designer in London",
   description: "Product designer in London. Selected work across enterprise software, fintech and B2B SaaS.",
   /** Live origin. Open Graph needs absolute URLs, so this resolves the card. */
   url: "https://www.benjaminsegall.com",

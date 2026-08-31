@@ -506,6 +506,42 @@ body.sheet-open {
 }
 
 /*
+ * Above that breakpoint, give the panel image a width it can compute without
+ * having loaded.
+ *
+ * Vitrine sizes a desktop panel image `width: auto` against the two caps,
+ * which is right for a loaded image and 0 for one that has not arrived — an
+ * <img> with no intrinsic size contributes no width — and it marks everything
+ * past the first two panels `loading="lazy"`. The two together collapsed every
+ * unloaded panel to the 16px of card padding: the Identity gallery laid out as
+ * two real panels and three slivers 32px apart, the track's scrollWidth shrank
+ * to match, and the rest could not be scrolled to at all. That is what left
+ * the arrows and dots addressing slides that were not there, and why clicking
+ * back did nothing after scrolling.
+ *
+ * `--panel-ratio` is each image's own ratio, stamped from the data in
+ * project-media.tsx. With it the width is the same `min()` the browser would
+ * reach on its own — the width cap, or the height cap scaled by the ratio,
+ * whichever binds first — but computed from numbers that are there before the
+ * file is. Reproduces the loaded layout exactly: at 1440 a 1600x1001 panel
+ * resolves to the 568px cap and a 1164x1048 one to 493px, both matching what
+ * they measured once loaded.
+ *
+ * Mobile is deliberately left out: Vitrine switches to `width: 100%` below
+ * 700px, which never depended on the intrinsic size and so never collapsed.
+ */
+@media (min-width: 700px) {
+  .project-media .slider__item-inner img,
+  .project-media .slider__item-inner video {
+    width: min(
+      calc(var(--item-max-w) - 1rem),
+      calc((var(--item-max-h) - 1rem) * var(--panel-ratio, 1))
+    ) !important;
+    height: auto !important;
+  }
+}
+
+/*
  * The scroll cue under an in-sheet gallery — prev/next plus one dot per image
  * (`arrows` / `pagination` in project-media.tsx, on only where there is more
  * than one image to reach).
