@@ -33,14 +33,14 @@ export default function Home() {
               title with a caption under it rather than as the sentence it is.
               Inline, it simply wraps where the measure runs out.
 
-              The lead-in keeps the site's heading treatment, which is also the
-              pattern the sheets use for "Scope." / "During." — foreground
-              weight on the opening clause, body copy for the rest.
+              Emphasis is colour alone, the same move as "Available from 21
+              September." in the bio and the "Scope." / "During." lead-ins in
+              the sheets: the clause steps forward out of the muted body copy
+              without claiming to be a heading. Bold would have gone on saying
+              "title", which is the one thing this line is not.
             */}
             <p className="text-base text-muted-foreground text-pretty">
-              <span className="font-bold tracking-tight text-foreground">
-                {philosophy.heading}
-              </span>{" "}
+              <span className="text-foreground">{philosophy.heading}</span>{" "}
               {philosophy.quote}
             </p>
             <p className="mt-16 text-detail text-muted-foreground">{footer.copyright}</p>
