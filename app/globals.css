@@ -234,6 +234,34 @@
 }
 
 /*
+ * Pin the homepage panel size to the layout viewport, for the reason the
+ * in-sheet galleries are pinned (see `--item-max-w` under the 699px query
+ * below): Vitrine sizes its panels in JS from `window.innerWidth`, which on
+ * iOS reports the VISUAL viewport. Pinch-zoom therefore has its debounced
+ * resize handler rewrite every panel to a fraction of its size, and dismissing
+ * the zoom does not reliably fire the resize that would undo it.
+ *
+ * This slider gets it worse than the sheets do. It sets an `aspectRatio`, so
+ * the height is derived from the width and BOTH variables collapse together —
+ * at 2x a panel image went from 696x459 to 116x72 and stayed there, surviving
+ * a resize back to full width.
+ *
+ * `min()` mirrors what the handler computes at every breakpoint rather than
+ * only on mobile, so a tablet or a zoomed desktop is covered too: the panel is
+ * the contentWidth, or the viewport less a margin either side once that is the
+ * smaller. Verified against the inline value it replaces at 375 (319), 768
+ * (712) and 1400 (800, the contentWidth cap).
+ *
+ * The three constants mirror the <Slider> props in projects.tsx — 800
+ * contentWidth, 28 sideMargin, 3/2 aspectRatio. Move one and these must move
+ * with it, the same contract the track padding above already carries.
+ */
+.projects-slider .slider__item {
+  --item-max-w: min(800px, calc(100vw - 56px)) !important;
+  --item-max-h: calc(min(800px, calc(100vw - 56px)) / 1.5) !important;
+}
+
+/*
  * Vitrine spaces the slider with `lh` margins of its own (3-4lh top,
  * 4.75-6.75lh bottom) — 99px and 167px here. Stacked on top of our own section
  * padding that left the "Selected Work" heading 123px from the work it labels

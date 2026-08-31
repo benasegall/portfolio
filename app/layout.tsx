@@ -7,7 +7,10 @@ export const metadata: Metadata = {
   // Absolute base for the social card: Open Graph will not accept a relative
   // image URL, so without this a shared link renders with no preview at all.
   metadataBase: new URL(siteMeta.url),
-  title: siteMeta.title,
+  // The <title>, so the tab, bookmarks and history read as the name alone.
+  // The descriptive form stays on the cards below, where it is a headline
+  // rather than a label.
+  title: siteMeta.name,
   description: siteMeta.description,
   icons: {
     icon: [
@@ -23,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/',
-    siteName: siteMeta.title,
+    siteName: siteMeta.name,
     title: siteMeta.title,
     description: siteMeta.description,
     locale: 'en_GB',

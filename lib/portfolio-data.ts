@@ -315,6 +315,18 @@ export const footer = {
 }
 
 export const siteMeta = {
+  /**
+   * The browser's label for the site — the tab, the bookmark, the history
+   * entry. Just the name: those are all places where the descriptive version
+   * is truncated to roughly this anyway, and a tab that reads "Benjamin
+   * Segall" is the one someone finds again in a row of them.
+   */
+  name: "Benjamin Segall",
+  /**
+   * The descriptive form, for the contexts that show a headline rather than a
+   * label: the share card and the search snippet, where the extra words are
+   * doing work rather than competing for room.
+   */
   title: "Benjamin Segall, Product Designer in London",
   description: "Product designer in London. Selected work across enterprise software, fintech and B2B SaaS.",
   /** Live origin. Open Graph needs absolute URLs, so this resolves the card. */
