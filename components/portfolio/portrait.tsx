@@ -21,8 +21,8 @@ export function Portrait() {
         <img
           src={profile.portrait.src}
           alt={profile.portrait.alt}
-          width={640}
-          height={640}
+          width={1280}
+          height={1280}
           className="aspect-square w-full rounded-[0.75rem] bg-muted object-cover"
         />
       </div>
