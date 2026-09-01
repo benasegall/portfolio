@@ -12,14 +12,23 @@ export const metadata: Metadata = {
   // rather than a label.
   title: siteMeta.name,
   description: siteMeta.description,
+  // An SVG favicon alone is a desktop-only icon. iOS Safari has never read one
+  // — it wants an apple-touch-icon PNG — and Android Chrome takes its icon from
+  // the manifest. With only the SVG declared, both fell back to a generated
+  // placeholder, so the raster sizes below carry the icon on mobile and the ICO
+  // covers the browsers that still ask for /favicon.ico by convention.
   icons: {
     icon: [
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '16x16 32x32 48x48', type: 'image/x-icon' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
+    // iOS ignores the sizes hint and rounds the corners itself, which is why
+    // this one is the full-bleed square rather than the pre-rounded artwork.
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: ['/favicon.ico'],
   },
+  manifest: '/manifest.webmanifest',
   alternates: {
     canonical: '/',
   },
