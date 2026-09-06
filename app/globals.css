@@ -776,3 +776,28 @@ body.sheet-open {
       0 2px 4px rgb(0 0 0 / 0.02) !important;
   }
 }
+
+/*
+ * Drop the empty caption heading Vitrine renders for each in-sheet gallery.
+ *
+ * Vitrine always emits an `<h3>` for a panel's caption, filled from the item's
+ * `title`. The sheet's galleries carry their own heading in the figcaption
+ * above them and pass no per-item title, so every gallery left an `<h3></h3>`
+ * behind — four per sheet. They are 0x0 and invisible, but they still sit in
+ * the accessibility tree, so anyone moving through the page by heading (a
+ * primary screen-reader strategy) hit four blank stops per project.
+ *
+ * WCAG 1.3.1 Info and Relationships (A) and 2.4.6 Headings and Labels (AA):
+ * a heading has to describe the section it heads, and an empty one announces
+ * structure that is not there. axe does not report it under the WCAG tags —
+ * its `empty-heading` rule is classed best-practice — which is why this
+ * surfaced in the manual pass rather than the scan.
+ *
+ * `display: none` rather than `aria-hidden`, because it takes the element out
+ * of the accessibility tree without needing to reach into Vitrine's markup.
+ * Scoped to `:empty` and to `.project-media`, so the homepage captions — which
+ * carry the real project titles — are untouched.
+ */
+.project-media .slider__meta-inner h3:empty {
+  display: none;
+}
