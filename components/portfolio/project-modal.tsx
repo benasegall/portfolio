@@ -193,11 +193,12 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           {/*
             Zero-height so it doesn't displace the cover image, sticky so the
             close stays reachable once the sheet scrolls past the top. The
-            sticky offset matches the sheet's own top frame (pt-16 / md:pt-8),
-            so at rest the button sits a consistent 16px inside the corner at
-            every breakpoint instead of being nudged by an early stick.
+            sticky offset matches the sheet's own top frame, which is pt-10 at
+            every width, so at rest the button sits a consistent 16px inside the
+            corner rather than being nudged out of it by an early stick. Move
+            the frame's top padding and this has to move with it.
           */}
-          <div className="pointer-events-none sticky top-16 z-20 flex h-0 justify-end md:top-8">
+          <div className="pointer-events-none sticky top-10 z-20 flex h-0 justify-end">
             <button
               type="button"
               aria-label="Close project"
