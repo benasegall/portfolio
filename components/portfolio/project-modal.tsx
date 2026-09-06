@@ -185,7 +185,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         onClick={onClose}
         className="fixed inset-0 z-50 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <div className="relative flex min-h-full items-start justify-center px-2 pb-16 pt-16 md:px-8 md:pb-24 md:pt-8">
+        <div className="relative flex min-h-full items-start justify-center px-2 pb-10 pt-10 md:px-8 md:pb-16 md:pt-6">
         <div
           onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-[960px] rounded-[2rem] bg-card shadow-2xl"
@@ -233,7 +233,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               however wide the sheet gets; padding alone would crush the text
               on narrower sheets, where the cap simply stops applying.
             */}
-            <div className="mx-auto w-full max-w-[45rem] px-4 pb-16 pt-6 md:px-10 md:pb-[5.5rem] md:pt-8">
+            <div className="mx-auto w-full max-w-[45rem] px-4 pb-10 pt-6 md:px-10 md:pb-14 md:pt-8">
               <h2 className="text-lg font-bold tracking-tight text-foreground">
                 {project.title}
               </h2>
