@@ -130,6 +130,8 @@ const imageSizes: Record<string, [width: number, height: number]> = {
   "what-caused-this/product-tour-01": [1418, 1062],
   "what-caused-this/product-tour-02": [1600, 1002],
   "what-caused-this/product-tour-03": [1600, 1002],
+  "what-caused-this/product-tour-04": [1600, 1002],
+  "what-caused-this/product-tour-05": [1600, 1002],
   "what-caused-this/tutorials-01": [1600, 1002],
   "what-caused-this/user-flows-01": [1551, 855],
   "wise-young-explorer/after-01": [833, 1600],
@@ -218,6 +220,8 @@ export const projects: Project[] = [
         img("what-caused-this", "product-tour-01", "Sketches through to final design of the onboarding checklist"),
         img("what-caused-this", "product-tour-02", "Onboarding asking how familiar the user is with root cause analysis"),
         img("what-caused-this", "product-tour-03", "Dashboard with the Get Started tour panel open"),
+        img("what-caused-this", "product-tour-04", "The tour inside an analysis, showing the focal point the RCA is built out from"),
+        img("what-caused-this", "product-tour-05", "A later tour step explaining evidence, with the cause tree built out and the checklist part-complete"),
       ] },
       { id: "tutorials", title: "Tutorials page", afterParagraph: 6, items: [
         img("what-caused-this", "tutorials-01", "Tutorials page with searchable walkthrough cards"),
