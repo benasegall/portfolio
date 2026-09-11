@@ -137,18 +137,15 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
    * that point the back arrow is either pointing at a slide behind the one you
    * are looking at or sitting `disabled`, and a disabled button does not emit a
    * click at all, so nothing we could listen for ever fires. The smooth scroll
-   * is the second half: it is one animation the browser will drop on its own —
-   * reduced-motion settings, an interrupted scroll, an automated browser — and
-   * when it is dropped the call is silently a no-op.
+   * is the second half: it is one animation the browser can drop — a
+   * backgrounded tab, an automated browser — and with nothing behind it, a
+   * dropped scroll is a control that silently does nothing.
    *
-   * So the panel stops are measured off the DOM on every click and the track is
-   * moved by hand. "Back" is the stop before the one the track is nearest,
-   * "forward" the one after it, both read from the live `scrollLeft` rather
-   * than from any remembered index — see `locate` for why nearest, and not
-   * "left of here", is the rule. Snapping goes off for the
-   * duration, as Vitrine does for its own drag, so the mandatory snap does not
-   * pull each frame onto a panel edge and turn the glide into a series of
-   * jumps.
+   * So the panel stops are measured off the DOM on every click. "Back" is the
+   * stop before the one the track is nearest, "forward" the one after it, both
+   * read from the live `scrollLeft` rather than from any remembered index — see
+   * `locate` for why nearest, and not "left of here", is the rule. See `glide`
+   * for how the track then gets there.
    *
    * Clicks are caught on the way down and stopped, so Vitrine's own handler
    * never runs and never fights the animation with a scroll of its own. That
@@ -199,49 +196,77 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
       writing = false
     }
 
-    let frame = 0
     let land = 0
-    let snapping = ""
+    // Where a glide in flight is headed. A second click mid-glide steps on from
+    // here: read from the live position instead, a click before the halfway
+    // point finds the track still nearest the panel it is leaving and aims at
+    // the same panel again, so a quick double-click only moves one.
+    let heading: number | null = null
+
+    const arrive = () => {
+      clearTimeout(land)
+      heading = null
+      sync()
+    }
+
+    /*
+     * Moves the track with the browser's own smooth scroll, snapping left on.
+     *
+     * This used to be a hand-rolled animation — scroll-snap switched off, the
+     * position written every frame along a cubic ease-out, snap back on at the
+     * end. It never looked like a swipe, for two reasons. The curve was timed
+     * from the click, so when the first frame came late (and after a click that
+     * restyles the whole track, it does) the curve had already "moved" most of
+     * the distance, and the track jumped there in one frame — measured at 502px
+     * of a 600px step. And an ease-out is fastest at its very start, so even a
+     * punctual first frame lurched and then crawled. Together that read as the
+     * panel snapping into place.
+     *
+     * A swipe ends in the browser's native snap animation, and a native smooth
+     * scroll is that same animation — same engine, same curve — so the arrows
+     * now match a swipe by construction rather than by imitation. Snapping stays
+     * on throughout, which also means the browser lands on the snap point
+     * itself: on a phone, where panels snap to centre rather than to their left
+     * edge, it aims straight for the right spot instead of arriving at the edge
+     * and correcting.
+     *
+     * The timer is the floor under it. If the browser drops the animation, the
+     * track has not moved when it fires, and is put at the panel directly — so
+     * a control can no longer silently do nothing. It is cleared by `scrollend`
+     * where the browser has it, and cancelled outright the moment someone
+     * takes the track by hand, so it never drags a swipe back to the panel an
+     * arrow was aiming for.
+     *
+     * Reduced motion gets the move without the travel.
+     */
     const glide = (track: HTMLElement, to: number) => {
       const from = track.scrollLeft
-      const distance = to - from
-      if (Math.abs(distance) < 1) return
-      // Restored the moment the glide lands, so a flick or a wheel still snaps.
-      if (!frame) snapping = track.style.scrollSnapType
-      if (frame) cancelAnimationFrame(frame)
+      if (Math.abs(to - from) < 1) return
       clearTimeout(land)
-      track.style.scrollSnapType = "none"
-      const started = performance.now()
-      const ms = Math.min(520, 240 + Math.abs(distance) * 0.32)
-      const settle = () => {
-        if (frame) cancelAnimationFrame(frame)
-        frame = 0
-        track.scrollLeft = to
-        track.style.scrollSnapType = snapping
-        // Scroll events are the usual trigger for this, and they are the other
-        // thing a browser stops delivering when it is not painting.
-        sync()
-      }
-      const step = (now: number) => {
-        const t = Math.min(1, (now - started) / ms)
-        track.scrollLeft = from + distance * (1 - Math.pow(1 - t, 3))
-        if (t < 1) {
-          frame = requestAnimationFrame(step)
-          return
-        }
-        clearTimeout(land)
-        settle()
-      }
-      frame = requestAnimationFrame(step)
-      /*
-       * The glide is a nicety; arriving is not. Animation frames stop being
-       * delivered in a backgrounded tab, and some browsers suppress them
-       * outright — which is the same hole Vitrine's smooth `scrollIntoView`
-       * falls into, a control that silently does nothing. This timer is the
-       * floor: however the animation fares, the track is at the panel by the
-       * time it fires.
-       */
-      land = window.setTimeout(settle, ms + 80)
+      heading = to
+      const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      track.scrollTo({ left: to, behavior: still ? "auto" : "smooth" })
+      land = window.setTimeout(() => {
+        if (Math.abs(track.scrollLeft - from) < 1) track.scrollLeft = to
+        arrive()
+      }, 1200)
+    }
+
+    /*
+     * A hand on the track ends any glide — the person swiping is in charge.
+     * Only the track counts: pressing an arrow is also a pointerdown in here,
+     * and it arrives before the click, so counting it would cancel the very
+     * glide the click is about to extend. A wheel counts only when it moves
+     * sideways; a vertical one scrolls the sheet, not the track, and leaves the
+     * glide running.
+     */
+    const takeOver = (event: Event) => {
+      if (heading === null) return
+      const target = event.target
+      if (!(target instanceof Element) || !target.closest(".slider__track")) return
+      if (event instanceof WheelEvent && Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return
+      clearTimeout(land)
+      heading = null
     }
 
     // Reports whether there was anywhere to go, so the keyboard can leave the
@@ -250,7 +275,9 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
       const track = trackOf()
       if (!track) return false
       const { stops, current } = locate(track)
-      const to = stops[current + direction]
+      const origin =
+        heading !== null && stops.includes(heading) ? stops.indexOf(heading) : current
+      const to = stops[origin + direction]
       if (to === undefined) return false
       glide(track, to)
       return true
@@ -305,6 +332,11 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
     // Scroll does not bubble, so the capture phase is how one listener covers a
     // track that mounts after this runs.
     root.addEventListener("scroll", sync, true)
+    // Neither bubbles either, hence capture. `scrollend` is missing in some
+    // browsers; the timer in `glide` covers them.
+    root.addEventListener("scrollend", arrive, true)
+    root.addEventListener("pointerdown", takeOver, true)
+    root.addEventListener("wheel", takeOver, { capture: true, passive: true })
     root.addEventListener("pointerenter", onEnter)
     root.addEventListener("pointerleave", onLeave)
     window.addEventListener("keydown", onKeyDown, true)
@@ -322,11 +354,13 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
     sync()
 
     return () => {
-      if (frame) cancelAnimationFrame(frame)
       clearTimeout(land)
       observer.disconnect()
       root.removeEventListener("click", onClick, true)
       root.removeEventListener("scroll", sync, true)
+      root.removeEventListener("scrollend", arrive, true)
+      root.removeEventListener("pointerdown", takeOver, true)
+      root.removeEventListener("wheel", takeOver, true)
       root.removeEventListener("pointerenter", onEnter)
       root.removeEventListener("pointerleave", onLeave)
       window.removeEventListener("keydown", onKeyDown, true)
