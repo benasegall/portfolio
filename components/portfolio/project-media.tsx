@@ -41,6 +41,36 @@ function panelStops(track: HTMLElement): number[] {
   })
 }
 
+/*
+ * The track's distinct stops, and which of them it is on now.
+ *
+ * "On" means nearest — not "at or left of". The stops are measured to each
+ * panel's left edge, which is where the desktop track snaps a panel. On a phone
+ * Vitrine switches the panels to `scroll-snap-align: center`, so a swipe leaves
+ * the track a few pixels right of the current panel's stop rather than on it.
+ * Reading "back" as "the last stop left of here" then picked the current
+ * panel's own stop: the first tap on the back arrow slid the track eight pixels
+ * and stayed on the same slide, and it took a second tap to reach the previous
+ * one. The same drift left the back arrow enabled on the first slide, doing
+ * nothing, and the forward arrow enabled on the last.
+ *
+ * Nearest holds under either alignment, because the snap offset is a few
+ * pixels and the panels are hundreds apart — and it is the rule the active dot
+ * already uses, so the dot and the arrows can no longer disagree about where
+ * the gallery is. Stops are de-duplicated first: the last panels of a long
+ * gallery can all clamp to the end of the track, and a step between two stops
+ * at the same position would go nowhere.
+ */
+function locate(track: HTMLElement) {
+  const stops = [...new Set(panelStops(track))].sort((a, b) => a - b)
+  const here = track.scrollLeft
+  let current = 0
+  stops.forEach((stop, index) => {
+    if (Math.abs(stop - here) < Math.abs(stops[current] - here)) current = index
+  })
+  return { stops, current }
+}
+
 export function ProjectMedia({ block }: { block: MediaBlock }) {
   const rootRef = useRef<HTMLElement>(null)
   const [zoomOpen, setZoomOpen] = useState(false)
@@ -112,10 +142,10 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
    * when it is dropped the call is silently a no-op.
    *
    * So the panel stops are measured off the DOM on every click and the track is
-   * moved by hand. "Back" is the last stop left of here, "forward" the first
-   * stop right of here, both read from the live `scrollLeft` rather than from
-   * any remembered index — which also makes a half-scrolled position, where no
-   * index is strictly true, do the obvious thing. Snapping goes off for the
+   * moved by hand. "Back" is the stop before the one the track is nearest,
+   * "forward" the one after it, both read from the live `scrollLeft` rather
+   * than from any remembered index — see `locate` for why nearest, and not
+   * "left of here", is the rule. Snapping goes off for the
    * duration, as Vitrine does for its own drag, so the mandatory snap does not
    * pull each frame onto a panel edge and turn the glide into a series of
    * jumps.
@@ -139,8 +169,8 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
       const track = trackOf()
       if (!track) return
       const here = track.scrollLeft
-      const end = Math.max(0, track.scrollWidth - track.clientWidth)
       const stops = panelStops(track)
+      const position = locate(track)
       let active = 0
       stops.forEach((stop, index) => {
         // `<=` so a run of panels stacked against the end resolves to the last
@@ -150,8 +180,12 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
 
       writing = true
       root.querySelectorAll<HTMLButtonElement>(".slider__nav").forEach((nav) => {
+        // Spent when there is no stop to step to, by the same rule the step
+        // itself uses — so an arrow is never enabled and then does nothing.
         const spent =
-          nav.getAttribute("aria-label") === "Previous" ? here <= 1 : here >= end - 1
+          nav.getAttribute("aria-label") === "Previous"
+            ? position.current === 0
+            : position.current === position.stops.length - 1
         if (nav.disabled !== spent) nav.disabled = spent
       })
       root.querySelectorAll<HTMLElement>(".slider__dot").forEach((dot, index) => {
@@ -215,12 +249,8 @@ export function ProjectMedia({ block }: { block: MediaBlock }) {
     const stepBy = (direction: 1 | -1) => {
       const track = trackOf()
       if (!track) return false
-      const stops = panelStops(track)
-      const here = track.scrollLeft
-      const to =
-        direction < 0
-          ? [...stops].reverse().find((stop) => stop < here - 1)
-          : stops.find((stop) => stop > here + 1)
+      const { stops, current } = locate(track)
+      const to = stops[current + direction]
       if (to === undefined) return false
       glide(track, to)
       return true
