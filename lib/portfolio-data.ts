@@ -79,6 +79,21 @@ export type Project = {
   media?: MediaBlock[]
 }
 
+/**
+ * The public card for a case study whose content sits behind the password
+ * gate. This file is imported by a client component, so everything in it ships
+ * in the page's JavaScript — only what the public homepage shows belongs here.
+ * The case study itself is in lib/private/, served by app/api/case-study/[slug]
+ * once the password checks out.
+ */
+export type GatedProject = Pick<Project, "slug" | "title" | "category" | "cover"> & {
+  gated: true
+}
+
+export function isGated(project: Project | GatedProject): project is GatedProject {
+  return "gated" in project && project.gated
+}
+
 export const profile = {
   name: "Benjamin Segall",
   bio: [
@@ -179,7 +194,16 @@ function img(slug: string, name: string, alt: string): MediaItem {
   }
 }
 
-export const projects: Project[] = [
+export const projects: (Project | GatedProject)[] = [
+  // PLACEHOLDER card — the approved title, one-liner and public-safe cover
+  // replace these. First, so it leads Selected Work.
+  {
+    slug: "private-project",
+    title: "Private project",
+    category: "A password-protected case study.",
+    cover: "/images/projects/private-project/cover.svg",
+    gated: true,
+  },
   {
     slug: "what-caused-this",
     title: "What Caused This",

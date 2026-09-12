@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { Slider, PlainCaption } from "@ocarignan/vitrine"
 import type { SliderItem } from "@ocarignan/vitrine"
 import "@ocarignan/vitrine/styles.css"
-import type { Project } from "@/lib/portfolio-data"
-import { projects } from "@/lib/portfolio-data"
+import type { GatedProject, Project } from "@/lib/portfolio-data"
+import { isGated, projects } from "@/lib/portfolio-data"
+import { PasswordGate } from "./password-gate"
 import { ProjectModal } from "./project-modal"
 
 const slides: SliderItem[] = projects.map((project) => ({
@@ -18,6 +19,64 @@ const slides: SliderItem[] = projects.map((project) => ({
 
 export function Projects() {
   const [active, setActive] = useState<Project | null>(null)
+  const [gate, setGate] = useState<GatedProject | null>(null)
+
+  /*
+   * Gated case studies.
+   *
+   * A gated card has no content on the page. Clicking it asks the server
+   * first: a visitor who has already entered the password this session gets
+   * the case study straight back and goes directly to the sheet; anyone else
+   * gets the password prompt. Once unlocked, a case study is kept here, so
+   * reopening it in the same visit needs no second round trip.
+   *
+   * The card is remembered so focus can go back to it. The sheet returns focus
+   * to whatever was focused when it opened, and after the gate that would be
+   * the gate's own button, gone by then — so the card is focused first, and
+   * the sheet opens with it as the thing to return to.
+   */
+  const unlocked = useRef(new Map<string, Project>())
+  const card = useRef<HTMLElement | null>(null)
+
+  const openProject = useCallback(async (index: number) => {
+    const project = projects[index]
+    if (!isGated(project)) {
+      setActive(project)
+      return
+    }
+
+    card.current =
+      document.querySelectorAll<HTMLElement>(".projects-slider .slider__item")[index] ?? null
+
+    let content = unlocked.current.get(project.slug) ?? null
+    if (!content) {
+      const response = await fetch(`/api/case-study/${project.slug}`, { cache: "no-store" }).catch(
+        () => null,
+      )
+      if (response?.ok) content = (await response.json()) as Project
+    }
+
+    if (content) {
+      unlocked.current.set(project.slug, content)
+      setActive(content)
+    } else {
+      setGate(project)
+    }
+  }, [])
+
+  const closeGate = useCallback(() => {
+    setGate(null)
+    card.current?.focus()
+  }, [])
+
+  const unlock = useCallback((content: Project) => {
+    unlocked.current.set(content.slug, content)
+    card.current?.focus()
+    setGate(null)
+    setActive(content)
+  }, [])
+
+  const closeSheet = useCallback(() => setActive(null), [])
 
   return (
     <section className="w-full pb-32">
@@ -51,11 +110,12 @@ export function Projects() {
           // Mirrored as the floor in the .slider__track rule in globals.css.
           sideMargin={28}
           lightbox={false}
-          onItemClick={(_item, index) => setActive(projects[index])}
+          onItemClick={(_item, index) => void openProject(index)}
         />
       </div>
 
-      <ProjectModal project={active} onClose={() => setActive(null)} />
+      <ProjectModal project={active} onClose={closeSheet} />
+      <PasswordGate project={gate} onClose={closeGate} onUnlock={unlock} />
     </section>
   )
 }
