@@ -217,13 +217,13 @@ function GateDialog({
                 aria-disabled={locked}
                 aria-describedby={messageId}
                 aria-invalid={message === WRONG}
-                className="h-10 min-w-0 flex-1 rounded-full border border-input bg-card px-4 text-base text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring aria-disabled:cursor-not-allowed aria-disabled:text-muted-foreground"
+                className="h-10 min-w-0 flex-1 rounded-full border border-input bg-card px-4 text-base text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring aria-disabled:cursor-default aria-disabled:text-muted-foreground"
               />
               <button
                 type="submit"
                 aria-label="Enter"
                 disabled={!password || pending || locked}
-                className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-card"
+                className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:opacity-40 disabled:hover:bg-card"
               >
                 <ArrowRight aria-hidden="true" />
               </button>
