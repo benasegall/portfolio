@@ -30,7 +30,6 @@ const privateImageSizes: Record<string, [width: number, height: number]> = {
   "england-football-app/existing-app-03": [839, 1600],
   "england-football-app/existing-app-04": [839, 1600],
   "england-football-app/existing-app-05": [839, 1600],
-  "england-football-app/existing-app-06": [839, 1600],
   "england-football-app/prototype-01": [811, 1600],
   "england-football-app/prototype-02": [811, 1600],
   "england-football-app/prototype-03": [811, 1600],
@@ -88,14 +87,13 @@ const privateContent: Record<string, PrivateContent> = {
       // The app as it stood: the content Discovery ends on, and the text it
       // arrived as. The match coverage leads, then the player coverage, as the
       // two sources the stats and the player cards were made from; the
-      // commercial pages after them show how far the text ran.
+      // membership page after them shows how far the text ran.
       { id: "existing-app", title: "The existing app", afterParagraph: 2, items: [
         privateImg("england-football-app", "existing-app-01", "Match report article in the England app, France 4-6 England, over a photo of two players embracing."),
         privateImg("england-football-app", "existing-app-02", "The same match report's lineups, substitutes and scorers, set out as a block of text."),
         privateImg("england-football-app", "existing-app-03", "Article introducing England's U20 Women's World Cup squad, over a team photo."),
         privateImg("england-football-app", "existing-app-04", "The same squad article, in which teammates describe each player in quotes."),
         privateImg("england-football-app", "existing-app-05", "England+ member benefits listed as bullet points, above an embedded YouTube video."),
-        privateImg("england-football-app", "existing-app-06", "Ticket sale dates, prices and concessions set out as text."),
       ] },
       // Closing Approach, straight after the paragraph describing the two
       // features, in the order a fan meets them: the live card into the match
