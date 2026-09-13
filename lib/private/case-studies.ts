@@ -66,7 +66,7 @@ const privateContent: Record<string, PrivateContent> = {
     sectionLengths: [1, 2, 3, 2, 2, 1],
     items: [
       { title: "Context", description: "A twelve-week IBM project to show what its AI could do inside the FA's England app." },
-      { title: "Insight", description: "Rivals win on live data; the FA's edge is its own content and trusted data from the pitch." },
+      { title: "Insight", description: "Rivals compete on more stats; the FA's edge is content that keeps fans in its own app." },
       { title: "Solution", description: "An agentic toolkit for fan products, and the live match centre and players page it produced." },
     ],
     // PLACEHOLDER galleries, each at the end of a section so no section's
