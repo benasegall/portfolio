@@ -1,7 +1,7 @@
 import "server-only"
 
 import { isGated, projects } from "@/lib/portfolio-data"
-import type { GatedProject, MediaBlock, MediaItem, Project } from "@/lib/portfolio-data"
+import type { GatedProject, MediaItem, Project } from "@/lib/portfolio-data"
 
 /*
  * Case studies that sit behind the password gate.
@@ -20,29 +20,43 @@ import type { GatedProject, MediaBlock, MediaItem, Project } from "@/lib/portfol
 type PrivateContent = Omit<Project, "slug" | "title" | "category" | "cover">
 
 /**
- * A gallery image served through the gate. Files live in `private/images/<slug>/`
- * — outside `public/`, where anything is fetchable by URL without a password —
- * and are streamed by the image route only to a visitor holding a valid access
- * cookie. Naming follows public/images/README.md.
+ * Pixel dimensions of each processed panel, keyed by `<slug>/<name>`, as in
+ * lib/portfolio-data.ts. Recorded here rather than read from the files so the
+ * sheet can reserve each panel's space before it loads.
  */
-function privateImg(slug: string, file: string, alt: string, width: number, height: number): MediaItem {
-  return { src: `/api/case-study/${slug}/image/${file}`, width, height, alt }
+const privateImageSizes: Record<string, [width: number, height: number]> = {
+  "england-football-app/fa-content-01": [794, 1600],
+  "england-football-app/fa-content-02": [794, 1600],
+  "england-football-app/fa-content-03": [794, 1600],
+  "england-football-app/fa-content-04": [794, 1600],
+  "england-football-app/fa-content-05": [794, 1600],
+  "england-football-app/fa-content-06": [794, 1600],
+  "england-football-app/fa-content-07": [794, 1600],
+  "england-football-app/fa-content-08": [794, 1600],
+  "england-football-app/match-centre-01": [1053, 1010],
+  "england-football-app/match-centre-02": [765, 1600],
+  "england-football-app/toolkit-01": [1600, 900],
+  "england-football-app/toolkit-02": [1600, 900],
+  "england-football-app/toolkit-03": [1600, 900],
 }
 
-/** PLACEHOLDER gallery — three numbered SVGs, until the real images arrive. */
-function placeholderGallery(
-  slug: string,
-  id: string,
-  title: string,
-  afterParagraph: number,
-): MediaBlock {
+/**
+ * The panel / lightbox pair for one gallery image served through the gate.
+ * Files live in `private/images/<slug>/` — outside `public/`, where anything is
+ * fetchable by URL without a password — and are streamed by the image route
+ * only to a visitor holding a valid access cookie. Naming follows
+ * public/images/README.md.
+ */
+function privateImg(slug: string, name: string, alt: string): MediaItem {
+  const size = privateImageSizes[`${slug}/${name}`]
+  if (!size) throw new Error(`No recorded size for ${slug}/${name}`)
+  const [width, height] = size
   return {
-    id,
-    title,
-    afterParagraph,
-    items: [1, 2, 3].map((n) =>
-      privateImg(slug, `${id}-0${n}.svg`, `${title} placeholder ${n} of 3`, 1512, 982),
-    ),
+    src: `/api/case-study/${slug}/image/${name}.webp`,
+    highResSrc: `/api/case-study/${slug}/image/${name}-full.webp`,
+    width,
+    height,
+    alt,
   }
 }
 
@@ -69,20 +83,35 @@ const privateContent: Record<string, PrivateContent> = {
       { title: "Insight", description: "Fans can get stats anywhere; the FA's edge is giving them a reason to stay and take part." },
       { title: "Solution", description: "An agentic toolkit for fan products, and the live match centre and players page it produced." },
     ],
-    // PLACEHOLDER galleries, each at the end of a section so no section's
-    // prose is split in two. Real images keep these ids, so the files become
-    // discovery-01.webp and so on — see private/README.md. The titles are
-    // working titles, to confirm when the images arrive.
+    // Each gallery closes a section, so no section's prose is split in two.
     media: [
-      // The competitor audit, closing Discovery.
-      placeholderGallery("england-football-app", "discovery", "Competitor audit", 2),
-      // The two features, closing Approach in the order its second paragraph
-      // describes them.
-      placeholderGallery("england-football-app", "match-centre", "Live match centre", 5),
-      placeholderGallery("england-football-app", "players", "Players page", 5),
-      // The toolkit, closing Decisions, whose last paragraph makes the
-      // features its output.
-      placeholderGallery("england-football-app", "toolkit", "The agentic toolkit", 7),
+      // The app as it stood: the "ecosystem of content" Discovery ends on,
+      // which the features were built to keep fans inside.
+      { id: "fa-content", title: "The FA's own content", afterParagraph: 2, items: [
+        privateImg("england-football-app", "fa-content-01", "Match report article in the England app, France 4-6 England, over a photo of two players embracing."),
+        privateImg("england-football-app", "fa-content-02", "The same match report's lineups, substitutes and scorers, set out as a block of text."),
+        privateImg("england-football-app", "fa-content-03", "England+ launch article, Get closer with England+, with a Join now button."),
+        privateImg("england-football-app", "fa-content-04", "England+ member benefits listed as bullet points, above an embedded YouTube video."),
+        privateImg("england-football-app", "fa-content-05", "Ticket sale dates, prices and concessions set out as text."),
+        privateImg("england-football-app", "fa-content-06", "Article introducing England's U20 Women's World Cup squad, over a team photo."),
+        privateImg("england-football-app", "fa-content-07", "A Register your interest button above a photo of England fans with flags in the stands."),
+        privateImg("england-football-app", "fa-content-08", "Squad article in which teammates describe each player in quotes."),
+      ] },
+      // The two features, closing Approach. The composite leads because it
+      // shows both; the fixtures screen after it is how a fan gets there.
+      { id: "match-centre", title: "The match centre and players page", afterParagraph: 5, items: [
+        privateImg("england-football-app", "match-centre-01", "Three prototype screens: the players page grouped by position, the stats tab with a match momentum chart, and the timeline with match insights written by IBM watsonx."),
+        privateImg("england-football-app", "match-centre-02", "The matches tab, where a live France v England score leads into the match centre above upcoming fixtures."),
+      ] },
+      // The toolkit, closing Decisions, whose last paragraph makes the features
+      // its output. In order: the consulting lifecycle it was shaped around (the
+      // gap Reflection names), the halfway point where the brief changed, and
+      // where the agents sit across it.
+      { id: "toolkit", title: "The agentic toolkit", afterParagraph: 7, items: [
+        privateImg("england-football-app", "toolkit-01", "Slide, The long journey of a consultant: a timeline from client brief through understanding the client, research, personas and requirements to design and development."),
+        privateImg("england-football-app", "toolkit-02", "Slide, Product development lifecycle overview: research, requirements and design as discovery, then development, testing and deploy as delivery, captioned 6 weeks gone, 6 weeks left."),
+        privateImg("england-football-app", "toolkit-03", "Slide, AI assistants and agents across the lifecycle: eight stages from market analysis and benchmarking to feature development, where AI can be added into the loop."),
+      ] },
     ],
   },
 }

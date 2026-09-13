@@ -197,12 +197,11 @@ function img(slug: string, name: string, alt: string): MediaItem {
 export const projects: (Project | GatedProject)[] = [
   // Gated: only the card is here, and the case study is in
   // lib/private/case-studies.ts. First, so it leads Selected Work.
-  // PLACEHOLDER cover — the public-safe cover.webp replaces cover.svg.
   {
     slug: "england-football-app",
     title: "England Football App",
     category: "AI features designed at IBM, and the agentic toolkit that produced them.",
-    cover: "/images/projects/england-football-app/cover.svg",
+    cover: "/images/projects/england-football-app/cover.webp",
     gated: true,
   },
   {

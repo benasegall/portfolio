@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" role="img" aria-label="Cover image placeholder">
-  <rect width="1500" height="1000" fill="#e8e8e8"/>
-  <rect x="45.0" y="30.0" width="1410.0" height="940.0" fill="none" stroke="#bdbdbd" stroke-width="5.0" stroke-dasharray="30 20"/>
-  <text x="50%" y="500.0" text-anchor="middle" font-family="system-ui, sans-serif" font-size="52" font-weight="600" fill="#6b6b6b">Cover image</text>
-  <text x="50%" y="578" text-anchor="middle" font-family="system-ui, sans-serif" font-size="40" fill="#8f8f8f">Public-safe cover to come</text>
-  <text x="50%" y="638" text-anchor="middle" font-family="system-ui, sans-serif" font-size="30" fill="#a5a5a5">1500 x 1000</text>
-</svg>
