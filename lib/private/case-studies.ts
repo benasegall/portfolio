@@ -54,7 +54,7 @@ const privateContent: Record<string, PrivateContent> = {
       "I audited the England app against its competitors. Most compete on live data, better stats, results and player detail during a match, and do it well.",
       "What the FA has is an ecosystem of content strong enough to keep a fan in its own app, and data straight from the pitch that others can't match for accuracy or trust. We used fan personas to decide which features to prioritise around those strengths.",
       "Halfway through, the brief changed. What began as building AI features for the app became two things at once. We had to build a reusable agentic toolkit for researching, designing and delivering digital fan products, without losing human oversight. The FA work became the case study proving it worked. I wrote code for some of those agents, including the ones that synthesised research and generated design options.",
-      "On the product half I designed two features. A live match centre carries a fan through the game across three tabs, a timeline of key events, a stats panel covering possession, momentum and more, and both teams' lineups. The watsonx powered insights sit in the timeline, with polls and predictions fans take part in as the game runs. A players page gives a reference card for each player to use before, during or after.",
+      "On the product half I designed two features. A live match centre carries a fan through the game across three tabs: a timeline of key events; a stats panel covering possession, momentum and more; and both teams' lineups. The watsonx powered insights sit in the timeline, with polls and predictions fans take part in as the game runs. A players page gives a reference card for each player to use before, during or after.",
       "The prototype ran on mock data, so what we demonstrated was the experience rather than the integration.",
       "The brief called for live match data, and the obvious move was to compete on how much of it we could show. That meant fighting on the one front where the FA holds no advantage. We used the live data for participation and insight instead, leaning on what only the FA has.",
       "Building the toolkit and the features at the same time was the harder problem. Each risked bending the other out of shape, so we reworked the project to make the FA features the output of the toolkit rather than a separate track.",
@@ -64,9 +64,11 @@ const privateContent: Record<string, PrivateContent> = {
     ],
     sectionTitles: ["Context", "Discovery", "Approach", "Decisions", "Outcome", "Reflection"],
     sectionLengths: [1, 2, 3, 2, 2, 1],
-    // No Highlights yet: the copy has none, and the sheet leaves the list out
-    // when `items` is absent.
-    //
+    items: [
+      { title: "Context", description: "A twelve-week IBM project to show what its AI could do inside the FA's England app." },
+      { title: "Insight", description: "Rivals win on live data; the FA's edge is its own content and trusted data from the pitch." },
+      { title: "Solution", description: "An agentic toolkit for fan products, and the live match centre and players page it produced." },
+    ],
     // PLACEHOLDER galleries, each at the end of a section so no section's
     // prose is split in two. Real images keep these ids, so the files become
     // discovery-01.webp and so on — see private/README.md. The titles are
