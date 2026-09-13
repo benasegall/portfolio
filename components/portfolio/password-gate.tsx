@@ -26,12 +26,18 @@ export function PasswordGate({ project, onClose, onUnlock }: PasswordGateProps) 
   return <GateDialog key={project.slug} project={project} onClose={onClose} onUnlock={onUnlock} />
 }
 
-const WRONG = "That password is wrong. Try again."
-const FAILED = "Something went wrong. Try again in a moment."
+/*
+ * Every message has to fit one line, so the prompt never grows when one
+ * appears. Measured in Nimbus Sans at 18px: the longest, "Too many tries. Wait
+ * 60 minutes.", is 260px, inside the 280px the text gets on a 360px phone.
+ * Check a new message against that before using it.
+ */
+const WRONG = "Oops, that is not it. Try again."
+const FAILED = "That didn't work. Try again."
 
 function tooManyAttempts(ms: number) {
   const minutes = Math.max(1, Math.ceil(ms / 60_000))
-  return `Too many attempts. Try again in ${minutes} ${minutes === 1 ? "minute" : "minutes"}.`
+  return `Too many tries. Wait ${minutes} ${minutes === 1 ? "minute" : "minutes"}.`
 }
 
 function GateDialog({
@@ -152,9 +158,10 @@ function GateDialog({
         inputRef.current?.focus()
       } else if (response.status === 401) {
         setMessage(WRONG)
-        // Selected rather than cleared: a typo can be fixed, and retyping
-        // replaces it anyway.
-        inputRef.current?.select()
+        // Cleared rather than selected: the field shows only dots, so there is
+        // no typo to fix, and a selection would paint the browser's blue.
+        setPassword("")
+        inputRef.current?.focus()
       } else {
         setMessage(FAILED)
       }
@@ -184,7 +191,7 @@ function GateDialog({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-[26rem] rounded-[2rem] bg-card p-8 shadow-2xl"
+          className="relative w-full max-w-[26rem] rounded-[2rem] bg-card p-6 shadow-2xl md:p-8"
         >
           <button
             type="button"
@@ -221,7 +228,12 @@ function GateDialog({
                 aria-disabled={locked}
                 aria-describedby={messageId}
                 aria-invalid={message === WRONG}
-                className="h-10 min-w-0 flex-1 rounded-full border border-input bg-card px-4 text-base text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring aria-disabled:cursor-default aria-disabled:text-muted-foreground"
+                // Focus is one 2px stroke in `--ring`: the border itself darkens
+                // and the ring adds a pixel outside it. A ring drawn around the
+                // pale border instead read as a third grey where the two met.
+                // `focus` rather than `focus-visible`, so the field shows it
+                // however focus arrived, including the gate focusing it on open.
+                className="h-10 min-w-0 flex-1 rounded-full border border-input bg-card px-4 text-base text-foreground outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring aria-disabled:cursor-default aria-disabled:text-muted-foreground"
               />
               <button
                 type="submit"
@@ -229,7 +241,7 @@ function GateDialog({
                 // Not disabled while a check is in flight — that would drop
                 // focus from the button just pressed; submit() ignores repeats.
                 disabled={!password || locked}
-                className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:opacity-40 disabled:hover:bg-card"
+                className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:text-input disabled:hover:bg-card"
               >
                 <ArrowRight aria-hidden="true" />
               </button>
@@ -238,7 +250,7 @@ function GateDialog({
             {/* The line is always there, so nothing moves when a message
                 appears in it. `--destructive` is the site's medium grey — the
                 palette has no red on purpose. */}
-            <p id={messageId} aria-live="polite" className="mt-3 min-h-6 text-base text-destructive">
+            <p id={messageId} aria-live="polite" className="mt-3 min-h-6 whitespace-nowrap text-base text-destructive">
               {message}
             </p>
           </form>
