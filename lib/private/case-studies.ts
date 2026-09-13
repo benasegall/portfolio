@@ -62,11 +62,10 @@ const privateContent: Record<string, PrivateContent> = {
     date: "Two deliverables in twelve weeks. A toolkit for designing fan products faster, and the England app features proving it worked.",
     body: [
       "The project set out to show what IBM's AI technology could do inside the FA's England football app, measured on fan engagement, retention and commercial outcomes. I was the experience designer on a team of five, alongside a developer, data scientist, business analyst and data analyst, over twelve weeks split between research and delivery.",
-      "I audited the England app against its competitors. Most compete on live data, better stats, results and player detail during a match, and do it well.",
-      "What the FA has is an ecosystem of content strong enough to keep a fan in its own app, and data straight from the pitch that others can't match for accuracy or trust. We used fan personas to decide which features to prioritise around those strengths. Most of that content was text. The key was turning it into visual information, stats for each match and a card for each player, and that decided the two features.",
+      "I audited the England app against its competitors. Most compete on live data, better stats, results and player detail during a match.",
+      "What the FA has is an ecosystem of content strong enough to keep fans in its own app, and data straight from the pitch that others can't match for accuracy or trust. We used fan personas to decide which features to prioritise around those strengths. The most important content the FA had was presented in text formats. The key was turning it into visual information, stats for each match and a card for each player.",
       "Halfway through, the brief changed. What began as building AI features for the app became two things at once. We had to build a reusable agentic toolkit for researching, designing and delivering digital fan products, without losing human oversight. The FA work became the case study proving it worked. I wrote code for some of those agents, including the ones that synthesised research and generated design options.",
       "On the product half I designed two features. A live match centre carries a fan through the game across three tabs: a timeline of key events; a stats panel covering possession, momentum and more; and both teams' lineups. The watsonx powered insights sit in the timeline, with polls and predictions fans take part in as the game runs. A players page gives a reference card for each player to use before, during or after.",
-      "The prototype ran on mock data, so what we demonstrated was the experience rather than the integration.",
       "The brief called for live match data, and the obvious move was to compete on how much of it we could show. That meant fighting on the one front where the FA holds no advantage. We used the live data for participation and insight instead, leaning on what only the FA has.",
       "Building the toolkit and the features at the same time was the harder problem. Each risked bending the other out of shape, so we reworked the project to make the FA features the output of the toolkit rather than a separate track.",
       "IBM leadership were very happy with the final presentation. The work has been handed to another team to continue, with a possibility IBM packages it up and takes it to clients.",
@@ -74,7 +73,7 @@ const privateContent: Record<string, PrivateContent> = {
       "The research was done before the brief changed, so all of it pointed at the app. We shaped the toolkit around a traditional consulting product development lifecycle rather than around how our own teams work, and that's the gap I'd close.",
     ],
     sectionTitles: ["Context", "Discovery", "Approach", "Decisions", "Outcome", "Reflection"],
-    sectionLengths: [1, 2, 3, 2, 2, 1],
+    sectionLengths: [1, 2, 2, 2, 2, 1],
     items: [
       { title: "Context", description: "A twelve-week IBM project to show what its AI could do inside the FA's England app." },
       { title: "Insight", description: "The FA's content was rich but mostly text; making it visual gave fans a reason to stay." },
@@ -94,19 +93,21 @@ const privateContent: Record<string, PrivateContent> = {
         privateImg("england-football-app", "existing-app-05", "England+ member benefits listed as bullet points, above an embedded YouTube video."),
         privateImg("england-football-app", "existing-app-06", "Ticket sale dates, prices and concessions set out as text."),
       ] },
-      // Closing Approach, straight after "The prototype ran on mock data": the
-      // wireframe is that prototype, its live score made up. The finished
-      // screens are the cover, so they are not repeated here.
-      { id: "wireframe", title: "Hi-fi wireframe of the matches tab", afterParagraph: 5, items: [
+      // Closing Approach, straight after the paragraph describing the match
+      // centre, which this screen leads into. The finished screens are the
+      // cover, so they are not repeated here.
+      { id: "wireframe", title: "Hi-fi wireframe of the matches tab", afterParagraph: 4, items: [
         privateImg("england-football-app", "wireframe-01", "Hi-fi wireframe of the matches tab: a live France v England score card leading into the match centre, above upcoming fixtures."),
       ] },
       // The lifecycle the toolkit was designed from, closing Decisions, whose
       // last paragraph makes the features the toolkit's output. In order: the
-      // consulting journey (the gap Reflection names), the halfway point where
-      // the brief changed, and where AI could join each stage.
-      { id: "lifecycle", title: "The lifecycle behind the toolkit", afterParagraph: 7, items: [
+      // consulting journey (the gap Reflection names), the lifecycle split into
+      // discovery and delivery, and where AI could join each stage. The second
+      // slide's "6 weeks gone, 6 weeks left" caption was painted out of the
+      // source before processing.
+      { id: "lifecycle", title: "The lifecycle behind the toolkit", afterParagraph: 6, items: [
         privateImg("england-football-app", "lifecycle-01", "Slide, The long journey of a consultant: a timeline from client brief through understanding the client, research, personas and requirements to design and development."),
-        privateImg("england-football-app", "lifecycle-02", "Slide, Product development lifecycle overview: research, requirements and design as discovery, then development, testing and deploy as delivery, captioned 6 weeks gone, 6 weeks left."),
+        privateImg("england-football-app", "lifecycle-02", "Slide, Product development lifecycle overview: research, requirements and design as discovery, then development, testing and deploy as delivery."),
         privateImg("england-football-app", "lifecycle-03", "Slide, AI assistants and agents across the lifecycle: eight stages from market analysis and benchmarking to feature development, where AI can be added into the loop."),
       ] },
     ],
