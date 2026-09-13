@@ -31,11 +31,12 @@ const privateImageSizes: Record<string, [width: number, height: number]> = {
   "england-football-app/existing-app-04": [839, 1600],
   "england-football-app/existing-app-05": [839, 1600],
   "england-football-app/existing-app-06": [839, 1600],
-  "england-football-app/wireframe-01": [811, 1600],
-  "england-football-app/wireframe-02": [811, 1600],
-  "england-football-app/wireframe-03": [811, 1600],
-  "england-football-app/wireframe-04": [811, 1600],
-  "england-football-app/wireframe-05": [811, 1600],
+  "england-football-app/prototype-01": [811, 1600],
+  "england-football-app/prototype-02": [811, 1600],
+  "england-football-app/prototype-03": [811, 1600],
+  "england-football-app/prototype-04": [811, 1600],
+  "england-football-app/prototype-05": [811, 1600],
+  "england-football-app/prototype-06": [811, 1600],
   "england-football-app/lifecycle-01": [1600, 939],
   "england-football-app/lifecycle-02": [1600, 939],
   "england-football-app/lifecycle-03": [1600, 939],
@@ -99,15 +100,16 @@ const privateContent: Record<string, PrivateContent> = {
       ] },
       // Closing Approach, straight after the paragraph describing the two
       // features, in the order a fan meets them: the live card into the match
-      // centre, its three tabs, then the players page. Frames from the
-      // prototype's screen recording, with the pointer painted out.
-      // TITLE TO CONFIRM — to be renamed.
-      { id: "wireframe", title: "Hi-fi wireframe of the matches tab", afterParagraph: 4, items: [
-        privateImg("england-football-app", "wireframe-01", "The matches tab, where a live France v England score card leads into the match centre, above upcoming fixtures."),
-        privateImg("england-football-app", "wireframe-02", "The match centre timeline, with match insights written by IBM watsonx, a goal card and a new poll below."),
-        privateImg("england-football-app", "wireframe-03", "The stats tab, with a match momentum chart powered by IBM watsonx above possession, shots and shots on target."),
-        privateImg("england-football-app", "wireframe-04", "The lineups tab, with England's 4-1-4-1 formation on a pitch and the substitutes below."),
-        privateImg("england-football-app", "wireframe-05", "The players page, with the England squad grouped by position, a photo and name for each player."),
+      // centre, its three tabs, then the players page and a player's card.
+      // Frames from the prototype's screen recording, with the pointer
+      // painted out.
+      { id: "prototype", title: "Prototype screens", afterParagraph: 4, items: [
+        privateImg("england-football-app", "prototype-01", "The matches tab, where a live France v England score card leads into the match centre, above upcoming fixtures."),
+        privateImg("england-football-app", "prototype-02", "The match centre timeline, with match insights written by IBM watsonx, a goal card and a new poll below."),
+        privateImg("england-football-app", "prototype-03", "The stats tab, with a match momentum chart powered by IBM watsonx above possession, shots and shots on target."),
+        privateImg("england-football-app", "prototype-04", "The lineups tab, with England's 4-1-4-1 formation on a pitch and the substitutes below."),
+        privateImg("england-football-app", "prototype-05", "The players page, with the England squad grouped by position, a photo and name for each player."),
+        privateImg("england-football-app", "prototype-06", "Morgan Rogers's player card, with his position, club, age, caps and goals above a heatmap of his touches in the match."),
       ] },
       // The lifecycle the toolkit was designed from, closing Decisions, whose
       // last paragraph makes the features the toolkit's output. In order: the
