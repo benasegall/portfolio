@@ -70,7 +70,7 @@ const privateContent: Record<string, PrivateContent> = {
       "Building the toolkit and the features at the same time was the harder problem. Each risked bending the other out of shape, so we reworked the project to make the FA features the output of the toolkit rather than a separate track.",
       "IBM leadership were very happy with the final presentation. The work has been handed to another team to continue, with a possibility IBM packages it up and takes it to clients.",
       "The next steps we set out were testing with fans, checking accessibility and performance, richer backend services for the FA's own data, and extending beyond the England teams into grassroots football.",
-      "The research was done before the brief changed, so all of it pointed at the app. We shaped the toolkit around a traditional consulting product development lifecycle rather than around how our own teams work, and that's the gap I'd close.",
+      "The research was done before the brief changed, so all of it pointed at the app. We shaped the toolkit around a traditional consulting product development lifecycle rather than around how our own team worked, and that's the gap I'd close.",
     ],
     sectionTitles: ["Context", "Discovery", "Approach", "Decisions", "Outcome", "Reflection"],
     sectionLengths: [1, 2, 2, 2, 2, 1],
