@@ -102,9 +102,8 @@ const privateContent: Record<string, PrivateContent> = {
       // The lifecycle the toolkit was designed from, closing Decisions, whose
       // last paragraph makes the features the toolkit's output. In order: the
       // consulting journey (the gap Reflection names), the lifecycle split into
-      // discovery and delivery, and where AI could join each stage. The second
-      // slide's "6 weeks gone, 6 weeks left" caption was painted out of the
-      // source before processing.
+      // discovery and delivery, and where AI could join each stage. Rendered
+      // from the deck's PDF export rather than screenshots, for the real fonts.
       { id: "lifecycle", title: "The lifecycle behind the toolkit", afterParagraph: 6, items: [
         privateImg("england-football-app", "lifecycle-01", "Slide, The long journey of a consultant: a timeline from client brief through understanding the client, research, personas and requirements to design and development."),
         privateImg("england-football-app", "lifecycle-02", "Slide, Product development lifecycle overview: research, requirements and design as discovery, then development, testing and deploy as delivery."),
