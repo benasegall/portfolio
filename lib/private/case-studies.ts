@@ -1,7 +1,7 @@
 import "server-only"
 
 import { isGated, projects } from "@/lib/portfolio-data"
-import type { GatedProject, MediaItem, Project } from "@/lib/portfolio-data"
+import type { GatedProject, MediaBlock, MediaItem, Project } from "@/lib/portfolio-data"
 
 /*
  * Case studies that sit behind the password gate.
@@ -29,42 +29,59 @@ function privateImg(slug: string, file: string, alt: string, width: number, heig
   return { src: `/api/case-study/${slug}/image/${file}`, width, height, alt }
 }
 
-/*
- * PLACEHOLDER — the approved project text replaces everything below, and the
- * real images replace the numbered SVGs. The structure matches the three public
- * case studies: a dek, three Highlights, then sections whose paragraph counts
- * are given by `sectionLengths`.
- */
+/** PLACEHOLDER gallery — three numbered SVGs, until the real images arrive. */
+function placeholderGallery(
+  slug: string,
+  id: string,
+  title: string,
+  afterParagraph: number,
+): MediaBlock {
+  return {
+    id,
+    title,
+    afterParagraph,
+    items: [1, 2, 3].map((n) =>
+      privateImg(slug, `${id}-0${n}.svg`, `${title} placeholder ${n} of 3`, 1512, 982),
+    ),
+  }
+}
+
 const privateContent: Record<string, PrivateContent> = {
-  "private-project": {
-    date: "Placeholder subtitle. The approved subtitle replaces this line.",
+  "england-football-app": {
+    date: "Two deliverables in twelve weeks. A toolkit for designing fan products faster, and the England app features proving it worked.",
     body: [
-      "Placeholder paragraph. This stands in for the approved project text, which replaces it once the password gate is working.",
-      "Placeholder paragraph. The context section sets out the brief, the team and the constraints.",
-      "Placeholder paragraph. The research section covers what was learned and how.",
-      "Placeholder paragraph. The approach section explains how the problem was framed.",
-      "Placeholder paragraph. A second approach paragraph, to show a section running to more than one.",
-      "Placeholder paragraph. The decisions section covers the trade-offs that shaped the design.",
-      "Placeholder paragraph. The reflection section closes the case study.",
+      "The project set out to show what IBM's AI technology could do inside the FA's England football app, measured on fan engagement, retention and commercial outcomes. I was the experience designer on a team of five, alongside a developer, data scientist, business analyst and data analyst, over twelve weeks split between research and delivery.",
+      "I audited the England app against its competitors. Most compete on live data, better stats, results and player detail during a match, and do it well.",
+      "What the FA has is an ecosystem of content strong enough to keep a fan in its own app, and data straight from the pitch that others can't match for accuracy or trust. We used fan personas to decide which features to prioritise around those strengths.",
+      "Halfway through, the brief changed. What began as building AI features for the app became two things at once. We had to build a reusable agentic toolkit for researching, designing and delivering digital fan products, without losing human oversight. The FA work became the case study proving it worked. I wrote code for some of those agents, including the ones that synthesised research and generated design options.",
+      "On the product half I designed two features. A live match centre carries a fan through the game across three tabs, a timeline of key events, a stats panel covering possession, momentum and more, and both teams' lineups. The watsonx powered insights sit in the timeline, with polls and predictions fans take part in as the game runs. A players page gives a reference card for each player to use before, during or after.",
+      "The prototype ran on mock data, so what we demonstrated was the experience rather than the integration.",
+      "The brief called for live match data, and the obvious move was to compete on how much of it we could show. That meant fighting on the one front where the FA holds no advantage. We used the live data for participation and insight instead, leaning on what only the FA has.",
+      "Building the toolkit and the features at the same time was the harder problem. Each risked bending the other out of shape, so we reworked the project to make the FA features the output of the toolkit rather than a separate track.",
+      "IBM leadership were very happy with the final presentation. The work has been handed to another team to continue, with a possibility IBM packages it up and takes it to clients.",
+      "The next steps we set out were testing with fans, checking accessibility and performance, richer backend services for the FA's own data, and extending beyond the England teams into grassroots football.",
+      "The research was done before the brief changed, so all of it pointed at the app. We shaped the toolkit around a traditional consulting product development lifecycle rather than around how our own teams work, and that's the gap I'd close.",
     ],
-    sectionTitles: ["Context", "Research", "Approach", "Decisions", "Reflection"],
-    sectionLengths: [2, 1, 2, 1, 1],
-    items: [
-      { title: "Context", description: "Placeholder highlight. The approved highlights replace these." },
-      { title: "Research", description: "Placeholder highlight." },
-      { title: "Outcome", description: "Placeholder highlight." },
+    sectionTitles: ["Context", "Discovery", "Approach", "Decisions", "Outcome", "Reflection"],
+    sectionLengths: [1, 2, 3, 2, 2, 1],
+    // No Highlights yet: the copy has none, and the sheet leaves the list out
+    // when `items` is absent.
+    //
+    // PLACEHOLDER galleries, each at the end of a section so no section's
+    // prose is split in two. Real images keep these ids, so the files become
+    // discovery-01.webp and so on — see private/README.md. The titles are
+    // working titles, to confirm when the images arrive.
+    media: [
+      // The competitor audit, closing Discovery.
+      placeholderGallery("england-football-app", "discovery", "Competitor audit", 2),
+      // The two features, closing Approach in the order its second paragraph
+      // describes them.
+      placeholderGallery("england-football-app", "match-centre", "Live match centre", 5),
+      placeholderGallery("england-football-app", "players", "Players page", 5),
+      // The toolkit, closing Decisions, whose last paragraph makes the
+      // features its output.
+      placeholderGallery("england-football-app", "toolkit", "The agentic toolkit", 7),
     ],
-    // Placeholder galleries, each at the end of a section so the text reads as
-    // an unbroken block before the images. Real images keep these ids, so the
-    // files become research-01.webp and so on — see private/README.md.
-    media: (["research", "approach", "decisions"] as const).map((id, index) => ({
-      id,
-      title: id.charAt(0).toUpperCase() + id.slice(1),
-      afterParagraph: [2, 4, 5][index],
-      items: [1, 2, 3].map((n) =>
-        privateImg("private-project", `${id}-0${n}.svg`, `${id} placeholder ${n} of 3`, 1512, 982),
-      ),
-    })),
   },
 }
 
