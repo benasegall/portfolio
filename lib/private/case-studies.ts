@@ -33,8 +33,7 @@ const privateImageSizes: Record<string, [width: number, height: number]> = {
   "england-football-app/existing-app-06": [839, 1600],
   "england-football-app/existing-app-07": [839, 1600],
   "england-football-app/existing-app-08": [839, 1600],
-  "england-football-app/new-features-01": [812, 1600],
-  "england-football-app/new-features-02": [1115, 1072],
+  "england-football-app/wireframe-01": [812, 1600],
   "england-football-app/lifecycle-01": [1600, 939],
   "england-football-app/lifecycle-02": [1600, 939],
   "england-football-app/lifecycle-03": [1600, 939],
@@ -97,11 +96,11 @@ const privateContent: Record<string, PrivateContent> = {
         privateImg("england-football-app", "existing-app-07", "A Register your interest button above a photo of England fans with flags in the stands."),
         privateImg("england-football-app", "existing-app-08", "Squad article in which teammates describe each player in quotes."),
       ] },
-      // The two features, closing Approach, in the order a fan meets them: the
-      // fixtures screen, then the match centre it opens.
-      { id: "new-features", title: "The new features", afterParagraph: 5, items: [
-        privateImg("england-football-app", "new-features-01", "The matches tab, where a live France v England score leads into the match centre above upcoming fixtures."),
-        privateImg("england-football-app", "new-features-02", "Three prototype screens: the players page grouped by position, the stats tab with a match momentum chart, and the timeline with match insights written by IBM watsonx."),
+      // Closing Approach, straight after "The prototype ran on mock data": the
+      // wireframe is that prototype, its live score made up. The finished
+      // screens are the cover, so they are not repeated here.
+      { id: "wireframe", title: "Hi-fi wireframe of the matches tab", afterParagraph: 5, items: [
+        privateImg("england-football-app", "wireframe-01", "Hi-fi wireframe of the matches tab: a live France v England score card leading into the match centre, above upcoming fixtures."),
       ] },
       // The lifecycle the toolkit was designed from, closing Decisions, whose
       // last paragraph makes the features the toolkit's output. In order: the
