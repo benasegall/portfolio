@@ -55,8 +55,38 @@ function withLeadIns(text: string, leadIns?: string[]) {
   return parts
 }
 
+/** Keys typed into a field are text, not navigation; see `lastInput` below. */
+function inTextField(target: EventTarget | null) {
+  return target instanceof Element && target.closest("input, textarea, select, [contenteditable]") !== null
+}
+
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const sheetRef = useRef<HTMLDivElement>(null)
+
+  /*
+   * How the user last acted, outside of typing into a field. The browser keeps
+   * its own version of this to decide when to show focus rings, but it counts
+   * typing as keyboard use, so unlocking a gated case study — which means
+   * typing a password — opened the sheet to a ringed close button that a
+   * click-opened sheet never shows. This version leaves typing out, so the
+   * sheet opens the way its card was opened. See the focus effect below.
+   */
+  const lastInput = useRef<"pointer" | "keyboard">("pointer")
+  useEffect(() => {
+    const onPointer = () => {
+      lastInput.current = "pointer"
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || inTextField(e.target)) return
+      lastInput.current = "keyboard"
+    }
+    document.addEventListener("pointerdown", onPointer, true)
+    document.addEventListener("keydown", onKey, true)
+    return () => {
+      document.removeEventListener("pointerdown", onPointer, true)
+      document.removeEventListener("keydown", onKey, true)
+    }
+  }, [])
 
   /*
    * Focus management. `aria-modal` tells a screen reader's virtual cursor to
@@ -81,7 +111,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       ).filter((el) => el.getClientRects().length > 0)
 
     // The close button, so the first Tab lands somewhere predictable.
-    focusable()[0]?.focus()
+    const first = focusable()[0]
+    first?.focus()
+
+    // Opened by pointer, it takes focus without the ring, until a key that is
+    // not typing suggests the keyboard is in use after all.
+    let release: ((e: KeyboardEvent) => void) | null = null
+    if (first && lastInput.current === "pointer") {
+      first.dataset.quietFocus = ""
+      release = (e: KeyboardEvent) => {
+        if (inTextField(e.target)) return
+        delete first.dataset.quietFocus
+        if (release) document.removeEventListener("keydown", release, true)
+      }
+      document.addEventListener("keydown", release, true)
+    }
 
     const onTab = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return
@@ -110,6 +154,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
     document.addEventListener("keydown", onTab)
     return () => {
       document.removeEventListener("keydown", onTab)
+      if (release) document.removeEventListener("keydown", release, true)
       // Back to the panel that opened it, so the keyboard keeps its place.
       opener?.focus?.()
     }
@@ -203,7 +248,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               type="button"
               aria-label="Close project"
               onClick={onClose}
-              className="pointer-events-auto mr-4 mt-4 flex size-10 cursor-pointer items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="pointer-events-auto mr-4 mt-4 flex size-10 cursor-pointer items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-quiet-focus:focus-visible:ring-0"
             >
               <X aria-hidden="true" />
             </button>
