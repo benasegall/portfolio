@@ -146,6 +146,10 @@ function GateDialog({
         setLockedUntil(Date.now() + wait)
         setMessage(tooManyAttempts(wait))
         setPassword("")
+        // The button is about to be disabled, and a disabled button drops
+        // focus to the page behind the dialog. The field keeps it instead,
+        // and reads the message out through aria-describedby.
+        inputRef.current?.focus()
       } else if (response.status === 401) {
         setMessage(WRONG)
         // Selected rather than cleared: a typo can be fixed, and retyping
@@ -222,7 +226,9 @@ function GateDialog({
               <button
                 type="submit"
                 aria-label="Enter"
-                disabled={!password || pending || locked}
+                // Not disabled while a check is in flight — that would drop
+                // focus from the button just pressed; submit() ignores repeats.
+                disabled={!password || locked}
                 className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-card text-foreground shadow-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:opacity-40 disabled:hover:bg-card"
               >
                 <ArrowRight aria-hidden="true" />
