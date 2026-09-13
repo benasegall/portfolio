@@ -25,19 +25,19 @@ type PrivateContent = Omit<Project, "slug" | "title" | "category" | "cover">
  * sheet can reserve each panel's space before it loads.
  */
 const privateImageSizes: Record<string, [width: number, height: number]> = {
-  "england-football-app/fa-content-01": [794, 1600],
-  "england-football-app/fa-content-02": [794, 1600],
-  "england-football-app/fa-content-03": [794, 1600],
-  "england-football-app/fa-content-04": [794, 1600],
-  "england-football-app/fa-content-05": [794, 1600],
-  "england-football-app/fa-content-06": [794, 1600],
-  "england-football-app/fa-content-07": [794, 1600],
-  "england-football-app/fa-content-08": [794, 1600],
-  "england-football-app/match-centre-01": [1053, 1010],
-  "england-football-app/match-centre-02": [765, 1600],
-  "england-football-app/toolkit-01": [1600, 900],
-  "england-football-app/toolkit-02": [1600, 900],
-  "england-football-app/toolkit-03": [1600, 900],
+  "england-football-app/existing-app-01": [839, 1600],
+  "england-football-app/existing-app-02": [839, 1600],
+  "england-football-app/existing-app-03": [839, 1600],
+  "england-football-app/existing-app-04": [839, 1600],
+  "england-football-app/existing-app-05": [839, 1600],
+  "england-football-app/existing-app-06": [839, 1600],
+  "england-football-app/existing-app-07": [839, 1600],
+  "england-football-app/existing-app-08": [839, 1600],
+  "england-football-app/new-features-01": [812, 1600],
+  "england-football-app/new-features-02": [1115, 1072],
+  "england-football-app/lifecycle-01": [1600, 939],
+  "england-football-app/lifecycle-02": [1600, 939],
+  "england-football-app/lifecycle-03": [1600, 939],
 }
 
 /**
@@ -87,30 +87,30 @@ const privateContent: Record<string, PrivateContent> = {
     media: [
       // The app as it stood: the "ecosystem of content" Discovery ends on,
       // which the features were built to keep fans inside.
-      { id: "fa-content", title: "The FA's own content", afterParagraph: 2, items: [
-        privateImg("england-football-app", "fa-content-01", "Match report article in the England app, France 4-6 England, over a photo of two players embracing."),
-        privateImg("england-football-app", "fa-content-02", "The same match report's lineups, substitutes and scorers, set out as a block of text."),
-        privateImg("england-football-app", "fa-content-03", "England+ launch article, Get closer with England+, with a Join now button."),
-        privateImg("england-football-app", "fa-content-04", "England+ member benefits listed as bullet points, above an embedded YouTube video."),
-        privateImg("england-football-app", "fa-content-05", "Ticket sale dates, prices and concessions set out as text."),
-        privateImg("england-football-app", "fa-content-06", "Article introducing England's U20 Women's World Cup squad, over a team photo."),
-        privateImg("england-football-app", "fa-content-07", "A Register your interest button above a photo of England fans with flags in the stands."),
-        privateImg("england-football-app", "fa-content-08", "Squad article in which teammates describe each player in quotes."),
+      { id: "existing-app", title: "The existing app", afterParagraph: 2, items: [
+        privateImg("england-football-app", "existing-app-01", "Match report article in the England app, France 4-6 England, over a photo of two players embracing."),
+        privateImg("england-football-app", "existing-app-02", "The same match report's lineups, substitutes and scorers, set out as a block of text."),
+        privateImg("england-football-app", "existing-app-03", "England+ launch article, Get closer with England+, with a Join now button."),
+        privateImg("england-football-app", "existing-app-04", "England+ member benefits listed as bullet points, above an embedded YouTube video."),
+        privateImg("england-football-app", "existing-app-05", "Ticket sale dates, prices and concessions set out as text."),
+        privateImg("england-football-app", "existing-app-06", "Article introducing England's U20 Women's World Cup squad, over a team photo."),
+        privateImg("england-football-app", "existing-app-07", "A Register your interest button above a photo of England fans with flags in the stands."),
+        privateImg("england-football-app", "existing-app-08", "Squad article in which teammates describe each player in quotes."),
       ] },
-      // The two features, closing Approach. The composite leads because it
-      // shows both; the fixtures screen after it is how a fan gets there.
-      { id: "match-centre", title: "The match centre and players page", afterParagraph: 5, items: [
-        privateImg("england-football-app", "match-centre-01", "Three prototype screens: the players page grouped by position, the stats tab with a match momentum chart, and the timeline with match insights written by IBM watsonx."),
-        privateImg("england-football-app", "match-centre-02", "The matches tab, where a live France v England score leads into the match centre above upcoming fixtures."),
+      // The two features, closing Approach, in the order a fan meets them: the
+      // fixtures screen, then the match centre it opens.
+      { id: "new-features", title: "The new features", afterParagraph: 5, items: [
+        privateImg("england-football-app", "new-features-01", "The matches tab, where a live France v England score leads into the match centre above upcoming fixtures."),
+        privateImg("england-football-app", "new-features-02", "Three prototype screens: the players page grouped by position, the stats tab with a match momentum chart, and the timeline with match insights written by IBM watsonx."),
       ] },
-      // The toolkit, closing Decisions, whose last paragraph makes the features
-      // its output. In order: the consulting lifecycle it was shaped around (the
-      // gap Reflection names), the halfway point where the brief changed, and
-      // where the agents sit across it.
-      { id: "toolkit", title: "The agentic toolkit", afterParagraph: 7, items: [
-        privateImg("england-football-app", "toolkit-01", "Slide, The long journey of a consultant: a timeline from client brief through understanding the client, research, personas and requirements to design and development."),
-        privateImg("england-football-app", "toolkit-02", "Slide, Product development lifecycle overview: research, requirements and design as discovery, then development, testing and deploy as delivery, captioned 6 weeks gone, 6 weeks left."),
-        privateImg("england-football-app", "toolkit-03", "Slide, AI assistants and agents across the lifecycle: eight stages from market analysis and benchmarking to feature development, where AI can be added into the loop."),
+      // The lifecycle the toolkit was designed from, closing Decisions, whose
+      // last paragraph makes the features the toolkit's output. In order: the
+      // consulting journey (the gap Reflection names), the halfway point where
+      // the brief changed, and where AI could join each stage.
+      { id: "lifecycle", title: "The lifecycle behind the toolkit", afterParagraph: 7, items: [
+        privateImg("england-football-app", "lifecycle-01", "Slide, The long journey of a consultant: a timeline from client brief through understanding the client, research, personas and requirements to design and development."),
+        privateImg("england-football-app", "lifecycle-02", "Slide, Product development lifecycle overview: research, requirements and design as discovery, then development, testing and deploy as delivery, captioned 6 weeks gone, 6 weeks left."),
+        privateImg("england-football-app", "lifecycle-03", "Slide, AI assistants and agents across the lifecycle: eight stages from market analysis and benchmarking to feature development, where AI can be added into the loop."),
       ] },
     ],
   },
