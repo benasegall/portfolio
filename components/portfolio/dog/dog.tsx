@@ -19,8 +19,8 @@ import "./dog.css"
  * A tablet with a trackpad, or a laptop with a touchscreen, gets both, each
  * behaving as its own input would.
  *
- * The drawing is the owner's sketch — see drawing.ts for how the tail is cut
- * out to wag. Decorative throughout, so it is hidden from assistive tech.
+ * The drawing is the owner's sketch — see drawing.ts for how it's split so
+ * the tail can wag. Decorative throughout, so it is hidden from assistive tech.
  *
  * Rendered inside the footer's text column, which is `relative`; dog.css sits
  * him on the top edge of that column, where the closing sentence starts. The
