@@ -4,7 +4,7 @@
  * transparent and cropped to the drawing).
  *
  * It's cut in two so the tail can wag: the tail on its own, and the rest of
- * him. The rest stops ~30px short of where the tail leaves the rump, so at
+ * him. The rest stops ~35px short of where the tail leaves the rump, so at
  * that join the two overlap rather than fade into each other — two fades
  * meeting half-cover the pencil and thin it into a pale line.
  *
@@ -24,7 +24,13 @@ export const DOG_ANCHORS = { z: [0.34, 0.02] } as const
 // the rest of him leaves out. Its outer edges sit out in the blank paper, clear
 // of the fur's tips, so none are left behind on the rump when it swings.
 const TAIL = "M1236 312 L1262 316 L1300 328 L1345 358 L1395 394 L1422 418 L1422 450 L1350 454 L1290 456 L1250 456 L1238 430 L1233 380 Z"
-const TAIL_CUT = "M1268 318 L1300 328 L1345 358 L1395 394 L1422 418 L1422 450 L1350 454 L1290 456 L1272 455 L1266 400 Z"
+const TAIL_CUT = "M1272 319 L1300 328 L1345 358 L1395 394 L1422 418 L1422 450 L1350 454 L1290 456 L1276 455 L1270 400 Z"
+
+// Where the overlap is, the tail fades in from nothing, so as it swings its
+// root ghosts softly over the rump rather than laying a hard-edged copy of the
+// fur on it. It's fully in by 1262, before the rest starts to give way at
+// ~1270, so at rest nothing is ever half there.
+const TAIL_FADE = [1236, 1262] as const
 
 const box = `x="-50" y="-50" width="${DOG_WIDTH + 100}" height="${DOG_HEIGHT + 100}"`
 const feather = (id: string) =>
@@ -46,12 +52,14 @@ export const DOG_BODY =
 /** The tail alone. It swings from where it leaves the rump — see dog.css. */
 export const DOG_TAIL =
   `<defs>${feather("dog-f-tail")}` +
-  `<mask id="dog-m-tail" maskUnits="userSpaceOnUse" ${box}><path d="${TAIL}" fill="#fff" filter="url(#dog-f-tail)"/></mask>` +
+  `<linearGradient id="dog-g-tail" gradientUnits="userSpaceOnUse" x1="${TAIL_FADE[0]}" y1="0" x2="${TAIL_FADE[1]}" y2="0">` +
+  `<stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>` +
+  `<mask id="dog-m-tail" maskUnits="userSpaceOnUse" ${box}><path d="${TAIL}" fill="url(#dog-g-tail)" filter="url(#dog-f-tail)"/></mask>` +
   `</defs>` +
   layer("dog-m-tail")
 
-/** The tail's pivot, as a fraction of the box. */
-export const DOG_TAIL_PIVOT = [1250 / DOG_WIDTH, 420 / DOG_HEIGHT] as const
+/** The tail's pivot, as a fraction of the box: the middle of its root, so the root barely moves. */
+export const DOG_TAIL_PIVOT = [1256 / DOG_WIDTH, 388 / DOG_HEIGHT] as const
 
 /** Motion lines beyond the tip, shown only while it wags. */
 export const DOG_WAG_LINES =
