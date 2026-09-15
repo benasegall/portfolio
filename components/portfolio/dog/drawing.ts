@@ -5,9 +5,9 @@
  * It comes in two pieces so the tail can wag:
  * - /images/site/dog-asleep.webp — all of him but the tail.
  * - /images/site/dog-tail.webp — the tail on its own. It's the long, feathered
- *   tail from the owner's sketch of him awake, set on the sleeping rump. Its
- *   root fades in over the rump, so as it swings it ghosts softly over the fur
- *   rather than laying a hard-edged copy on it.
+ *   tail from the owner's sketch of him awake, set on the sleeping rump. It's
+ *   taken from just past its own dark root, so the join is the rump's hatching
+ *   alone: the two sketches' dark roots stacked on each other were near black.
  *
  * All coordinates are the sleeping drawing's own pixels.
  */
