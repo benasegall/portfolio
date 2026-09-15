@@ -67,7 +67,7 @@ function pencil(points: [number, number][], className: string, size: number) {
 
 const Z: [number, number][] = [[2.2, 2.4], [7.8, 2.1], [2.4, 7.8], [8, 7.6]]
 
-export function FooterDog() {
+export function FooterDog({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null)
   // Where the z's float. Inside the dog, so they scroll with the page; a
   // screen-fixed layer kept them in place while the page moved under them.
@@ -140,7 +140,7 @@ export function FooterDog() {
   return (
     <div
       ref={ref}
-      className="dog"
+      className={className ? `dog ${className}` : "dog"}
       aria-hidden="true"
       onPointerDown={(e) => {
         lastPointer.current = e.pointerType

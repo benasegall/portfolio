@@ -26,10 +26,7 @@ export default function Home() {
         </div>
 
         <footer className="page-grid pb-20 pt-12">
-          {/* `relative` so the dog can sit on top of the closing sentence —
-              see components/portfolio/dog. */}
-          <div className="relative md:col-start-2">
-            <FooterDog />
+          <div className="md:col-start-2">
             {/*
               One paragraph, not a heading plus a paragraph. The two halves are
               a single sentence, and as separate blocks they always broke after
@@ -47,7 +44,13 @@ export default function Home() {
               <span className="text-foreground">{philosophy.heading}</span>{" "}
               {philosophy.quote}
             </p>
-            <p className="mt-16 text-detail text-muted-foreground">{footer.copyright}</p>
+            {/* `relative` so the dog can lie on top of the copyright line —
+                see components/portfolio/dog. The gap above leaves him room
+                below the sentence. */}
+            <div className="relative mt-28">
+              <FooterDog className="dog--left" />
+              <p className="text-detail text-muted-foreground">{footer.copyright}</p>
+            </div>
           </div>
         </footer>
       </main>
