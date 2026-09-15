@@ -101,17 +101,19 @@
   }
 }
 
-/* ─── Marks that float off the dog ─── */
-.dog-layer {
-  position: fixed;
+/* ─── The z's, floating off his head ───
+   Inside the dog's own box, so they scroll with the page rather than staying
+   put on screen. `overflow: visible` lets them rise clear of it. */
+.dog__marks {
+  position: absolute;
   inset: 0;
-  z-index: 40;
   pointer-events: none;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .dog-z {
   position: absolute;
+  pointer-events: none;
   opacity: 0;
   animation: dog-z 2.6s ease-out forwards;
 }
@@ -131,7 +133,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dog-layer {
+  .dog__marks {
     display: none;
   }
 

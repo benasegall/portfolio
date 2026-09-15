@@ -38,18 +38,6 @@ const stillness = () => window.matchMedia("(prefers-reduced-motion: reduce)").ma
 
 type Point = { x: number; y: number }
 
-/** One fixed layer for everything that floats, so nothing is clipped by the footer. */
-function layer() {
-  let el = document.querySelector<HTMLElement>("body > .dog-layer")
-  if (!el) {
-    el = document.createElement("div")
-    el.className = "dog-layer"
-    el.setAttribute("aria-hidden", "true")
-    document.body.appendChild(el)
-  }
-  return el
-}
-
 const SVG = "http://www.w3.org/2000/svg"
 
 /** A small pencil mark: the same polyline drawn twice with a little wobble, as a hand would. */
@@ -84,6 +72,9 @@ const Z: [number, number][] = [[2.2, 2.4], [7.8, 2.1], [2.4, 7.8], [8, 7.6]]
 
 export function FooterDog() {
   const ref = useRef<HTMLDivElement>(null)
+  // Where the z's float. Inside the dog, so they scroll with the page; a
+  // screen-fixed layer kept them in place while the page moved under them.
+  const marks = useRef<HTMLDivElement>(null)
   const [awake, setAwake] = useState(false)
   const awakeRef = useRef(false)
   awakeRef.current = awake
@@ -106,10 +97,10 @@ export function FooterDog() {
     return () => observer.disconnect()
   }, [])
 
-  /** A point on the dog, as a fraction of its drawing's box. */
+  /** A point on the dog, as a fraction of its box, in the box's own pixels. */
   const at = (fx: number, fy: number): Point | null => {
-    const box = ref.current?.getBoundingClientRect()
-    return box ? { x: box.left + box.width * fx, y: box.top + box.height * fy } : null
+    const el = ref.current
+    return el ? { x: el.offsetWidth * fx, y: el.offsetHeight * fy } : null
   }
 
   // The odd "z" while it sleeps — only while it's on screen, and not while awake.
@@ -129,7 +120,7 @@ export function FooterDog() {
         z.style.top = `${head.y - size / 2}px`
         z.style.setProperty("--dx", `${random(6, 16)}px`)
         z.addEventListener("animationend", () => z.remove(), { once: true })
-        layer().appendChild(z)
+        marks.current?.appendChild(z)
       }
       timer = window.setTimeout(snore, random(2600, 3600))
     }
@@ -189,6 +180,7 @@ export function FooterDog() {
       }}
     >
       {near ? <svg viewBox={DOG_VIEWBOX} dangerouslySetInnerHTML={{ __html: DOG_MARKUP }} /> : null}
+      <div ref={marks} className="dog__marks" />
     </div>
   )
 }
