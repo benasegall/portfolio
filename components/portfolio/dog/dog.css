@@ -49,12 +49,24 @@
 .dog__head {
   transform-box: view-box;
   transform-origin: 452px 440px;
-  transform: translateY(8px) rotate(-1.5deg);
+  transform: translateY(12px) rotate(-2deg);
   transition: transform 0.45s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .dog[data-awake="true"] .dog__head {
   transform: none;
+}
+
+/* The band of body around the head (see drawing.ts). Hidden while his head is
+   down over it, so the fur under his chin isn't drawn twice; back as the head
+   lifts, on the same timing, so the head's edge always lies over solid body. */
+.dog__band {
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.dog[data-awake="true"] .dog__band {
+  opacity: 1;
 }
 
 /* The tail trails off to the right; it wags from where it leaves the rump —
@@ -138,6 +150,7 @@
   }
 
   .dog__head,
+  .dog__band,
   .dog[data-wag] .dog__tail,
   .dog[data-wag] .dog__wag {
     animation: none;
