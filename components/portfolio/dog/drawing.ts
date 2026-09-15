@@ -10,10 +10,16 @@
  * a pale line across his chest; an overlap only ever lays the same strokes
  * over themselves, so it doesn't show.
  *
+ * The head layer also fades out below the chin. Asleep, his head dips and
+ * slides over his chest, so the fur there would be drawn twice and read as a
+ * dark band; the fade lets the head's copy give way to the body's. It starts
+ * below where the body takes over, so awake there is no thin spot.
+ *
  * Over the head sit the closed eyes: the sketch has him awake, so asleep a
- * soft cover takes out each eye, fur strokes in the drawing's own hand fill
- * it back in, and a dark lid crease sits across it. Awake, they simply go,
- * and his eyes are the sketch's own.
+ * soft cover takes out each eye and the sketch's own cheek fur, from just
+ * below, is laid over the gap — a clone, so the texture is the drawing's
+ * rather than an imitation of it. A single fine pencil arc sits over each:
+ * the closed lid. Awake, they simply go, and his eyes are the sketch's own.
  *
  * All coordinates are the cropped drawing's own pixels.
  */
@@ -35,27 +41,32 @@ const TAIL_CUT = "M1166 598 L1192 584 L1278 644 L1352 700 L1352 752 L1280 742 L1
 export const DOG_PIVOTS = { head: "452px 440px", tail: "1140px 640px" }
 export const DOG_ANCHORS = { z: [0.4, 0.04] } as const
 
-// Seeded, so the closed eyes come out the same on every render.
-let seed = 5
-const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
-const r = (a: number, b: number) => a + rnd() * (b - a)
 const f = (n: number) => n.toFixed(1)
 
+/**
+ * The closed eyes: where they sit, how big a cover each needs, and where its
+ * borrowed fur comes from (an offset to a patch of plain fur nearby). The
+ * right eye has a heavy dark socket on its lower side and dark fur below it,
+ * so its cover is larger and its fur comes from between the eyes instead.
+ */
+const EYES = [
+  { cx: 399, cy: 193, rx: 29, ry: 23, tilt: -1, from: [0, 44] },
+  { cx: 534, cy: 217, rx: 32, ry: 26, tilt: 2, from: [-56, 4] },
+] as const
+
 function closedEye(cx: number, cy: number, tilt: number) {
-  let fur = ""
-  for (let i = 0; i < 26; i++) {
-    const a = r(-0.2, 0.9), l = r(9, 17), x = cx + r(-22, 20), y = cy + r(-17, 13)
-    if (((x - cx) / 24) ** 2 + ((y - cy) / 18) ** 2 > 1) continue
-    fur += `M${f(x)} ${f(y)}l${f(Math.cos(a) * l)} ${f(Math.sin(a) * l)}`
-  }
   const x = (v: number) => f(cx + v)
+  // The lid: one fine arc bowing upward, drawn twice as a pencil would
+  const arc = (dy: number) =>
+    `M${x(-23)} ${f(cy + 4 + dy - tilt)} C${x(-12)} ${f(cy - 6 + dy)} ${x(11)} ${f(cy - 7 + dy)} ${x(23)} ${f(cy + 3 + dy + tilt)}`
   return (
-    `<ellipse cx="${cx}" cy="${cy}" rx="22" ry="17" fill="#fff" stroke="none" filter="url(#dog-soft)"/>` +
-    `<path d="${fur}" stroke-width="3.4" stroke-opacity="0.72"/>` +
-    `<path d="M${x(-24)} ${f(cy - 1 - tilt)} C${x(-13)} ${f(cy + 9)} ${x(12)} ${f(cy + 10)} ${x(24)} ${f(cy - 2 + tilt)}" stroke-width="7" stroke-opacity="0.95"/>` +
-    `<path d="M${x(-20)} ${f(cy + 2 - tilt)} C${x(-9)} ${f(cy + 10)} ${x(9)} ${f(cy + 11)} ${x(20)} ${f(cy + 1 + tilt)}" stroke-width="3" stroke-opacity="0.5"/>`
+    `<path d="${arc(5)}" stroke-width="4.6" stroke-opacity="0.92"/>` +
+    `<path d="${arc(6.6)}" stroke-width="2.4" stroke-opacity="0.45"/>`
   )
 }
+
+// Wide enough that the soft edge falls outside the eye's dark ring, or a ghost of it shows
+const cover = (e: (typeof EYES)[number]) => `<ellipse cx="${e.cx}" cy="${e.cy}" rx="${e.rx}" ry="${e.ry}"/>`
 
 const box = `x="-50" y="-50" width="${DOG_WIDTH + 100}" height="${DOG_HEIGHT + 100}"`
 const layer = (mask: string) => `<image href="${DOG_IMAGE}" width="${DOG_WIDTH}" height="${DOG_HEIGHT}" mask="url(#${mask})"/>`
@@ -66,13 +77,20 @@ export const DOG_MARKUP =
   `<filter id="dog-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.5"/></filter>` +
   `<mask id="dog-m-rest" maskUnits="userSpaceOnUse" ${box}><rect ${box} fill="#fff"/>` +
   `<path d="${HEAD_CUT}" fill="#000" filter="url(#dog-feather)"/><path d="${TAIL_CUT}" fill="#000" filter="url(#dog-feather)"/></mask>` +
-  `<mask id="dog-m-head" maskUnits="userSpaceOnUse" ${box}><path d="${HEAD}" fill="#fff" filter="url(#dog-feather)"/></mask>` +
+  `<linearGradient id="dog-chin" gradientUnits="userSpaceOnUse" x1="0" y1="398" x2="0" y2="440"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>` +
+  `<mask id="dog-m-head" maskUnits="userSpaceOnUse" ${box}><path d="${HEAD}" fill="url(#dog-chin)" filter="url(#dog-feather)"/></mask>` +
   `<mask id="dog-m-tail" maskUnits="userSpaceOnUse" ${box}><path d="${TAIL}" fill="#fff" filter="url(#dog-feather)"/></mask>` +
+  EYES.map((e, i) => `<mask id="dog-m-eye${i}" maskUnits="userSpaceOnUse" ${box}><g fill="#fff" filter="url(#dog-soft)">${cover(e)}</g></mask>`).join("") +
   `</defs>` +
   `<g class="dog__tail">${layer("dog-m-tail")}</g>` +
   layer("dog-m-rest") +
   `<g class="dog__head">${layer("dog-m-head")}` +
-  `<g class="dog__eye-closed" fill="none" stroke="#333" stroke-linecap="round">${closedEye(399, 192, -1)}${closedEye(531, 214, 2)}</g>` +
+  `<g class="dog__eye-closed">` +
+  // Paper over the open eyes, then the cheek fur from just below laid over it
+  `<g fill="#fff" filter="url(#dog-soft)">${EYES.map(cover).join("")}</g>` +
+  EYES.map((e, i) => `<image href="${DOG_IMAGE}" x="${-e.from[0]}" y="${-e.from[1]}" width="${DOG_WIDTH}" height="${DOG_HEIGHT}" mask="url(#dog-m-eye${i})"/>`).join("") +
+  `<g fill="none" stroke="#333" stroke-linecap="round">${EYES.map((e) => closedEye(e.cx, e.cy, e.tilt)).join("")}</g>` +
+  `</g>` +
   `</g>` +
   // Motion lines beside the tail, only while it wags
   `<g class="dog__wag" fill="none" stroke="#333" stroke-linecap="round">` +

@@ -49,7 +49,7 @@
 .dog__head {
   transform-box: view-box;
   transform-origin: 452px 440px;
-  transform: translateY(12px) rotate(-2deg);
+  transform: translateY(8px) rotate(-1.5deg);
   transition: transform 0.45s cubic-bezier(0.2, 0, 0, 1);
 }
 
