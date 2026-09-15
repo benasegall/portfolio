@@ -8,23 +8,19 @@ import "./dog.css"
  * A pencil-sketched chocolate doodle puppy, dozing on top of the footer's
  * closing sentence.
  *
- * Asleep he's the sleeping sketch — lying flat, head on his paws — and while
- * he's on screen he lets out a hand-drawn "z" every few seconds, which is what
- * says he is alive and worth touching. Wake him and the awake sketch fades in,
- * rising as he lifts his head to look at you, and his tail gives one wag.
+ * He stays asleep — lying flat, head on his paws — and while he's on screen he
+ * lets out a hand-drawn "z" every few seconds, which is what says he is alive
+ * and worth touching. Reach for him and his tail gives one wag in his sleep.
  *
- * How you wake him depends on the input, not the device:
- * - A mouse or trackpad hovers. One wag per hover, so coming back while he's
- *   still awake earns another, and he dozes off a moment after it leaves.
- * - A finger or stylus taps. One wag per tap; he stays awake a little longer,
- *   since a touch has no "leave" to tell him you've gone. A touch that turns
- *   into a scroll doesn't wake him — it never becomes a tap.
+ * How you reach him depends on the input, not the device:
+ * - A mouse or trackpad hovers: one wag per hover.
+ * - A finger or stylus taps: one wag per tap. A touch that turns into a
+ *   scroll doesn't count — it never becomes a tap.
  * A tablet with a trackpad, or a laptop with a touchscreen, gets both, each
  * behaving as its own input would.
  *
- * The drawings are the owner's two sketches — see drawing.ts for how they
- * share a box and how the tail is cut out to wag. Decorative throughout, so
- * it is hidden from assistive tech.
+ * The drawing is the owner's sketch — see drawing.ts for how the tail is cut
+ * out to wag. Decorative throughout, so it is hidden from assistive tech.
  *
  * Rendered inside the footer's text column, which is `relative`; dog.css sits
  * him on the top edge of that column, where the closing sentence starts. The
@@ -76,10 +72,6 @@ export function FooterDog() {
   // Where the z's float. Inside the dog, so they scroll with the page; a
   // screen-fixed layer kept them in place while the page moved under them.
   const marks = useRef<HTMLDivElement>(null)
-  const [awake, setAwake] = useState(false)
-  const awakeRef = useRef(false)
-  awakeRef.current = awake
-  const sleepTimer = useRef(0)
   const [near, setNear] = useState(false)
 
   // Mount the drawing once the footer is within a screen or so.
@@ -104,7 +96,7 @@ export function FooterDog() {
     return el ? { x: el.offsetWidth * fx, y: el.offsetHeight * fy } : null
   }
 
-  // The odd "z" while it sleeps — only while it's on screen, and not while awake.
+  // The odd "z" while he sleeps — only while he's on screen.
   useEffect(() => {
     const el = ref.current
     if (!el) return
@@ -114,7 +106,7 @@ export function FooterDog() {
     let timer = 0
     const snore = () => {
       const head = at(...DOG_ANCHORS.z)
-      if (visible && !awakeRef.current && !stillness() && head) {
+      if (visible && !stillness() && head) {
         const size = random(10, 14)
         const z = pencil(Z, "dog-z", size)
         z.style.left = `${head.x + random(-2, 4)}px`
@@ -132,23 +124,14 @@ export function FooterDog() {
     }
   }, [])
 
-  useEffect(() => () => clearTimeout(sleepTimer.current), [])
-
-  const wake = () => {
-    clearTimeout(sleepTimer.current)
-    setAwake(true)
-    // One wag per hover. The attribute is dropped and set again so the
-    // animation restarts even when he's still awake from the last one.
+  // One wag. The attribute is dropped and set again so the animation
+  // restarts even if the last wag is still going.
+  const wag = () => {
     const el = ref.current
     if (!el) return
     el.removeAttribute("data-wag")
     void el.offsetWidth
     el.setAttribute("data-wag", "")
-  }
-
-  const settle = (after = 1600) => {
-    clearTimeout(sleepTimer.current)
-    sleepTimer.current = window.setTimeout(() => setAwake(false), after)
   }
 
   /** The kind of pointer that last touched him, read by the click that follows. */
@@ -158,35 +141,24 @@ export function FooterDog() {
     <div
       ref={ref}
       className="dog"
-      data-awake={awake}
       aria-hidden="true"
+      onPointerDown={(e) => {
+        lastPointer.current = e.pointerType
+      }}
+      onPointerEnter={(e) => {
+        if (e.pointerType === "mouse") wag()
+      }}
+      // A tap arrives as a click; a mouse click is ignored, since hover has
+      // already wagged. Touches that scroll never produce one.
+      onClick={() => {
+        if (lastPointer.current !== "mouse") wag()
+      }}
       onAnimationEnd={(e) => {
         if (e.animationName === "dog-wag") ref.current?.removeAttribute("data-wag")
       }}
     >
       {near ? <svg viewBox={DOG_VIEWBOX} dangerouslySetInnerHTML={{ __html: DOG_MARKUP }} /> : null}
       <div ref={marks} className="dog__marks" />
-      {/* Where he can be woken: the sleeping drawing, or all of him once he's
-          up (see `.dog__hit` in dog.css). */}
-      <div
-        className="dog__hit"
-        onPointerDown={(e) => {
-          lastPointer.current = e.pointerType
-        }}
-        onPointerEnter={(e) => {
-          if (e.pointerType === "mouse") wake()
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType === "mouse") settle()
-        }}
-        // A tap arrives as a click; a mouse click is ignored, since hover has
-        // already done the work. Touches that scroll never produce one.
-        onClick={() => {
-          if (lastPointer.current === "mouse") return
-          wake()
-          settle(2600)
-        }}
-      />
     </div>
   )
 }
