@@ -21,10 +21,13 @@
  *   body and never meets another fade.
  *
  * The closed eyes are the owner's own drawing of them, from a sleeping
- * version of the sketch (/images/site/dog-eyes.webp, paper made transparent
- * the same way). Asleep, a soft cover takes out each open eye and that
- * drawing is laid over it, scaled and turned so both of its closed eyes land
- * on the sketch's open ones. Awake, they go, and his eyes are the sketch's.
+ * version of the sketch (/images/site/dog-eyes.webp, pencil on white). Asleep
+ * that drawing is cross-faded in over each open eye, scaled and turned so its
+ * two closed eyes land on the sketch's open ones. It's opaque on purpose: a
+ * transparent patch needs a white cover under it to hide the open eye, and
+ * the cover's soft edge half-whitened the fur into a grey ring around each
+ * eye. An opaque one simply blends into the drawing, fur into fur. Awake it
+ * goes, and his eyes are the sketch's own.
  *
  * All coordinates are the cropped drawing's own pixels.
  */
@@ -48,26 +51,26 @@ export const DOG_PIVOTS = { head: "452px 440px", tail: "1140px 640px" }
 export const DOG_ANCHORS = { z: [0.4, 0.04] } as const
 
 /**
- * The closed eyes. `covers` take out the sketch's open eyes (the right one is
- * larger, for its heavy dark socket). The eyes drawing is 335 × 185; its two
+ * The closed eyes. Each shows through a soft oval: solid over the open eye
+ * and its dark socket (the right one's is heavier, so its oval is larger),
+ * blending out over ~8px beyond. The eyes drawing is 335 × 185; its two
  * closed eyes sit at (88, 88) and (228, 102), and this transform — scale
  * 0.951, turned 3.75° — puts them on the open eyes at (399, 192) and
  * (531, 214).
  */
-const EYE_COVERS = [
-  { cx: 399, cy: 191, rx: 34, ry: 25 },
-  { cx: 534, cy: 215, rx: 36, ry: 27 },
+const EYE_PATCHES = [
+  { cx: 399, cy: 192, rx: 32, ry: 26 },
+  { cx: 535, cy: 216, rx: 36, ry: 29 },
 ] as const
 const EYES_TRANSFORM = "matrix(0.949 0.0622 -0.0622 0.949 320.96 103.02)"
 
 const box = `x="-50" y="-50" width="${DOG_WIDTH + 100}" height="${DOG_HEIGHT + 100}"`
 const layer = (mask: string) => `<image href="${DOG_IMAGE}" width="${DOG_WIDTH}" height="${DOG_HEIGHT}" mask="url(#${mask})"/>`
-const covers = EYE_COVERS.map((e) => `<ellipse cx="${e.cx}" cy="${e.cy}" rx="${e.rx}" ry="${e.ry}"/>`).join("")
+const patches = EYE_PATCHES.map((e) => `<ellipse cx="${e.cx}" cy="${e.cy}" rx="${e.rx}" ry="${e.ry}"/>`).join("")
 
 export const DOG_MARKUP =
   `<defs>` +
   `<filter id="dog-feather" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>` +
-  `<filter id="dog-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.5"/></filter>` +
   // Body: everything but the head and the tail
   `<mask id="dog-m-rest" maskUnits="userSpaceOnUse" ${box}><rect ${box} fill="#fff"/>` +
   `<g fill="#000" filter="url(#dog-feather)"><path d="${HEAD}"/><path d="${TAIL_CUT}"/></g></mask>` +
@@ -78,15 +81,15 @@ export const DOG_MARKUP =
   `<path d="${HEAD_CUT}" fill="#000" filter="url(#dog-feather)"/></mask>` +
   `<mask id="dog-m-head" maskUnits="userSpaceOnUse" ${box}><path d="${HEAD}" fill="#fff" filter="url(#dog-feather)"/></mask>` +
   `<mask id="dog-m-tail" maskUnits="userSpaceOnUse" ${box}><path d="${TAIL}" fill="#fff" filter="url(#dog-feather)"/></mask>` +
-  `<mask id="dog-m-eyes" maskUnits="userSpaceOnUse" ${box}><g fill="#fff" filter="url(#dog-soft)">${covers}</g></mask>` +
+  `<filter id="dog-eye-fade" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>` +
+  `<mask id="dog-m-eyes" maskUnits="userSpaceOnUse" ${box}><g fill="#fff" filter="url(#dog-eye-fade)">${patches}</g></mask>` +
   `</defs>` +
   `<g class="dog__tail">${layer("dog-m-tail")}</g>` +
   layer("dog-m-rest") +
   `<g class="dog__band">${layer("dog-m-band")}</g>` +
   `<g class="dog__head">${layer("dog-m-head")}` +
-  `<g class="dog__eye-closed">` +
-  `<g fill="#fff" filter="url(#dog-soft)">${covers}</g>` +
-  `<g mask="url(#dog-m-eyes)"><image href="${EYES_IMAGE}" width="335" height="185" transform="${EYES_TRANSFORM}"/></g>` +
+  `<g class="dog__eye-closed" mask="url(#dog-m-eyes)">` +
+  `<image href="${EYES_IMAGE}" width="335" height="185" transform="${EYES_TRANSFORM}"/>` +
   `</g>` +
   `</g>` +
   // Motion lines beside the tail, only while it wags
