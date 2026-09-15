@@ -1,10 +1,11 @@
 /*
- * The footer dog: the pencil sketch of a chocolate doodle puppy, lying on top
- * of the footer's closing sentence at the right of its text column — the
- * sentence is his floor. He's too tall to share the copyright line without
- * crowding the text, and there's ~170px of empty page above the sentence.
- * `bottom: 100%` puts his paws on the host's top edge, which is where the
- * sentence starts; the small overlap sets them into the line's leading.
+ * The footer dog: two pencil sketches of a chocolate doodle puppy, asleep and
+ * awake, lying on top of the footer's closing sentence at the right of its
+ * text column — the sentence is his floor. He's too tall awake to share the
+ * copyright line without crowding the text, and there's ~170px of empty page
+ * above the sentence. `bottom: 100%` puts his paws on the host's top edge,
+ * which is where the sentence starts; the small overlap sets them into the
+ * line's leading.
  */
 .dog {
   position: absolute;
@@ -12,11 +13,10 @@
   bottom: calc(100% - 0.1rem);
   width: 13rem;
   max-width: 62%;
-  -webkit-tap-highlight-color: transparent;
-  /* A tap wakes him straight away, without the double-tap-to-zoom wait. */
-  /* Holds his shape before the drawing mounts (DOG_WIDTH / DOG_HEIGHT). */
-  aspect-ratio: 1351 / 808;
-  touch-action: manipulation;
+  /* Holds his shape before the drawings mount (DOG_WIDTH / DOG_HEIGHT). */
+  aspect-ratio: 1422 / 808;
+  /* The box is as tall as he is awake; only `.dog__hit` takes the pointer. */
+  pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -35,37 +35,62 @@
   overflow: visible;
 }
 
-/* Asleep his eyes are the pencil-drawn closed ones; awake, the sketch's own. */
-.dog__eye-closed {
-  transition: opacity 0.2s ease;
+/*
+ * Where he can be woken: the sleeping drawing's height (DOG_ASLEEP_HEIGHT —
+ * he lies along the bottom of the box), so the empty space above him doesn't
+ * count. Once he's up it grows to the whole box, so moving onto his raised
+ * head doesn't count as leaving him.
+ */
+.dog__hit {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 64.2%;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  /* A tap wakes him straight away, without the double-tap-to-zoom wait. */
+  touch-action: manipulation;
 }
 
-.dog[data-awake="true"] .dog__eye-closed {
+.dog[data-awake="true"] .dog__hit {
+  height: 100%;
+}
+
+/*
+ * Asleep and awake are the two drawings, cross-faded. The awake one also
+ * rises a few pixels as it comes in, so it reads as him lifting his head
+ * rather than one picture swapping for another.
+ */
+.dog__asleep,
+.dog__awake {
+  transition:
+    opacity 0.4s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.dog__awake {
   opacity: 0;
+  transform: translateY(14px);
 }
 
-/* Asleep, his head droops a little from the neck; it lifts when he wakes.
-   Pivots are in the drawing's own pixels (see DOG_PIVOTS in drawing.ts). */
-.dog__head {
-  transform-box: view-box;
-  transform-origin: 452px 440px;
-  transform: translateY(8px) rotate(-1.5deg);
-  transition: transform 0.45s cubic-bezier(0.2, 0, 0, 1);
-}
-
-.dog[data-awake="true"] .dog__head {
+.dog[data-awake="true"] .dog__awake {
+  opacity: 1;
   transform: none;
 }
 
+.dog[data-awake="true"] .dog__asleep {
+  opacity: 0;
+}
+
 /* The tail trails off to the right; it wags from where it leaves the rump —
-   once per hover (`data-wag` is set again on every pointer enter). */
+   once per hover or tap (`data-wag` is set again each time). The pivot is in
+   the box's own pixels (see drawing.ts). */
 .dog__tail {
   transform-box: view-box;
-  transform-origin: 1140px 640px;
+  transform-origin: 1158px 640px;
 }
 
 .dog[data-wag] .dog__tail {
-  animation: dog-wag 0.6s ease-in-out;
+  animation: dog-wag 0.6s ease-in-out 0.15s;
 }
 
 @keyframes dog-wag {
@@ -87,7 +112,7 @@
 }
 
 .dog[data-wag] .dog__wag {
-  animation: dog-wag-lines 0.6s ease-in-out;
+  animation: dog-wag-lines 0.6s ease-in-out 0.15s;
 }
 
 @keyframes dog-wag-lines {
@@ -137,7 +162,8 @@
     display: none;
   }
 
-  .dog__head,
+  .dog__asleep,
+  .dog__awake,
   .dog[data-wag] .dog__tail,
   .dog[data-wag] .dog__wag {
     animation: none;

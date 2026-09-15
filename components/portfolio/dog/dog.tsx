@@ -8,9 +8,10 @@ import "./dog.css"
  * A pencil-sketched chocolate doodle puppy, dozing on top of the footer's
  * closing sentence.
  *
- * While he is on screen he lets out a hand-drawn "z" every few seconds, which
- * is what says he is alive and worth touching. Wake him and his eyes open, his
- * head lifts, and his tail gives one wag.
+ * Asleep he's the sleeping sketch — lying flat, head on his paws — and while
+ * he's on screen he lets out a hand-drawn "z" every few seconds, which is what
+ * says he is alive and worth touching. Wake him and the awake sketch fades in,
+ * rising as he lifts his head to look at you, and his tail gives one wag.
  *
  * How you wake him depends on the input, not the device:
  * - A mouse or trackpad hovers. One wag per hover, so coming back while he's
@@ -21,9 +22,9 @@ import "./dog.css"
  * A tablet with a trackpad, or a laptop with a touchscreen, gets both, each
  * behaving as its own input would.
  *
- * The drawing is the owner's sketch — see drawing.ts for how it is layered so
- * the head and tail can move. Decorative throughout, so it is hidden from
- * assistive tech.
+ * The drawings are the owner's two sketches — see drawing.ts for how they
+ * share a box and how the tail is cut out to wag. Decorative throughout, so
+ * it is hidden from assistive tech.
  *
  * Rendered inside the footer's text column, which is `relative`; dog.css sits
  * him on the top edge of that column, where the closing sentence starts. The
@@ -159,28 +160,33 @@ export function FooterDog() {
       className="dog"
       data-awake={awake}
       aria-hidden="true"
-      onPointerDown={(e) => {
-        lastPointer.current = e.pointerType
-      }}
-      onPointerEnter={(e) => {
-        if (e.pointerType === "mouse") wake()
-      }}
-      onPointerLeave={(e) => {
-        if (e.pointerType === "mouse") settle()
-      }}
-      // A tap arrives as a click; a mouse click is ignored, since hover has
-      // already done the work. Touches that scroll never produce one.
-      onClick={() => {
-        if (lastPointer.current === "mouse") return
-        wake()
-        settle(2600)
-      }}
       onAnimationEnd={(e) => {
         if (e.animationName === "dog-wag") ref.current?.removeAttribute("data-wag")
       }}
     >
       {near ? <svg viewBox={DOG_VIEWBOX} dangerouslySetInnerHTML={{ __html: DOG_MARKUP }} /> : null}
       <div ref={marks} className="dog__marks" />
+      {/* Where he can be woken: the sleeping drawing, or all of him once he's
+          up (see `.dog__hit` in dog.css). */}
+      <div
+        className="dog__hit"
+        onPointerDown={(e) => {
+          lastPointer.current = e.pointerType
+        }}
+        onPointerEnter={(e) => {
+          if (e.pointerType === "mouse") wake()
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType === "mouse") settle()
+        }}
+        // A tap arrives as a click; a mouse click is ignored, since hover has
+        // already done the work. Touches that scroll never produce one.
+        onClick={() => {
+          if (lastPointer.current === "mouse") return
+          wake()
+          settle(2600)
+        }}
+      />
     </div>
   )
 }
