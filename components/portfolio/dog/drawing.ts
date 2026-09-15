@@ -27,17 +27,34 @@ const TAIL = "M1236 312 L1262 316 L1300 328 L1345 358 L1395 394 L1422 418 L1422 
 const TAIL_CUT = "M1268 318 L1300 328 L1345 358 L1395 394 L1422 418 L1422 450 L1350 454 L1290 456 L1272 455 L1266 400 Z"
 
 const box = `x="-50" y="-50" width="${DOG_WIDTH + 100}" height="${DOG_HEIGHT + 100}"`
+const feather = (id: string) =>
+  `<filter id="${id}" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>`
 const layer = (mask: string) => `<image href="${DOG_IMAGE}" width="${DOG_WIDTH}" height="${DOG_HEIGHT}" mask="url(#${mask})"/>`
 
-export const DOG_MARKUP =
-  `<defs>` +
-  `<filter id="dog-feather" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>` +
-  `<mask id="dog-m-rest" maskUnits="userSpaceOnUse" ${box}><rect ${box} fill="#fff"/><path d="${TAIL_CUT}" fill="#000" filter="url(#dog-feather)"/></mask>` +
-  `<mask id="dog-m-tail" maskUnits="userSpaceOnUse" ${box}><path d="${TAIL}" fill="#fff" filter="url(#dog-feather)"/></mask>` +
+// Each piece is its own <svg>, stacked in the same box, and the wag moves the
+// tail's <svg> as a whole. Animating the tail inside one shared <svg> repainted
+// the whole drawing every frame, and a bitmap repainted that often is scaled
+// at a lower quality — all of him went soft for as long as the tail moved.
+
+/** Everything but the tail. Never animates, so it's drawn once and stays sharp. */
+export const DOG_BODY =
+  `<defs>${feather("dog-f-rest")}` +
+  `<mask id="dog-m-rest" maskUnits="userSpaceOnUse" ${box}><rect ${box} fill="#fff"/><path d="${TAIL_CUT}" fill="#000" filter="url(#dog-f-rest)"/></mask>` +
   `</defs>` +
-  `<g class="dog__tail">${layer("dog-m-tail")}</g>` +
-  layer("dog-m-rest") +
-  // Motion lines beyond the tip, only while it wags
-  `<g class="dog__wag" fill="none" stroke="#333" stroke-linecap="round">` +
+  layer("dog-m-rest")
+
+/** The tail alone. It swings from where it leaves the rump — see dog.css. */
+export const DOG_TAIL =
+  `<defs>${feather("dog-f-tail")}` +
+  `<mask id="dog-m-tail" maskUnits="userSpaceOnUse" ${box}><path d="${TAIL}" fill="#fff" filter="url(#dog-f-tail)"/></mask>` +
+  `</defs>` +
+  layer("dog-m-tail")
+
+/** The tail's pivot, as a fraction of the box. */
+export const DOG_TAIL_PIVOT = [1250 / DOG_WIDTH, 420 / DOG_HEIGHT] as const
+
+/** Motion lines beyond the tip, shown only while it wags. */
+export const DOG_WAG_LINES =
+  `<g fill="none" stroke="#333" stroke-linecap="round">` +
   `<path d="M1430 398 C1444 414 1448 434 1442 456" stroke-width="4" stroke-opacity="0.75"/>` +
   `<path d="M1456 384 C1474 406 1478 436 1468 466" stroke-width="3" stroke-opacity="0.5"/></g>`

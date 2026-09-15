@@ -27,19 +27,22 @@
   }
 }
 
-.dog svg {
-  display: block;
+/* Body, tail and motion lines: three drawings stacked in the one box (see
+   drawing.ts for why they're separate). */
+.dog > svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
   overflow: visible;
 }
 
 /* The tail trails off to the right; it wags from where it leaves the rump —
-   once per hover or tap (`data-wag` is set again each time). The pivot is in
-   the drawing's own pixels (see drawing.ts). */
+   once per hover or tap (`data-wag` is set again each time). Its pivot is set
+   inline from DOG_TAIL_PIVOT. Kept on its own layer so the wag only moves it,
+   and nothing has to be redrawn. */
 .dog__tail {
-  transform-box: view-box;
-  transform-origin: 1250px 420px;
+  will-change: transform;
 }
 
 .dog[data-wag] .dog__tail {
@@ -62,6 +65,7 @@
 /* Pencil motion lines beside the tail, only for as long as it wags. */
 .dog__wag {
   opacity: 0;
+  will-change: opacity;
 }
 
 .dog[data-wag] .dog__wag {

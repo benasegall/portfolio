@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { DOG_ANCHORS, DOG_MARKUP, DOG_VIEWBOX } from "./drawing"
+import { DOG_ANCHORS, DOG_BODY, DOG_TAIL, DOG_TAIL_PIVOT, DOG_VIEWBOX, DOG_WAG_LINES } from "./drawing"
 import "./dog.css"
 
 /**
@@ -157,7 +157,18 @@ export function FooterDog() {
         if (e.animationName === "dog-wag") ref.current?.removeAttribute("data-wag")
       }}
     >
-      {near ? <svg viewBox={DOG_VIEWBOX} dangerouslySetInnerHTML={{ __html: DOG_MARKUP }} /> : null}
+      {near ? (
+        <>
+          <svg className="dog__body" viewBox={DOG_VIEWBOX} dangerouslySetInnerHTML={{ __html: DOG_BODY }} />
+          <svg
+            className="dog__tail"
+            viewBox={DOG_VIEWBOX}
+            style={{ transformOrigin: `${DOG_TAIL_PIVOT[0] * 100}% ${DOG_TAIL_PIVOT[1] * 100}%` }}
+            dangerouslySetInnerHTML={{ __html: DOG_TAIL }}
+          />
+          <svg className="dog__wag" viewBox={DOG_VIEWBOX} dangerouslySetInnerHTML={{ __html: DOG_WAG_LINES }} />
+        </>
+      ) : null}
       <div ref={marks} className="dog__marks" />
     </div>
   )
