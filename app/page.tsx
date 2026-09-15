@@ -1,3 +1,4 @@
+import { FooterDog } from "@/components/portfolio/dog/dog"
 import { Intro } from "@/components/portfolio/intro"
 import { Projects } from "@/components/portfolio/projects"
 import { philosophy, footer } from "@/lib/portfolio-data"
@@ -25,7 +26,10 @@ export default function Home() {
         </div>
 
         <footer className="page-grid pb-20 pt-12">
-          <div className="md:col-start-2">
+          {/* `relative` so the dog can sit on top of the closing sentence —
+              see components/portfolio/dog. */}
+          <div className="relative md:col-start-2">
+            <FooterDog />
             {/*
               One paragraph, not a heading plus a paragraph. The two halves are
               a single sentence, and as separate blocks they always broke after

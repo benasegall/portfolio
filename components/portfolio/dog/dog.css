@@ -1,0 +1,144 @@
+/*
+ * The footer dog: the pencil sketch of a chocolate doodle puppy, lying on top
+ * of the footer's closing sentence at the right of its text column — the
+ * sentence is his floor. He's too tall to share the copyright line without
+ * crowding the text, and there's ~170px of empty page above the sentence.
+ * `bottom: 100%` puts his paws on the host's top edge, which is where the
+ * sentence starts; the small overlap sets them into the line's leading.
+ */
+.dog {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% - 0.1rem);
+  width: 13rem;
+  max-width: 62%;
+  -webkit-tap-highlight-color: transparent;
+  /* A tap wakes him straight away, without the double-tap-to-zoom wait. */
+  /* Holds his shape before the drawing mounts (DOG_WIDTH / DOG_HEIGHT). */
+  aspect-ratio: 1351 / 808;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+@media (max-width: 809px) {
+  .dog {
+    width: 10rem;
+  }
+}
+
+.dog svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Asleep his eyes are the pencil-drawn closed ones; awake, the sketch's own. */
+.dog__eye-closed {
+  transition: opacity 0.2s ease;
+}
+
+.dog[data-awake="true"] .dog__eye-closed {
+  opacity: 0;
+}
+
+/* Asleep, his head droops a little from the neck; it lifts when he wakes.
+   Pivots are in the drawing's own pixels (see DOG_PIVOTS in drawing.ts). */
+.dog__head {
+  transform-box: view-box;
+  transform-origin: 452px 440px;
+  transform: translateY(12px) rotate(-2deg);
+  transition: transform 0.45s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.dog[data-awake="true"] .dog__head {
+  transform: none;
+}
+
+/* The tail trails off to the right; it wags from where it leaves the rump —
+   once per hover (`data-wag` is set again on every pointer enter). */
+.dog__tail {
+  transform-box: view-box;
+  transform-origin: 1140px 640px;
+}
+
+.dog[data-wag] .dog__tail {
+  animation: dog-wag 0.6s ease-in-out;
+}
+
+@keyframes dog-wag {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(-14deg);
+  }
+  70% {
+    transform: rotate(10deg);
+  }
+}
+
+/* Pencil motion lines beside the tail, only for as long as it wags. */
+.dog__wag {
+  opacity: 0;
+}
+
+.dog[data-wag] .dog__wag {
+  animation: dog-wag-lines 0.6s ease-in-out;
+}
+
+@keyframes dog-wag-lines {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  35%,
+  65% {
+    opacity: 1;
+  }
+}
+
+/* ─── Marks that float off the dog ─── */
+.dog-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.dog-z {
+  position: absolute;
+  opacity: 0;
+  animation: dog-z 2.6s ease-out forwards;
+}
+
+@keyframes dog-z {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(-8deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), -2.25rem) rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dog-layer {
+    display: none;
+  }
+
+  .dog__head,
+  .dog[data-wag] .dog__tail,
+  .dog[data-wag] .dog__wag {
+    animation: none;
+    transition: none;
+  }
+}
