@@ -27,6 +27,12 @@
   }
 }
 
+/* Lying at the left instead, over a short line such as the copyright. */
+.dog--left {
+  right: auto;
+  left: 0;
+}
+
 /* Body, tail and motion lines: three drawings stacked in the one box (see
    drawing.ts for why they're separate). */
 .dog > svg {
