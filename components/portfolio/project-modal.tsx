@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef } from "react"
 import { X } from "lucide-react"
 import type { Project } from "@/lib/portfolio-data"
+import { focusQuietly } from "@/lib/quiet-focus"
 import { ItemList } from "./item-list"
 import { ProjectMedia } from "./project-media"
 
@@ -55,38 +56,8 @@ function withLeadIns(text: string, leadIns?: string[]) {
   return parts
 }
 
-/** Keys typed into a field are text, not navigation; see `lastInput` below. */
-function inTextField(target: EventTarget | null) {
-  return target instanceof Element && target.closest("input, textarea, select, [contenteditable]") !== null
-}
-
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const sheetRef = useRef<HTMLDivElement>(null)
-
-  /*
-   * How the user last acted, outside of typing into a field. The browser keeps
-   * its own version of this to decide when to show focus rings, but it counts
-   * typing as keyboard use, so unlocking a gated case study — which means
-   * typing a password — opened the sheet to a ringed close button that a
-   * click-opened sheet never shows. This version leaves typing out, so the
-   * sheet opens the way its card was opened. See the focus effect below.
-   */
-  const lastInput = useRef<"pointer" | "keyboard">("pointer")
-  useEffect(() => {
-    const onPointer = () => {
-      lastInput.current = "pointer"
-    }
-    const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey || inTextField(e.target)) return
-      lastInput.current = "keyboard"
-    }
-    document.addEventListener("pointerdown", onPointer, true)
-    document.addEventListener("keydown", onKey, true)
-    return () => {
-      document.removeEventListener("pointerdown", onPointer, true)
-      document.removeEventListener("keydown", onKey, true)
-    }
-  }, [])
 
   /*
    * Focus management. `aria-modal` tells a screen reader's virtual cursor to
@@ -110,22 +81,10 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         ),
       ).filter((el) => el.getClientRects().length > 0)
 
-    // The close button, so the first Tab lands somewhere predictable.
+    // The close button, so the first Tab lands somewhere predictable. Opened
+    // by pointer it takes focus without a ring — see lib/quiet-focus.
     const first = focusable()[0]
-    first?.focus()
-
-    // Opened by pointer, it takes focus without the ring, until a key that is
-    // not typing suggests the keyboard is in use after all.
-    let release: ((e: KeyboardEvent) => void) | null = null
-    if (first && lastInput.current === "pointer") {
-      first.dataset.quietFocus = ""
-      release = (e: KeyboardEvent) => {
-        if (inTextField(e.target)) return
-        delete first.dataset.quietFocus
-        if (release) document.removeEventListener("keydown", release, true)
-      }
-      document.addEventListener("keydown", release, true)
-    }
+    focusQuietly(first)
 
     const onTab = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return
@@ -154,9 +113,11 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
     document.addEventListener("keydown", onTab)
     return () => {
       document.removeEventListener("keydown", onTab)
-      if (release) document.removeEventListener("keydown", release, true)
-      // Back to the panel that opened it, so the keyboard keeps its place.
-      opener?.focus?.()
+      // Back to the panel that opened it, so the keyboard keeps its place —
+      // quietly, or a sheet reached by pointer would leave a ring around the
+      // card on the way out. Unlocking a gated project means typing, which
+      // the browser alone would read as keyboard use.
+      focusQuietly(opener)
     }
   }, [project])
 

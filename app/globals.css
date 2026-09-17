@@ -327,6 +327,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Focus this code moved on the visitor's behalf while they were using a
+     pointer. The ring belongs to the keyboard; see lib/quiet-focus, which
+     sets and clears this. `!important` because the ring it has to beat is
+     Vitrine's own `.slider__item:focus-visible` rule, inside the library. */
+  [data-quiet-focus]:focus-visible {
+    outline: none !important;
+  }
   body {
     @apply bg-background text-foreground text-base;
   }
