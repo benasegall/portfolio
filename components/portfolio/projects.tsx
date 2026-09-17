@@ -6,6 +6,7 @@ import type { SliderItem } from "@ocarignan/vitrine"
 import "@ocarignan/vitrine/styles.css"
 import type { GatedProject, Project } from "@/lib/portfolio-data"
 import { isGated, projects } from "@/lib/portfolio-data"
+import { focusQuietly } from "@/lib/quiet-focus"
 import { PasswordGate } from "./password-gate"
 import { ProjectModal } from "./project-modal"
 
@@ -66,12 +67,14 @@ export function Projects() {
 
   const closeGate = useCallback(() => {
     setGate(null)
-    card.current?.focus()
+    // Quietly: the visitor has just been typing in the gate, which the browser
+    // would read as keyboard use and ring the card. See lib/quiet-focus.
+    focusQuietly(card.current)
   }, [])
 
   const unlock = useCallback((content: Project) => {
     unlocked.current.set(content.slug, content)
-    card.current?.focus()
+    focusQuietly(card.current)
     setGate(null)
     setActive(content)
   }, [])
