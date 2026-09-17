@@ -6,29 +6,25 @@ import { profile } from "@/lib/portfolio-data"
 const PANEL_ID = "bio-more"
 
 /**
- * The bio, with two extra paragraphs that expand in above the pinned
- * "Currently at IBM" line — that line is the last thing read in both states.
+ * The bio, with an extra paragraph that expands in above the pinned
+ * "Currently at IBM" line, and a visible trigger below that line.
  *
- * The whole block is the target — hover on a mouse, tap on a touch screen,
- * Tab and Enter/Space on a keyboard — but the control and the pointer surface
- * are deliberately separate elements.
+ * Opening is a click or tap anywhere on the block, or Enter/Space on the
+ * trigger — never hover. The block used to open on hover, which left nothing
+ * on screen to say it could open at all, and made it open by accident as the
+ * pointer crossed the page.
  *
- * The button is a real button and owns everything assistive tech and the
- * keyboard rely on: the accessible name, aria-expanded, aria-controls, native
- * Enter/Space activation, and a focus ring drawn around the whole block. It is
- * `pointer-events-none`, so it never becomes the hit-test target and the prose
- * underneath stays selectable and right-clickable — a stretched button on top
- * would swallow both.
- *
- * Pointer input therefore lands on the wrapper, which owns hover and tap. The
- * button's own click still bubbles up to that same handler, so keyboard and
- * pointer share one code path and the state can never be toggled twice.
+ * Only the trigger is a button. The block's own click handler is a larger
+ * pointer target on top of it, not a second control, so the keyboard and
+ * screen readers meet one button with one name and one expanded state. The
+ * trigger's own click bubbles to that same handler, so there is one code path
+ * and the state can never toggle twice.
  *
  * Height animates through the 0fr -> 1fr grid track rather than a measured
  * pixel height, which keeps it dependency-free and correct at any width. The
- * `visibility` flip (delayed to the end of the collapse) is what actually
- * takes the hidden copy out of the accessibility tree and out of tab order —
- * clipping alone would leave it readable to a screen reader.
+ * `visibility` flip (delayed to the end of the collapse) is what takes the
+ * hidden copy out of the accessibility tree and out of tab order — clipping
+ * alone would leave it readable to a screen reader.
  *
  * Container padding is reserved in both states and cancelled by the matching
  * negative margins, so the panel appears around text that never moves. The
@@ -37,64 +33,55 @@ const PANEL_ID = "bio-more"
  */
 export function Bio() {
   const [open, setOpen] = useState(false)
-  /**
-   * A mouse already governs the block through hover, so its click must not
-   * toggle it straight back shut. Touch and keyboard have no hover to lean
-   * on, so theirs must. A keyboard activation leaves this null — no pointer
-   * event precedes it.
-   */
-  const pointerType = useRef<string | null>(null)
+  const blockRef = useRef<HTMLDivElement>(null)
 
   const motion =
     "duration-[350ms] ease-[cubic-bezier(.2,0,0,1)] motion-reduce:transition-none"
 
+  function toggle() {
+    const block = blockRef.current
+    // Selecting text ends in a click. Leave the bio as it is, so it can still
+    // be copied from.
+    const selection = window.getSelection()
+    if (selection && !selection.isCollapsed && block?.contains(selection.anchorNode)) return
+
+    // Closing removes the paragraph above the trigger, so everything below
+    // it rises by that much. If the top of the bio has already scrolled off
+    // screen, that can carry the trigger up out of view with it — bring the
+    // bio back to the top of the screen instead. The block's top edge does
+    // not move during the collapse, so the scroll can run alongside it.
+    if (open && block && block.getBoundingClientRect().top < 0) {
+      const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      block.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" })
+    }
+    setOpen(!open)
+  }
+
   return (
     <div className="mt-8">
+      {/*
+        Without JavaScript the trigger can't work, so the whole bio shows
+        instead and the trigger is hidden. React renders this on the server
+        only; a browser running scripts ignores it.
+      */}
+      <noscript>
+        <style>{`
+          #${PANEL_ID} { grid-template-rows: 1fr !important; }
+          #${PANEL_ID} > div { visibility: visible !important; }
+          [data-bio-trigger] { display: none !important; }
+        `}</style>
+      </noscript>
+
       <div
-        onPointerDown={(e) => {
-          pointerType.current = e.pointerType
-        }}
-        onPointerEnter={(e) => {
-          if (e.pointerType === "mouse") setOpen(true)
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType === "mouse") setOpen(false)
-        }}
-        // Fires for a tap, and for the button's own Enter/Space click bubbling
-        // up. A mouse click is ignored because hover already governs the block
-        // — which also means a drag to select text never toggles it.
-        onClick={() => {
-          const fromMouse = pointerType.current === "mouse"
-          pointerType.current = null
-          if (fromMouse) return
-          setOpen((wasOpen) => !wasOpen)
-        }}
-        // touch-manipulation drops the double-tap zoom delay. Nothing here
-        // calls preventDefault, so a scroll or a long-press to select still
-        // behaves normally and never fires the click.
-        className={`relative -mx-4 -my-3 touch-manipulation rounded-2xl px-4 py-3 transition-colors ${motion} ${
+        ref={blockRef}
+        onClick={toggle}
+        // scroll-mt leaves a little air above the bio when closing scrolls
+        // back to it, rather than butting the text against the screen edge.
+        // The tap highlight is off because the grey panel is the feedback.
+        className={`group -mx-4 -my-3 cursor-pointer scroll-mt-6 touch-manipulation [-webkit-tap-highlight-color:transparent] rounded-2xl px-4 py-3 transition-colors ${motion} ${
           open ? "bg-muted" : "bg-muted/0"
         }`}
       >
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={PANEL_ID}
-          // Only a keyboard focus expands. A tap focuses the button too on
-          // some platforms, and expanding here would fight the click that
-          // follows it.
-          onFocus={(e) => {
-            if (e.currentTarget.matches(":focus-visible")) setOpen(true)
-          }}
-          onBlur={() => setOpen(false)}
-          // pointer-events-none is what keeps the bio selectable: the button
-          // covers the block for the focus ring only, and every mouse and
-          // touch event passes through it to the text.
-          className="pointer-events-none absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <span className="sr-only">More about {profile.name}</span>
-        </button>
-
         {/*
           No flex `gap` here: a gap would apply either side of the collapsed
           panel and double the space between the bio and the pinned line.
@@ -119,7 +106,6 @@ export function Bio() {
             style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
           >
             <div
-              inert={!open}
               className={`overflow-hidden transition-[visibility] duration-0 motion-reduce:delay-0 ${
                 open ? "visible delay-0" : "invisible delay-[350ms]"
               }`}
@@ -143,6 +129,69 @@ export function Bio() {
               {profile.current.availability}
             </span>
           </p>
+
+          {/*
+            The trigger is body size, with a thin plus or minus beside it. The
+            icon is what marks it as a control, and the extra space above sets
+            it apart from the paragraph.
+
+            Black by default, so a touch screen — which has no hover to
+            reveal anything with — shows the trigger at full strength from the
+            start. Where a pointer can hover, it rests in the body grey and
+            goes black as the pointer crosses the block, so the label answers
+            the cursor; the block is the target, not the label alone, which is
+            why the hover lives on the block.
+
+            The condition is the input, not the width, unlike ItemList's
+            resting highlight: this is about whether hover exists to reveal
+            anything, so a narrow window with a mouse still behaves as the
+            desktop it is.
+
+            transition-colors without the 350ms panel timing: this is the
+            same quick tint as the Connect links, not part of the open.
+
+            min-h-11 is a 44px tap target. The negative horizontal margin
+            with matching padding keeps the text on the bio's left edge while
+            giving the focus ring room around it.
+          */}
+          <button
+            type="button"
+            data-bio-trigger=""
+            aria-expanded={open}
+            aria-controls={PANEL_ID}
+            className="-mx-2 mt-2 inline-flex min-h-11 cursor-pointer items-center gap-3 self-start rounded-full px-2 text-base text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [@media(hover:hover)]:text-muted-foreground [@media(hover:hover)]:group-hover:text-foreground"
+          >
+            {open ? "Show less" : "More about how I work"}
+            {/*
+              Plus and minus are one drawing: the vertical stroke folds flat
+              into the horizontal one as the bio opens, so the icon changes
+              in step with the panel rather than swapping.
+
+              Flex centring puts the icon on the middle of the line box, which
+              sits below the middle of the lettering (the box includes room
+              for descenders). -top-[0.16em] lifts it onto the centre of the
+              capital height, so the bar lines up with the label; in em, so it
+              holds if the text size changes.
+            */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 12 12"
+              className="relative -top-[0.16em] size-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.25"
+              strokeLinecap="round"
+            >
+              <path d="M1 6h10" />
+              <path
+                d="M6 1v10"
+                className={`origin-center transition-transform ${motion} ${
+                  open ? "scale-y-0" : "scale-y-100"
+                }`}
+                style={{ transformBox: "fill-box" }}
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
