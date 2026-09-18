@@ -8,7 +8,7 @@ type ItemListProps = {
 
 /**
  * Reusable titled list. Each row shows a bold title and a one-line
- * muted description, with a soft rounded highlight on hover.
+ * muted description, on a soft rounded card.
  * Drop it anywhere — intro, project pages, tooling sections.
  */
 export function ItemList({ heading, items, className }: ItemListProps) {
@@ -20,27 +20,15 @@ export function ItemList({ heading, items, className }: ItemListProps) {
         </h2>
       ) : null}
       {/*
-        The resting highlight needs the rows held apart. Abutting rows share an
-        edge, which is invisible while only the hovered one is filled but reads
-        as a single dented slab once they all are — 8px separates them back
-        into three cards. Desktop keeps the flush stack, where a gap would show
-        as a jump between rows.
+        Every row rests filled, at every width and with any input — the rows
+        aren't interactive, so there is nothing for a hover to announce. The
+        filled rows need holding apart: abutting ones share an edge and read as
+        a single dented slab, so 8px separates them back into cards.
       */}
-      <ul className="flex flex-col max-lg:gap-2 [@media(hover:none)]:gap-2">
+      <ul className="flex flex-col gap-2">
         {items.map((item) => (
           <li key={item.title}>
-            {/*
-              The highlight rests on everywhere but desktop, and only desktop
-              reveals it on hover. Two conditions, because either one alone
-              misses a case:
-              - Below `lg` (mobile and tablet) it rests on whatever the input,
-                so a tablet with a trackpad reads the same as one without, and
-                both match the phone layout they sit closest to.
-              - `hover: none` keeps it on at any width, for a touch screen
-                large enough to pass for desktop, which has no hover to reveal
-                it with.
-            */}
-            <div className="-mx-4 rounded-2xl px-4 py-3 transition-colors hover:bg-muted max-lg:bg-muted [@media(hover:none)]:bg-muted">
+            <div className="-mx-4 rounded-2xl bg-muted px-4 py-3">
               <p className="text-detail font-bold tracking-tight text-foreground">
                 {item.title}
               </p>

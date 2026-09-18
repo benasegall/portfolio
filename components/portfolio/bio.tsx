@@ -28,8 +28,8 @@ const PANEL_ID = "bio-more"
  *
  * Container padding is reserved in both states and cancelled by the matching
  * negative margins, so the panel appears around text that never moves. The
- * -mx-4/rounded-2xl/px-4/py-3 shape and the 350ms cubic-bezier(.2,0,0,1)
- * timing are the ones already used by ItemList and Portrait.
+ * -mx-4/rounded-2xl/px-4/py-3 shape is the one ItemList uses, and the 350ms
+ * cubic-bezier(.2,0,0,1) timing the one Portrait uses.
  */
 export function Bio() {
   const [open, setOpen] = useState(false)
@@ -142,10 +142,9 @@ export function Bio() {
             the cursor; the block is the target, not the label alone, which is
             why the hover lives on the block.
 
-            The condition is the input, not the width, unlike ItemList's
-            resting highlight: this is about whether hover exists to reveal
-            anything, so a narrow window with a mouse still behaves as the
-            desktop it is.
+            The condition is the input, not the width: this is about whether
+            hover exists to reveal anything, so a narrow window with a mouse
+            still behaves as the desktop it is.
 
             transition-colors without the 350ms panel timing: this is the
             same quick tint as the Connect links, not part of the open.
