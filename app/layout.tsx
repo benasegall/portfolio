@@ -36,9 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: '/',
     siteName: siteMeta.name,
-    // The card headline is the name alone. The line under it already opens
-    // with "Product designer in London", so putting the role in both stutters
-    // it back at the reader twice in two lines.
+    // Keep the name as the headline, with background in the description.
     title: siteMeta.name,
     description: siteMeta.description,
     locale: 'en_GB',

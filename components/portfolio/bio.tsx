@@ -7,7 +7,7 @@ const PANEL_ID = "bio-more"
 
 /**
  * The bio, with an extra paragraph that expands in above the pinned
- * "Currently at IBM" line, and a visible trigger below that line.
+ * location and availability line, and a visible trigger below that line.
  *
  * Opening is a click or tap anywhere on the block, or Enter/Space on the
  * trigger — never hover. The block used to open on hover, which left nothing
@@ -124,7 +124,7 @@ export function Bio() {
           </div>
 
           <p className="mt-4 text-base text-muted-foreground">
-            {profile.current.employer}{" "}
+            {profile.current.location}{" "}
             <span className="text-foreground">
               {profile.current.availability}
             </span>

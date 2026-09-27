@@ -97,19 +97,17 @@ export function isGated(project: Project | GatedProject): project is GatedProjec
 export const profile = {
   name: "Benjamin Segall",
   bio: [
-    "I'm a product designer in London, with roots in the USA. I studied UX at Norwich University of the Arts and have worked across agency and consultancy teams, learning to hold user needs and business goals in the same hand.",
+    "Hi, I'm Ben. I recently graduated in User Experience Design from Norwich University of the Arts, with experience across agency, consultancy, enterprise and university teams. I enjoy understanding what people need and finding practical ways to make things work better.",
   ],
   // Revealed when the bio block is expanded, inserted between `bio` and
-  // `current` — the "Currently at IBM" line stays pinned last in both states.
+  // `current` — the location and availability stay pinned last in both states.
   more: [
-    "I start by understanding the problem, work through what is unclear, and find a practical way forward. I enjoy working early in the process, defining the problem and understanding the business context before deciding what to design, then turning those decisions into something real.",
+    "I like asking questions, listening to different perspectives and working out what to try next. My design background has given me a way to explore problems and test ideas. I'm interested in how organisations work and how technology can be useful in everyday work. I'm looking for an early career role where I can keep learning, work with people and help put improvements into practice.",
   ],
-  // Two sentences, so the availability — the actionable half — can be
-  // emphasised on its own. Combined they read exactly as the content spec:
-  // "Currently at IBM. Available from 21 September."
+  // Keep availability emphasised separately from location.
   current: {
-    employer: "Currently at IBM.",
-    availability: "Available from 21 September.",
+    location: "Based in London.",
+    availability: "Available now and open to relocating.",
   },
   portrait: {
     src: "/images/site/portrait.webp",
@@ -415,19 +413,17 @@ export const siteMeta = {
   /**
    * The site's name, everywhere a name is asked for: the <title>, so the tab,
    * bookmarks and history read as it; and the share card's headline and site
-   * name. Deliberately not "Benjamin Segall, Product Designer in London" — the
-   * role belongs in `description`, which sits directly under the headline on a
-   * card, and saying it in both stutters it back twice in two lines.
+   * name. The description adds background and availability below the name.
    */
   name: "Benjamin Segall",
-  description: "Product designer in London. Selected work across enterprise software, fintech and B2B SaaS.",
+  description: "User Experience Design graduate with experience across agency, consultancy, enterprise and university teams. Based in London, available now and open to relocating.",
   /** Live origin. Open Graph needs absolute URLs, so this resolves the card. */
   url: "https://www.benjaminsegall.com",
   /**
-   * The share card, at the 1200x630 every platform expects. Regenerate it if
-   * the availability line changes — it carries that date, same as the page.
+   * The 1200x630 share card, rendered by scripts/generate-social-card.mjs.
+   * Update the image and its version together so image caches can refresh.
    */
-  ogImage: "/images/site/og.png",
+  ogImage: "/images/site/og.png?v=20260927-2",
   ogImageAlt:
-    "Benjamin Segall, product designer in London. Currently at IBM, available from 21 September.",
+    "Benjamin Segall. User Experience Design graduate. Based in London. Available now.",
 }
