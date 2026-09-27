@@ -420,10 +420,10 @@ export const siteMeta = {
   /** Live origin. Open Graph needs absolute URLs, so this resolves the card. */
   url: "https://www.benjaminsegall.com",
   /**
-   * The 1200x630 share card. Update the image and its version together when
-   * the introduction or availability changes so image caches can refresh.
+   * The 1200x630 share card, rendered by scripts/generate-social-card.mjs.
+   * Update the image and its version together so image caches can refresh.
    */
-  ogImage: "/images/site/og.png?v=20260927",
+  ogImage: "/images/site/og.png?v=20260927-2",
   ogImageAlt:
-    "Benjamin Segall. User Experience Design graduate. Based in London. Available now and open to relocating.",
+    "Benjamin Segall. User Experience Design graduate. Based in London. Available now.",
 }
