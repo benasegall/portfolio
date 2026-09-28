@@ -1,3 +1,5 @@
+import { englandProject } from "@/lib/england-project"
+
 export type ListItem = {
   title: string
   description: string
@@ -77,21 +79,6 @@ export type Project = {
   items?: ListItem[]
   /** Galleries anchored to body paragraphs. See MediaBlock. */
   media?: MediaBlock[]
-}
-
-/**
- * The public card for a case study whose content sits behind the password
- * gate. This file is imported by a client component, so everything in it ships
- * in the page's JavaScript — only what the public homepage shows belongs here.
- * The case study itself is in lib/private/, served by app/api/case-study/[slug]
- * once the password checks out.
- */
-export type GatedProject = Pick<Project, "slug" | "title" | "category" | "cover"> & {
-  gated: true
-}
-
-export function isGated(project: Project | GatedProject): project is GatedProject {
-  return "gated" in project && project.gated
 }
 
 export const profile = {
@@ -193,16 +180,8 @@ function img(slug: string, name: string, alt: string): MediaItem {
   }
 }
 
-export const projects: (Project | GatedProject)[] = [
-  // Gated: only the card is here, and the case study is in
-  // lib/private/case-studies.ts. First, so it leads Selected Work.
-  {
-    slug: "england-football-app",
-    title: "England Football App",
-    category: "AI features designed at IBM, and the agentic toolkit that produced them.",
-    cover: "/images/projects/england-football-app/cover.webp",
-    gated: true,
-  },
+export const projects: Project[] = [
+  englandProject,
   {
     slug: "what-caused-this",
     title: "What Caused This",
