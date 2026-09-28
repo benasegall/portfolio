@@ -3,11 +3,8 @@
  *
  * A focus ring belongs to the keyboard. The browser decides when to draw one
  * — that is what `:focus-visible` is — and when script moves focus it hands
- * the decision to whatever the visitor did last. It counts typing as keyboard
- * use, which is where it goes wrong here: unlocking a gated case study means
- * typing a password, so every focus move after that carried a ring, and
- * closing the sheet left a 2px outline drawn around the project card that a
- * click-opened sheet never showed.
+ * the decision to whatever the visitor did last. We track pointer and keyboard
+ * use so a pointer-opened sheet does not leave a ring on its card when closed.
  *
  * Typing is not navigation. This module keeps its own record of how the
  * visitor last acted, ignoring keys pressed into a field, and `focusQuietly`
@@ -15,10 +12,8 @@
  * only ever suppressed for a focus THIS code moves; focus the visitor moves
  * is the browser's business and is left alone.
  *
- * Suppression lasts until the next key that is not typing, so a visitor who
- * unlocks with a password and then reaches for Tab gets the ring back at the
- * first press — the one case where guessing wrong would strand a keyboard
- * user with no visible focus.
+ * Suppression lasts until the next key that is not typing, so Tab brings the
+ * ring back on its first press.
  *
  * The marker is `data-quiet-focus`; app/globals.css turns the outline off
  * while it is set.

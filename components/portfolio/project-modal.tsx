@@ -115,8 +115,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       document.removeEventListener("keydown", onTab)
       // Back to the panel that opened it, so the keyboard keeps its place —
       // quietly, or a sheet reached by pointer would leave a ring around the
-      // card on the way out. Unlocking a gated project means typing, which
-      // the browser alone would read as keyboard use.
+      // card on the way out.
       focusQuietly(opener)
     }
   }, [project])
