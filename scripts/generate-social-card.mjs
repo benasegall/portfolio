@@ -36,8 +36,8 @@ const card = h('div', {
     width: 390, height: 390,
     style: { position: 'absolute', left: 80, top: 120, borderRadius: 30 },
   }),
-  text('Benjamin Segall', 154, 80, { color: '#000', fontWeight: 700, letterSpacing: -2 }),
-  text('User Experience Design graduate', 254, 36),
+  text('Benjamin Segall', 154, 72, { color: '#000', fontWeight: 700, letterSpacing: -2 }),
+  text('User Experience Design graduate', 254, 32),
   h('div', {
     style: {
       position: 'absolute', left: 534, top: 336, width: 586,
