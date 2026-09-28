@@ -97,17 +97,18 @@ export function isGated(project: Project | GatedProject): project is GatedProjec
 export const profile = {
   name: "Benjamin Segall",
   bio: [
-    "Hi, I'm Ben. I recently graduated in User Experience Design from Norwich University of the Arts, with experience across agency, consultancy, enterprise and university teams. I enjoy understanding what people need and finding practical ways to make things work better.",
+    "Hi, I'm Ben. I recently graduated in User Experience Design from Norwich University of the Arts, with experience across agency, consultancy and enterprise teams. I enjoy understanding what people need, what gets in their way and what could be done differently.",
   ],
   // Revealed when the bio block is expanded, inserted between `bio` and
   // `current` — the location and availability stay pinned last in both states.
   more: [
-    "I like asking questions, listening to different perspectives and working out what to try next. My design background has given me a way to explore problems and test ideas. I'm interested in how organisations work and how technology can be useful in everyday work. I'm looking for an early career role where I can keep learning, work with people and help put improvements into practice.",
+    "I start by asking questions, listening to different perspectives and working through what is unclear. My design work has taught me to test solutions with people and see what holds up in practice.",
+    "I'm interested in how organisations make decisions and how technology changes the way people work. I'm looking for an early career role where I can work with different teams, learn how an organisation operates and help turn research into recommendations it can act on.",
   ],
   // Keep availability emphasised separately from location.
   current: {
     location: "Based in London.",
-    availability: "Available now and open to relocating.",
+    availability: "Available now.",
   },
   portrait: {
     src: "/images/site/portrait.webp",
@@ -416,14 +417,14 @@ export const siteMeta = {
    * name. The description adds background and availability below the name.
    */
   name: "Benjamin Segall",
-  description: "User Experience Design graduate with experience across agency, consultancy, enterprise and university teams. Based in London, available now and open to relocating.",
+  description: "User Experience Design graduate with experience across agency, consultancy and enterprise teams. Based in London. Available now.",
   /** Live origin. Open Graph needs absolute URLs, so this resolves the card. */
   url: "https://www.benjaminsegall.com",
   /**
    * The 1200x630 share card, rendered by scripts/generate-social-card.mjs.
    * Update the image and its version together so image caches can refresh.
    */
-  ogImage: "/images/site/og.png?v=20260927-2",
+  ogImage: "/images/site/og.png?v=20260928",
   ogImageAlt:
     "Benjamin Segall. User Experience Design graduate. Based in London. Available now.",
 }
