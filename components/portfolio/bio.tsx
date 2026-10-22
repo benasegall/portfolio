@@ -78,7 +78,7 @@ export function Bio() {
         // scroll-mt leaves a little air above the bio when closing scrolls
         // back to it, rather than butting the text against the screen edge.
         // The tap highlight is off because the grey panel is the feedback.
-        className={`group -mx-4 -my-3 cursor-pointer scroll-mt-6 touch-manipulation [-webkit-tap-highlight-color:transparent] rounded-2xl px-4 py-3 transition-colors ${motion} ${
+        className={`-mx-4 -my-3 cursor-pointer scroll-mt-6 touch-manipulation [-webkit-tap-highlight-color:transparent] rounded-2xl px-4 py-3 transition-colors ${motion} ${
           open ? "bg-muted" : "bg-muted/0"
         }`}
       >
@@ -132,19 +132,8 @@ export function Bio() {
             icon is what marks it as a control, and the extra space above sets
             it apart from the paragraph.
 
-            Black by default, so a touch screen — which has no hover to
-            reveal anything with — shows the trigger at full strength from the
-            start. Where a pointer can hover, it rests in the body grey and
-            goes black as the pointer crosses the block, so the label answers
-            the cursor; the block is the target, not the label alone, which is
-            why the hover lives on the block.
-
-            The condition is the input, not the width: this is about whether
-            hover exists to reveal anything, so a narrow window with a mouse
-            still behaves as the desktop it is.
-
-            transition-colors without the 350ms panel timing: this is the
-            same quick tint as the Connect links, not part of the open.
+            Black at rest and on hover, so the control is identifiable with
+            every input method.
 
             min-h-11 is a 44px tap target. The negative horizontal margin
             with matching padding keeps the text on the bio's left edge while
@@ -155,7 +144,7 @@ export function Bio() {
             data-bio-trigger=""
             aria-expanded={open}
             aria-controls={PANEL_ID}
-            className="-mx-2 mt-2 inline-flex min-h-11 cursor-pointer items-center gap-3 self-start rounded-full px-2 text-base text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [@media(hover:hover)]:text-muted-foreground [@media(hover:hover)]:group-hover:text-foreground"
+            className="-mx-2 mt-2 inline-flex min-h-11 cursor-pointer items-center gap-3 self-start rounded-full px-2 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {open ? "Show less" : "More about how I work"}
             {/*
