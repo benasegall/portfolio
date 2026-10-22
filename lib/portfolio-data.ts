@@ -84,12 +84,12 @@ export type Project = {
 export const profile = {
   name: "Benjamin Segall",
   bio: [
-    "Hi, I’m Benjamin, a 2026 User Experience Design graduate with experience in customer research, practical coordination and client support.",
+    "Hi, I’m Benjamin, a 2026 User Experience Design graduate with experience in customer research, administration and client support.",
   ],
   more: [
     "My background combines understanding people’s needs with helping services work better. I can turn research and feedback into clear recommendations, explain information to different audiences and help teams keep their work organised.",
   ],
-  closing: "I’m looking for a graduate or junior role where I can bring this combination of research, communication and practical support to a team.",
+  closing: "I’m looking for a graduate or junior role where I can help a team understand people’s needs and improve services.",
   // Keep availability emphasised separately from location.
   current: {
     location: "Based in London.",
