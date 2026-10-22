@@ -65,7 +65,7 @@ export type Project = {
   title: string
   category: string
   cover: string
-  metadata: string
+  tagline: string
   body: string[]
   sectionTitles: string[]
   sectionLengths: number[]
@@ -185,7 +185,7 @@ export const projects: Project[] = [
     title: "What Caused This",
     category: "Finding where new users struggled and proposing clearer onboarding.",
     cover: "/images/projects/what-caused-this/cover.webp",
-    metadata: "Onboarding research and concept design",
+    tagline: "Five out of five new users failed the platform's main task. I redesigned onboarding so they could reach it alone.",
     body: [
       "I tested What Caused This with five new users. All five failed to complete the primary task without help.",
       "It's a root cause analysis tool for managers and project leads chasing recurring problems. The company wanted to launch a free trial, but new users had to email the team to get in, and once inside nothing told them what to do next.",
@@ -238,7 +238,7 @@ export const projects: Project[] = [
     title: "Wise Young Explorer",
     category: "Using research to develop a proposal around parents’ needs.",
     cover: "/images/projects/wise-young-explorer/cover.webp",
-    metadata: "Concept proposal · Wise Young Explorer brief",
+    tagline: "Parents want their kids to have independence. They also want to stay in control. Travel Ready gives them both.",
     body: [
       "Wise set a live brief. Get more parents of 15 to 17 year olds setting up Young Explorer, a product that already existed. The challenge was persuasion, not invention, and you can't market a financial product to a teenager. Wise's research shows 39% of adults still bank with the provider their parent chose. Getting a teenager onto Wise now is about the account they open at 18.",
       "GoHenry and Starling Kite both build around parental control, pocket money, spending locks, allowance tools. Neither designs for the moment parents care about most, the first time their kid travels without them. Wise's multicurrency infrastructure meant it could own that moment in a way the others couldn't.",
@@ -310,7 +310,7 @@ export const projects: Project[] = [
     title: "ClearTerms",
     category: "Making complex terms and conditions easier to understand and navigate.",
     cover: "/images/projects/clearterms/cover.webp",
-    metadata: "Sync the City · 54-hour hackathon · Team of six, including two designers",
+    tagline: "The biggest lie on the internet is \"I have read and agree to the terms and conditions.\" ClearTerms uses AI-driven summaries to make that statement true.",
     body: [
       "A man lost his right to sue over food poisoning because of a clause buried in the signup for a free service. He had agreed to it. Almost nobody reads these documents, and the people who write them know it.",
       "In our survey, 83% of people accepted terms without reading them and 97% would rather see a plain summary first. These findings informed a concept for consumers seeking clearer terms and businesses seeking to reduce legal risk.",

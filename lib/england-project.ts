@@ -44,7 +44,7 @@ export const englandProject: Project = {
   title: "England Football App",
   category: "Customer and competitor research for a mobile app prototype.",
   cover: "/images/projects/england-football-app/cover.webp",
-  metadata: "IBM internship · 12-week project · Team of five",
+  tagline: "Two deliverables in twelve weeks. A toolkit for designing fan products faster, and the England app features proving it worked.",
   body: [
     "The project explored how IBM’s AI technology could support the FA’s England football app, with objectives around fan engagement, retention and commercial value. I worked on the experience design within a team of five, alongside a developer, data scientist, business analyst and data analyst, over twelve weeks split between research and delivery.",
     "I audited the England app against its competitors. Most compete on live data, better stats, results and player detail during a match.",

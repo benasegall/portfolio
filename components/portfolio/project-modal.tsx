@@ -227,7 +227,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               <h2 className="text-lg font-bold tracking-tight text-foreground">
                 {project.title}
               </h2>
-              <p className="mt-1 text-base text-foreground">{project.metadata}</p>
+              <p className="mt-1 text-base text-foreground">{project.tagline}</p>
 
               {project.items ? (
                 <ItemList items={project.items} className="mt-6" />
