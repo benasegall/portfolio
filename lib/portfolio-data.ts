@@ -85,9 +85,11 @@ export const profile = {
   name: "Benjamin Segall",
   bio: [
     "Hi, I’m Benjamin, a 2026 User Experience Design graduate with experience in customer research, practical coordination and client support.",
-    "My background combines understanding people’s needs with helping services work better. I can turn research and feedback into clear recommendations, explain information to different audiences and help teams keep their work organised.",
-    "I’m looking for a graduate or junior role where I can bring this combination of research, communication and practical support to a team.",
   ],
+  more: [
+    "My background combines understanding people’s needs with helping services work better. I can turn research and feedback into clear recommendations, explain information to different audiences and help teams keep their work organised.",
+  ],
+  closing: "I’m looking for a graduate or junior role where I can bring this combination of research, communication and practical support to a team.",
   // Keep availability emphasised separately from location.
   current: {
     location: "Based in London.",
@@ -106,7 +108,7 @@ export const contactHrefs = {
 
 export const connectLinks: { label: string; href: string }[] = [
   { label: "Email", href: contactHrefs.email },
-  { label: "CV", href: "/Benjamin_Segall_CV.pdf" },
+  { label: "CV", href: "https://drive.google.com/file/d/1OyowLEmJPKoriapbSCXiseFirdBLi3_l/view?usp=sharing" },
   { label: "LinkedIn", href: contactHrefs.linkedIn },
 ]
 

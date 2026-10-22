@@ -26,8 +26,8 @@ export function Intro() {
             <li key={link.label}>
               <a
                 href={link.href}
-                target={link.href.startsWith("http") || link.label === "CV" ? "_blank" : undefined}
-                rel={link.href.startsWith("http") || link.label === "CV" ? "noreferrer" : undefined}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noreferrer" : undefined}
                 className="text-base text-muted-foreground decoration-1 underline-offset-4 transition-colors hover:text-foreground hover:underline"
               >
                 {link.label}
