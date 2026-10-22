@@ -29,7 +29,10 @@ export default function Home() {
           <div className="md:col-start-2">
             <p className="text-base text-muted-foreground text-pretty">
               Get in touch by{" "}
-              <a href={contactHrefs.email} className="text-foreground underline-offset-4 hover:underline">
+              <a
+                href={contactHrefs.email}
+                className="text-base text-muted-foreground decoration-1 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+              >
                 email
               </a>{" "}
               or connect on{" "}
@@ -37,7 +40,7 @@ export default function Home() {
                 href={contactHrefs.linkedIn}
                 target="_blank"
                 rel="noreferrer"
-                className="text-foreground underline-offset-4 hover:underline"
+                className="text-base text-muted-foreground decoration-1 underline-offset-4 transition-colors hover:text-foreground hover:underline"
               >
                 LinkedIn
               </a>
