@@ -51,9 +51,6 @@ export default function Home() {
                 below the sentence. */}
             <div className="relative mt-28">
               <FooterDog className="dog--left" />
-              <p aria-hidden="true" className="dog-greeting text-muted-foreground">
-                Say hello to the dog!
-              </p>
               <p className="text-detail text-muted-foreground">{footer.copyright}</p>
             </div>
           </div>
