@@ -65,7 +65,7 @@ export type Project = {
   title: string
   category: string
   cover: string
-  date: string
+  tagline: string
   body: string[]
   sectionTitles: string[]
   sectionLengths: number[]
@@ -84,29 +84,27 @@ export type Project = {
 export const profile = {
   name: "Benjamin Segall",
   bio: [
-    "Hi, I'm Ben. I recently graduated in User Experience Design from Norwich University of the Arts, with experience across agency, consultancy and enterprise teams. I enjoy understanding what people need, what gets in their way and what could be done differently.",
+    "Hi, I’m Benjamin, a 2026 User Experience Design graduate with experience in customer research, administration and client support.",
   ],
-  // Revealed when the bio block is expanded, inserted between `bio` and
-  // `current` — the location and availability stay pinned last in both states.
   more: [
-    "I start by asking questions, listening to different perspectives and working through what is unclear. My design work has taught me to test solutions with people and see what holds up in practice.",
-    "I'm interested in how organisations make decisions and how technology changes the way people work. I'm looking for an early career role where I can work with different teams, learn how an organisation operates and help turn research into recommendations it can act on.",
+    "My background combines understanding people’s needs with helping services work better. I can turn research and feedback into clear recommendations, explain information to different audiences and help teams keep their work organised.",
   ],
-  // Keep availability emphasised separately from location.
-  current: {
-    location: "Based in London.",
-    availability: "Available now.",
-  },
+  closing: "I’m looking for a graduate or junior role where I can help a team understand people’s needs and improve services.",
   portrait: {
     src: "/images/site/portrait.webp",
     alt: "Benjamin Segall",
   },
 }
 
+export const contactHrefs = {
+  email: "mailto:benasegall@gmail.com",
+  linkedIn: "https://linkedin.com/in/benasegall",
+}
+
 export const connectLinks: { label: string; href: string }[] = [
-  { label: "Email", href: "mailto:benasegall@gmail.com" },
+  { label: "Email", href: contactHrefs.email },
   { label: "CV", href: "https://drive.google.com/file/d/1OyowLEmJPKoriapbSCXiseFirdBLi3_l/view?usp=sharing" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/benasegall" },
+  { label: "LinkedIn", href: contactHrefs.linkedIn },
 ]
 
 /**
@@ -185,9 +183,9 @@ export const projects: Project[] = [
   {
     slug: "what-caused-this",
     title: "What Caused This",
-    category: "Onboarding a root cause analysis platform so new users reach value alone.",
+    category: "Finding where new users struggled and proposing clearer onboarding.",
     cover: "/images/projects/what-caused-this/cover.webp",
-    date: "Five out of five new users failed the platform's main task. I redesigned onboarding so they could reach it alone.",
+    tagline: "Five out of five new users failed the platform's main task. I redesigned onboarding so they could reach it alone.",
     body: [
       "I tested What Caused This with five new users. All five failed to complete the primary task without help.",
       "It's a root cause analysis tool for managers and project leads chasing recurring problems. The company wanted to launch a free trial, but new users had to email the team to get in, and once inside nothing told them what to do next.",
@@ -199,7 +197,7 @@ export const projects: Project[] = [
       "The tension was guidance against freedom. Early concepts mapped instruction points across the whole interface until the list became unusable. Too many prompts block a user as effectively as none. So I cut the flow to the steps that serve the first report, and added a skip option for anyone who would rather explore alone.",
       "I also scoped out a proactive support feature that would spot a stuck user through hovering or inactivity. The core onboarding needed to work on its own before anything sat on top of it, so it stayed out of this build.",
       "I had the brief and the design system, and no contact after the initial presentation. The conversation I wanted was early in research, to find out how far the redesign could go. With it I'd have asked whether the interface structure needed rethinking rather than building around it.",
-      "The tour and tutorials reduce confusion and improve early usability, but the deeper problem is the structure of the interface. The onboarding problems I solved are symptoms. The interface is the cause, and that's where I'd start next time.",
+      "The tour and tutorials were designed to reduce confusion and make early use easier, while the wider structure of the interface remains an area for further work. The onboarding problems I solved are symptoms. The interface is the cause, and that's where I'd start next time.",
     ],
     sectionTitles: ["Context", "Research", "Approach", "Decisions", "Constraints", "Reflection"],
     sectionLengths: [4, 1, 2, 2, 1, 1],
@@ -230,17 +228,17 @@ export const projects: Project[] = [
       ] },
     ],
     items: [
-      { title: "Context", description: "A root cause analysis tool for managers and project leads chasing recurring problems." },
-      { title: "Research", description: "Five out of five new users failed to complete the primary task without help." },
-      { title: "Approach", description: "Guidance at the point of action, focused on creating a first analysis report." },
+      { title: "Problem", description: "All five new users in the initial study needed help to complete the main task in a root cause analysis platform." },
+      { title: "My contribution", description: "Tested the task with five new users, identified where they became stuck and developed a guided product tour and tutorials page." },
+      { title: "Delivered", description: "An onboarding proposal focused on helping users create their first analysis report, with guidance placed alongside the relevant actions." },
     ],
   },
   {
     slug: "wise-young-explorer",
     title: "Wise Young Explorer",
-    category: "Helping parents hand a teenager a card for their first trip abroad.",
+    category: "Using research to develop a proposal around parents’ needs.",
     cover: "/images/projects/wise-young-explorer/cover.webp",
-    date: "Parents want their kids to have independence. They also want to stay in control. Travel Ready gives them both.",
+    tagline: "Parents want their kids to have independence. They also want to stay in control. Travel Ready gives them both.",
     body: [
       "Wise set a live brief. Get more parents of 15 to 17 year olds setting up Young Explorer, a product that already existed. The challenge was persuasion, not invention, and you can't market a financial product to a teenager. Wise's research shows 39% of adults still bank with the provider their parent chose. Getting a teenager onto Wise now is about the account they open at 18.",
       "GoHenry and Starling Kite both build around parental control, pocket money, spending locks, allowance tools. Neither designs for the moment parents care about most, the first time their kid travels without them. Wise's multicurrency infrastructure meant it could own that moment in a way the others couldn't.",
@@ -250,7 +248,7 @@ export const projects: Project[] = [
       "Control stays with the parent. Once the trip starts, they only step in if they choose to.",
       "The main question was how much to show the teen. An early version gave them a full mirror of the parent's plan. I pulled it back. Seeing the exact limits risked making the product feel restrictive rather than freeing, so a lighter trip view replaced it, one that included the teen without showing them the limits themselves.",
       "The recap took the most thought. It had to end on something rewarding rather than evaluative, so neither of them read it as a report card.",
-      "Success here is trips set up per card, and how many of those accounts are still open at 18.",
+      "Proposed measures of success are trips set up per card and the proportion of accounts still open when the teenager turns 18.",
       "Travel Ready works inside Wise's existing system rather than proposing something new, which is what the brief asked for. I didn't speak to parents or teenagers, so the read behind it comes from Wise's research and the gap in the market rather than from testing. That's the first thing I'd fix. The second is that I never explored extending it beyond travel into everyday spending. That's what would make a full account at 18 the obvious next step rather than a decision.",
     ],
     sectionTitles: ["Context", "Competitor landscape", "Approach", "Decisions", "Reflection"],
@@ -302,20 +300,20 @@ export const projects: Project[] = [
       ] },
     ],
     items: [
-      { title: "Context", description: "A live Wise brief to get more parents setting up Young Explorer for 15 to 17 year olds." },
-      { title: "Insight", description: "The first trip abroad is where parental reassurance and teenage independence meet." },
-      { title: "Solution", description: "Travel Ready: a guided setup built into the Young Explorer card area." },
+      { title: "Problem", description: "Explore how to encourage more parents of 15 to 17 year olds to set up Wise Young Explorer." },
+      { title: "My contribution", description: "Reviewed existing research and competitors, reframed the proposal around a teenager’s first trip abroad and developed the Travel Ready concept." },
+      { title: "Delivered", description: "A proposed journey and interface screens covering before, during and after a trip. The concept has not been tested with parents or teenagers." },
     ],
   },
   {
     slug: "clearterms",
     title: "ClearTerms",
-    category: "Turning terms and conditions into summaries people actually read.",
+    category: "Making complex terms and conditions easier to understand and navigate.",
     cover: "/images/projects/clearterms/cover.webp",
-    date: "The biggest lie on the internet is \"I have read and agree to the terms and conditions.\" ClearTerms uses AI-driven summaries to make that statement true.",
+    tagline: "The biggest lie on the internet is \"I have read and agree to the terms and conditions.\" ClearTerms uses AI-driven summaries to make that statement true.",
     body: [
       "A man lost his right to sue over food poisoning because of a clause buried in the signup for a free service. He had agreed to it. Almost nobody reads these documents, and the people who write them know it.",
-      "Our survey found 83% of people accept terms without reading them, and 97% would rather see a plain summary first. ClearTerms was built for both sides of that gap, consumers who need clarity and businesses that want to reduce legal risk.",
+      "In our survey, 83% of people accepted terms without reading them and 97% would rather see a plain summary first. These findings informed a concept for consumers seeking clearer terms and businesses seeking to reduce legal risk.",
       "Our proof of concept flagged a clause granting TikTok rights to a user's image and voice. Not something anyone catches reading on their own.",
       "I was one of two designers on a team of six at Sync the City, a 54 hour build event. We worked the design together from research through to final screens, alongside development and business strategy. Decisions on revenue model, disclaimers and product format fed straight into design choices, so the design moved with the business case rather than after it. Legal input came from external mentor review through the Akcela incubator.",
       "Surveys and interviews showed people weren't ignoring terms out of laziness. They were beaten by the structure and the language. That moved the problem from reducing content to ranking it, so someone could spot a risky clause without reading the whole document.",
@@ -369,21 +367,12 @@ export const projects: Project[] = [
       ] },
     ],
     items: [
-      { title: "Context", description: "Built in 54 hours at Sync the City with a team of six." },
-      { title: "Research", description: "83% accept terms without reading them; 97% would rather see a plain summary first." },
-      { title: "Safeguard", description: "Cited and highlightable clauses let users check source text themselves." },
+      { title: "Problem", description: "In our survey, 83% accepted terms without reading them and 97% would rather see a plain summary first." },
+      { title: "My contribution", description: "Worked as one of two designers, contributing to research, interface design and revisions following external legal feedback." },
+      { title: "Delivered", description: "An AI-assisted summary prototype with clause highlighting and source references so users could check the original wording." },
     ],
   },
 ]
-
-// One sentence in two parts, rendered as a single wrapping paragraph in the
-// footer: `heading` is the opening clause, set in the foreground weight, and
-// `quote` continues it in body copy. Kept split so the emphasis stays data
-// rather than markup; joined with a space at the point of use.
-export const philosophy = {
-  heading: "Design starts the moment a decision is made,",
-  quote: "whether that's in Figma, a conversation, or with the help of AI.",
-}
 
 export const footer = {
   copyright: "© 2026 Benjamin Segall",
