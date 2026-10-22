@@ -1,7 +1,7 @@
 import { FooterDog } from "@/components/portfolio/dog/dog"
 import { Intro } from "@/components/portfolio/intro"
 import { Projects } from "@/components/portfolio/projects"
-import { philosophy, footer } from "@/lib/portfolio-data"
+import { contactHrefs, footer } from "@/lib/portfolio-data"
 
 export default function Home() {
   return (
@@ -27,22 +27,21 @@ export default function Home() {
 
         <footer className="page-grid pb-20 pt-12">
           <div className="md:col-start-2">
-            {/*
-              One paragraph, not a heading plus a paragraph. The two halves are
-              a single sentence, and as separate blocks they always broke after
-              "made," however much room the line had — the clause read as a
-              title with a caption under it rather than as the sentence it is.
-              Inline, it simply wraps where the measure runs out.
-
-              Emphasis is colour alone, the same move as "Available from 21
-              September." in the bio and the "Scope." / "During." lead-ins in
-              the sheets: the clause steps forward out of the muted body copy
-              without claiming to be a heading. Bold would have gone on saying
-              "title", which is the one thing this line is not.
-            */}
             <p className="text-base text-muted-foreground text-pretty">
-              <span className="text-foreground">{philosophy.heading}</span>{" "}
-              {philosophy.quote}
+              Get in touch by{" "}
+              <a href={contactHrefs.email} className="text-foreground underline-offset-4 hover:underline">
+                email
+              </a>{" "}
+              or connect on{" "}
+              <a
+                href={contactHrefs.linkedIn}
+                target="_blank"
+                rel="noreferrer"
+                className="text-foreground underline-offset-4 hover:underline"
+              >
+                LinkedIn
+              </a>
+              .
             </p>
             {/* `relative` so the dog can lie on top of the copyright line —
                 see components/portfolio/dog. The gap above leaves him room

@@ -215,17 +215,18 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           </div>
 
           <div className="p-2">
-            {/*
-              The cover is inset on three sides rather than run to the sheet's
-              edge. With placeholders it read fine tight to the frame, but real
-              screenshots carry their own detail right to the crop, and pressed
-              against the corner they looked cramped — particularly the desktop
-              shots, which lost their left and right margins entirely. The top
-              inset also answers the sheet's own bottom padding, so the card is
-              framed evenly top and bottom. The image gets smaller; the frame is
-              worth more than the extra pixels.
-            */}
-            <div className="px-4 pt-4 md:px-6">
+            <div className="mx-auto w-full max-w-[45rem] px-4 pb-6 pt-16 md:px-10 md:pt-8">
+              <h2 className="pr-10 text-lg font-bold tracking-tight text-foreground">
+                {project.title}
+              </h2>
+              <p className="mt-1 text-base text-foreground">{project.metadata}</p>
+
+              {project.items ? (
+                <ItemList items={project.items} className="mt-6" />
+              ) : null}
+            </div>
+
+            <div className="px-4 md:px-6">
               <img
                 src={project.cover || "/placeholder.svg"}
                 alt={project.title}
@@ -233,23 +234,8 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               />
             </div>
 
-            {/*
-              Only the text is inset — the cover above stays tight to the sheet.
-              The cap plus padding holds the measure at ~640px (74 characters)
-              however wide the sheet gets; padding alone would crush the text
-              on narrower sheets, where the cap simply stops applying.
-            */}
             <div className="mx-auto w-full max-w-[45rem] px-4 pb-10 pt-6 md:px-10">
-              <h2 className="text-lg font-bold tracking-tight text-foreground">
-                {project.title}
-              </h2>
-              <p className="mt-1 text-base text-foreground">{project.date}</p>
-
-              {project.items ? (
-                <ItemList heading="Highlights" items={project.items} className="mt-6" />
-              ) : null}
-
-              <hr className="my-6 border-project-divider" />
+              <hr className="mb-6 border-project-divider" />
 
               <div className="flex flex-col gap-8">
                 {project.sectionTitles.map((title, sectionIndex) => {
