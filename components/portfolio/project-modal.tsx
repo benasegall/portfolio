@@ -215,18 +215,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           </div>
 
           <div className="p-2">
-            <div className="mx-auto w-full max-w-[45rem] px-4 pb-6 pt-16 md:px-10 md:pt-8">
-              <h2 className="pr-10 text-lg font-bold tracking-tight text-foreground">
-                {project.title}
-              </h2>
-              <p className="mt-1 text-base text-foreground">{project.metadata}</p>
-
-              {project.items ? (
-                <ItemList items={project.items} className="mt-6" />
-              ) : null}
-            </div>
-
-            <div className="px-4 md:px-6">
+            <div className="px-4 pt-4 md:px-6">
               <img
                 src={project.cover || "/placeholder.svg"}
                 alt={project.title}
@@ -235,7 +224,16 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
 
             <div className="mx-auto w-full max-w-[45rem] px-4 pb-10 pt-6 md:px-10">
-              <hr className="mb-6 border-project-divider" />
+              <h2 className="text-lg font-bold tracking-tight text-foreground">
+                {project.title}
+              </h2>
+              <p className="mt-1 text-base text-foreground">{project.metadata}</p>
+
+              {project.items ? (
+                <ItemList items={project.items} className="mt-6" />
+              ) : null}
+
+              <hr className="my-6 border-project-divider" />
 
               <div className="flex flex-col gap-8">
                 {project.sectionTitles.map((title, sectionIndex) => {

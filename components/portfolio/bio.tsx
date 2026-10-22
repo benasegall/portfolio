@@ -6,8 +6,8 @@ import { profile } from "@/lib/portfolio-data"
 const PANEL_ID = "bio-more"
 
 /**
- * The bio, with an extra paragraph that expands in above the pinned
- * location and availability line, and a visible trigger below that line.
+ * The bio, with a middle paragraph that expands between the introduction
+ * and closing paragraph, and a visible trigger below them.
  *
  * Opening is a click or tap anywhere on the block, or Enter/Space on the
  * trigger — never hover. The block used to open on hover, which left nothing
@@ -84,7 +84,7 @@ export function Bio() {
       >
         {/*
           No flex `gap` here: a gap would apply either side of the collapsed
-          panel and double the space between the bio and the pinned line.
+          panel and double the space between the surrounding paragraphs.
           Each child owns its own top margin instead, and the panel's lives
           inside it where it can be clipped away.
         */}
@@ -125,13 +125,6 @@ export function Bio() {
 
           <p className="mt-4 text-base text-muted-foreground text-pretty">
             {profile.closing}
-          </p>
-
-          <p className="mt-4 text-base text-muted-foreground">
-            {profile.current.location}{" "}
-            <span className="text-foreground">
-              {profile.current.availability}
-            </span>
           </p>
 
           {/*

@@ -90,11 +90,6 @@ export const profile = {
     "My background combines understanding people’s needs with helping services work better. I can turn research and feedback into clear recommendations, explain information to different audiences and help teams keep their work organised.",
   ],
   closing: "I’m looking for a graduate or junior role where I can help a team understand people’s needs and improve services.",
-  // Keep availability emphasised separately from location.
-  current: {
-    location: "Based in London.",
-    availability: "Available now.",
-  },
   portrait: {
     src: "/images/site/portrait.webp",
     alt: "Benjamin Segall",
